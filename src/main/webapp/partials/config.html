@@ -1,0 +1,151 @@
+<div id="configuration">
+    <div ng-show="saveIndicator" class="savedFloat alert alert-success check-element show-anim">Saved succesfully</div>
+    <h1>Configuration</h1>
+    <div ng-include="'partials/error-list.html'"></div>
+
+    <h2>General</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="autoreloadjobs" class="col-sm-3 control-label">Auto Reload Jobs</label>
+            <div class="col-sm-9">
+                <div class="btn-group" id="autoreloadjobs">
+                    <button type="button" ng-class="{'active' : serverConfig.autoReloadJobs}" ng-click="updateAutoReloadsJobs(true)" class="btn btn-sm btn-success">On</button>
+                    <button type="button" ng-class="{'active' : !serverConfig.autoReloadJobs}" ng-click="updateAutoReloadsJobs(false)" class="btn btn-sm btn-danger">Off</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <h2>Signal Strength Map</h2>
+    <form name="signalStrengthConfigForm" class="form-horizontal" role="form">
+        <h3>General</h3>
+
+        <div class="form-group">
+            <label for="signalMapConfigTile" class="col-sm-3 control-label">Tile Length</label>
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <input ng-blur="updateSignalMapConfig()" ng-enter="updateSignalMapConfig()" id="signalMapConfigTile" type="number" class="form-control" ng-model="serverConfig.signalMapConfig.tileLenghtCm" placeholder="Tile Length in cm (default 10)" required>
+                    <div class="input-group-addon">cm</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="signalMapConfigrandomSeed" class="col-sm-3 control-label">Random Seed</label>
+            <div class="col-sm-5">
+                <input ng-blur="updateSignalMapConfig()" ng-enter="updateSignalMapConfig()" id="signalMapConfigrandomSeed" type="number" class="form-control" ng-model="serverConfig.signalMapConfig.randomSeed" placeholder="random long or -1 for total random)">
+            </div>
+        </div>
+
+        <h3>Trilateration</h3>
+        <div class="form-group">
+            <label for="signalMapConfigdefaultSpreaManagedNodesCm" class="col-sm-3 control-label">Spread (Active Nodes)</label>
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <input ng-blur="updateSignalMapConfig()" ng-enter="updateSignalMapConfig()" id="signalMapConfigdefaultSpreaManagedNodesCm" type="number" class="form-control" ng-model="serverConfig.signalMapConfig.defaultSpreaManagedNodesCm" placeholder="Trilateral Circle Spread in cm" required>
+                    <div class="input-group-addon">cm</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="signalMapConfigdefaultSpreadExtendedNodesCm" class="col-sm-3 control-label">Default Spread (Extended Nodes)</label>
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <input ng-blur="updateSignalMapConfig()" ng-enter="updateSignalMapConfig()" id="signalMapConfigdefaultSpreadExtendedNodesCm" type="number" class="form-control" ng-model="serverConfig.signalMapConfig.defaultSpreadExtendedNodesCm" placeholder="Trilateral Circle Spread in cm" required>
+                    <div class="input-group-addon">cm</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="signalMapConfigcanvasDimensionManagedNodesCm" class="col-sm-3 control-label">Calculation Canvas Size (Active Nodes)</label>
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <input ng-blur="updateSignalMapConfig()" ng-enter="updateSignalMapConfig()" id="signalMapConfigcanvasDimensionManagedNodesCm" type="number" class="form-control" ng-model="serverConfig.signalMapConfig.canvasDimensionManagedNodesCm" placeholder="Canvas Dimension for trilateral calculation" required>
+                    <div class="input-group-addon">cm</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="signalMapConfigcanvasDimensionExtendedNodesCm" class="col-sm-3 control-label">Calculation Canvas Size (Extended Nodes)</label>
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <input ng-blur="updateSignalMapConfig()" ng-enter="updateSignalMapConfig()" id="signalMapConfigcanvasDimensionExtendedNodesCm" type="number" class="form-control" ng-model="serverConfig.signalMapConfig.canvasDimensionExtendedNodesCm" placeholder="Canvas Dimension for trilateral calculation" required>
+                    <div class="input-group-addon">cm</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="signalMapConfigcmOverflowForCalculatedCanvas" class="col-sm-3 control-label">Overflow Canvas after Trimming</label>
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <input ng-blur="updateSignalMapConfig()" ng-enter="updateSignalMapConfig()" id="signalMapConfigcmOverflowForCalculatedCanvas" type="number" class="form-control" ng-model="serverConfig.signalMapConfig.cmOverflowForCalculatedCanvas" placeholder="Canvas Overflow" required>
+                    <div class="input-group-addon">cm</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="signalMapConfigminDbmNeededToConsiderForTrilateration" class="col-sm-3 control-label">Min. DBm for Trilateration</label>
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <input ng-blur="updateSignalMapConfig()" ng-enter="updateSignalMapConfig()" id="signalMapConfigminDbmNeededToConsiderForTrilateration" type="number" class="form-control" ng-model="serverConfig.signalMapConfig.minDbmNeededToConsiderForTrilateration" placeholder="min dBm (e.g. -85)" required>
+                    <div class="input-group-addon">dBm</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="signalMapConfigminVisibilityNeededForTrilateration" class="col-sm-3 control-label">Min. Visibility for Trilateration</label>
+            <div class="col-sm-5">
+                <input ng-blur="updateSignalMapConfig()" ng-enter="updateSignalMapConfig()" id="signalMapConfigminVisibilityNeededForTrilateration" type="number" class="form-control" ng-model="serverConfig.signalMapConfig.minVisibilityNeededForTrilateration" placeholder="min visibility (min. 3)" min="3" max="20" required>
+            </div>
+        </div>
+
+        <h3>Signal Strength Matrix</h3>
+        <div class="form-group">
+            <label for="signalStrengthMatrixMaxPathloss" class="col-sm-3 control-label">Max Pathloss for Signal Radius</label>
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <input ng-blur="updateSignalMapConfig()" ng-enter="updateSignalMapConfig()" min="40" max="200" id="signalStrengthMatrixMaxPathloss" type="number" class="form-control" ng-model="serverConfig.signalMapConfig.maxPathLossForSignalStrengthMatrixCalculation" placeholder="max dB (e.g. 85)" required>
+                    <div class="input-group-addon">dB</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="signalStrengthMatrixMinPathloss" class="col-sm-3 control-label">Min Pathloss Value for Matrix</label>
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <input ng-blur="updateSignalMapConfig()" ng-enter="updateSignalMapConfig()" min="0" max="80" id="signalStrengthMatrixMinPathloss" type="number" class="form-control" ng-model="serverConfig.signalMapConfig.minPathLossValueForSignalStrengthMatrix" placeholder="max dB (e.g. 85)" required>
+                    <div class="input-group-addon">dB</div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <h2>Misc</h2>
+
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="serverStartUp" class="col-sm-3 control-label">Server Startup</label>
+            <div class="col-sm-5">
+                <input id="serverStartUp" type="text" class="form-control" disabled="disabled" value="{{serverConfig.serverStartUp}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="version" class="col-sm-3 control-label">Version</label>
+            <div class="col-sm-5">
+                <input id="version" type="text" class="form-control" disabled="disabled" value="{{serverConfig.version}}">
+            </div>
+        </div>
+    </form>
+	<hr/>
+	<span>
+        <button type="button" class="btn btn-hover btn-danger" ng-click="reset()">Reset Server</button>
+		<button type="button" class="btn btn-hover btn-warning" ng-click="clearLocalStorage()">Clear Local Storage</button>
+	</span>
+</div>

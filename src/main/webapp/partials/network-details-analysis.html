@@ -1,0 +1,147 @@
+<span ng-if="analysisMetaList.list && analysisMetaList.list.length>0" >
+    <div class="only-hover-content">
+	<h2 style="margin-top: 35px;">Analysis <button class="only-hover-subject btn btn-default btn-hover btn-sm pull-right" ng-disabled="!analysisMetaList.hasNext" ng-click="nextAnalysis()"><span class="glyphicon glyphicon-chevron-right"></span></button>
+	    <button ng-disabled="!analysisMetaList.hasPrev" class="only-hover-subject btn btn-default btn-hover btn-sm pull-right" ng-click="prevAnalysis()"><span class="glyphicon glyphicon-chevron-left"></span></button></h2>
+
+    <div class="tl-container only-hover-content-inner" ng-click="loadAnalysis(meta.analysisId)" ng-repeat="meta in analysisMetaList.list"
+         ng-class="{'tl-container-active' : meta.analysisId == analysis.analysisId}" >
+	    <div class="tl_top-label"><strong ng-class="{'only-hover-subject-inner':meta.analysisId != analysis.analysisId}">{{meta.created | date:'dd.MM.yy HH:mm'}}</strong></div>
+	    <div class="tl-line-wrapper">
+		    <div class="tl-line" ng-class="{'tl-line-transparent': $first && !analysisMetaList.hasPrev,'tl-line-left-last':$first && analysisMetaList.hasPrev}"></div><!--
+         --><div class="tl-circle"></div><!--
+         --><div class="tl-line tl-line-right" ng-class="{'tl-line-transparent': $last && !analysisMetaList.hasNext,'tl-line-right-last' : $last && analysisMetaList.hasNext}"></div>
+	    </div>
+	    <small class="text-muted" ng-class="{'only-hover-subject-inner':meta.analysisId != analysis.analysisId}">{{meta.surveyPerNodeSum}} Surveys per Node</small><br/>
+	    {{meta.from | dateRange:meta.to:'d.M H:mm':'H:mm' }}
+    </div>
+	</div>
+    <tabset ng-if="analysis.extendedNodeMap" vertical="false" type="pills" class="right-float-nav-pill">
+	    <tab ng-repeat="(freq,list) in analysis.extendedNodeMap" heading="{{freq}}">
+		    <tabset>
+			    <tab heading="Extended Nodes">
+				    <div class="tab-spacer"></div>
+				    <table class="table table-hover table-striped table-condensed">
+					    <thead>
+					    <tr>
+						    <th></th>
+						    <th>SSID</th>
+						    <th>Mac Address</th>
+						    <th>Channel</th>
+						    <th>Visibility</th>
+						    <th></th>
+						    <th></th>
+					    </tr>
+					    </thead>
+					    <tbody>
+					    <tr ng-repeat="extended in list" ng-if="!extended.managedNode" ng-class="{'text-mute': extended.managedNodes.length < 3,'ignoreMac':extended.ignored}">
+						    <td>
+							    <sn-trend-info trend-info="extended.trendInfo" use-short-term-value="false"/>
+						    </td>
+						    <td><small ng-repeat="ssid in extended.ssidSet">{{ssid | nullRepresentation:'[empty]'}}{{$last ? '' : ', '}}</small></td>
+						    <td>{{extended.macAddress}}</td>
+						    <td><span ng-repeat="channel in extended.channels">{{channel}}{{$last ? '' : ', '}}</span></td>
+						    <td>{{extended.managedNodes.length}}</td>
+						    <td>
+							    <small ng-repeat="managedNode in extended.managedNodes">
+								    <sn-trend-info trend-info="managedNode.trendInfo" use-short-term-value="true"></sn-trend-info>
+								    <sn-colored-dbm fraction-count="0" dbm="managedNode.statistics.mean"></sn-colored-dbm>{{$last ? '' : ', '}}
+							    </small>
+						    </td>
+						    <td>
+                                <span class="dropdown pull-right">
+                                  <a href class="dropdown-toggle">
+	                                  {{getRoomByMapping(extended.macAddress)}} <span class="caret"></span>
+                                  </a>
+                                <ul class="dropdown-menu">
+	                                <li><a href ng-click="setRoomForExtNode(extended.macAddress,'')">unknown</a></li>
+	                                <li ng-repeat="room in wrapper.roomList.rooms">
+		                                <a href ng-click="setRoomForExtNode(extended.macAddress,room.roomId)">{{room.name}}</a>
+	                                </li>
+                                </ul>
+                                </span>
+						    </td>
+					    </tr>
+					    </tbody>
+				    </table>
+			    </tab>
+			    <tab heading="Distance Matrix" select="tabSelected('distSelected',true)">
+                    <span ng-if="tabs.distSelected">
+                        <div class="tab-spacer"></div>
+                        <div style="margin-bottom: 0.5em;" class="clearfix">
+                                <span class="pull-left" style="font-size: 14px; margin-right: 2em;" ng-show="distanceMatrix[freq].unit == 'm'">
+                                    <small class="text-muted" style="display: block">Dist. {{analysis.distMultiMap[freq]}}x</small>
+                                    <input style="width: 200px" type="range" min="0.5" max="2.0" step="0.01" ng-model="analysis.distMultiMap[freq]" ng-mouseup="setAnalysisMultiplier(freq,analysis.distMultiMap[freq],analysis.analysisId)">
+                                </span>
+
+	                        <div class="btn-group pull-left" style="font-size: 14px; margin-top: 0.3em;" ng-show="distanceMatrix[freq].unit == 'dBm'">
+		                        <button type="button" ng-class="{'active' : distanceMatrix[freq].useMult}" ng-click="switchDistanceMatrixMult(freq)" class="btn btn-sm btn-info">Multi. Values</button>
+	                        </div>
+
+	                        <div class="btn-group pull-left" style="font-size: 14px; margin-top: 0.3em; margin-left: 0.5em;">
+		                        <button type="button" ng-class="{'active' : distanceMatrix[freq].showOnlyManaged}" ng-click="switchShowOnlyManaged(freq)" class="btn btn-sm btn-info">Show Only Managed</button>
+	                        </div>
+
+	                        <div class="pull-left" ng-show="analysis.selectedNode" style="margin: 0.5em 0 0 1em;font-size: 90%;font-weight: bold;">
+		                        Mean:
+		                        <sn-trend-info trend-info="analysis.selectedNode.trendInfo" use-short-term-value="false"></sn-trend-info>
+		                        <sn-colored-dbm fraction-count="2" dbm="analysis.selectedNode.statistics.mean"></sn-colored-dbm>
+		                        <span ng-show="analysis.selectedNode.physicalAdapter.multiplier != 1">x {{analysis.selectedNode.physicalAdapter.multiplier}} = <sn-colored-dbm fraction-count="2" dbm="analysis.selectedNode.statistics.mean*analysis.selectedNode.physicalAdapter.multiplier"></sn-colored-dbm></span>
+		                        / Median: <sn-colored-dbm fraction-count="0" dbm="analysis.selectedNode.statistics.median"></sn-colored-dbm>
+		                        / Dist: {{analysis.selectedNode.radioModelData.distanceMap.ITUIndoorModelDegradingDist.meanDistance.toFixed(2)}}m
+		                        <span ng-show="analysis.selectedNode.physicalAdapter.multiplier != 1">(Mult: {{analysis.selectedNode.radioModelData.distanceMap.ITUIndoorModelDegradingDist.multMeanDistance.toFixed(2)}}m)</span>
+	                        </div>
+
+                                <span class="dropdown pull-right" style="margin-top: 0.5em">
+                                  <a href class="dropdown-toggle" style="font-size: 18px;">
+	                                  {{distanceMatrix[freq].label}} <span class="caret"></span>
+                                  </a>
+
+                                  <ul class="dropdown-menu" style="font-size: 16px; padding-top: 0.5em;">
+	                                  <li><a href ng-click="setDistanceMatrixValue(freq,'statistics.mean','Mean')">Mean</a></li>
+	                                  <li><a href ng-click="setDistanceMatrixValue(freq,'statistics.median','Median')">Median</a></li>
+	                                  <li><a href ng-click="setDistanceMatrixValue(freq,'statistics.mode','Mode')">Mode</a></li>
+	                                  <li class="divider"></li>
+	                                  <li><a href ng-click="setDistanceMatrixValue(freq,'statistics.min','Min')">Min</a></li>
+	                                  <li><a href ng-click="setDistanceMatrixValue(freq,'statistics.max','Max')">Max</a></li>
+	                                  <li><a href ng-click="setDistanceMatrixValue(freq,'statistics.stdDev','Std Deviation')">Std Deviation</a></li>
+	                                  <li class="divider"></li>
+	                                  <li><a href ng-click="setDistanceMatrixValue(freq,'radioModelData.distanceMap.ITUIndoorModelDegradingDist.multMeanDistance','ITU Mult. Degr. Dist. (Mean)')">ITU Mult. Degr. Dist. (Mean)</a></li>
+	                                  <li><a href ng-click="setDistanceMatrixValue(freq,'radioModelData.distanceMap.ITUIndoorModelDegradingDist.multMedianDistance','ITU Mult. Degr. Dist. (Median)')">ITU Mult. Degr. Dist. (Median)</a></li>
+                                  </ul>
+                                </span>
+                        </div>
+
+                        <table class="table table-bordered table-condensed">
+	                        <thead>
+	                        <tr>
+		                        <th>SSID</th>
+		                        <th ng-repeat="node in analysis.physicalAdaptersMap[freq]">{{node.nodeName}} <small ng-show="distanceMatrix[freq].useMult && node.multiplier != 1" class="text-muted">(x{{node.multiplier}})</small><br/>
+			                        <small ng-repeat="ssid in node.ssidSet" class="text-muted">{{ssid | nullRepresentation:'[empty]'}}{{$last ? '' : ', '}}</small></th>
+	                        </tr>
+	                        </thead>
+	                        <tbody>
+	                        <tr ng-repeat="extended in list" ng-show="!distanceMatrix[freq].showOnlyManaged || extended.managedNode">
+		                        <td ng-class="{'ignoreMac':extended.ignored}"><small ng-repeat="ssid in extended.ssidSet" class="tt" style="font-weight: bold;" tooltip="Mac: {{extended.macAddress}}">{{ssid | nullRepresentation:'[empty]'}}{{$last ? '' : ', '}}</small></td>
+		                        <td id="{{node.macAddress+'_'+extended.macAddress}}" ng-class="{'ignoreMac':extended.ignored,'inactive':getDistanceMatrixValue(freq,extended.macAddress,node.macAddress)==undefined}"
+		                            ng-repeat="node in analysis.physicalAdaptersMap[freq]" ng-mouseleave="leaveCell(node.macAddress,extended.macAddress)" ng-mouseover="hoverCell(freq,node.macAddress,extended.macAddress)">
+			                        <span ng-if="distanceMatrix[freq].unit == 'm' && getDistanceMatrixValue(freq,extended.macAddress,node.macAddress)">{{getDistanceMatrixValue(freq,extended.macAddress,node.macAddress).toFixed(2)}}m</span>
+                                            <span ng-if="distanceMatrix[freq].unit == 'dBm'">
+                                                <sn-trend-info trend-info="getDistanceMatrixStat(freq,extended.macAddress,node.macAddress).trendInfo" use-short-term-value="false"></sn-trend-info>
+                                                <sn-colored-dbm fraction-count="2" dbm="getDistanceMatrixValue(freq,extended.macAddress,node.macAddress)"></sn-colored-dbm>
+                                            </span>
+		                        </td>
+	                        </tr>
+	                        </tbody>
+                        </table>
+                    </span>
+			    </tab>
+			    <tab heading="Signal Strength Map" select="tabSelected('physSelected',true)">
+				    <span ng-include="'partials/network-details-signalmap.html'" ng-controller="NetworkDetailSignalMapCtrl"></span>
+			    </tab>
+		    </tabset>
+	    </tab>
+    </tabset>
+
+    <hr/>
+    <button type="submit" class="btn btn-danger pull-left btn-hover" ng-show="analysis.analysisId" ng-click="deleteAnalysis(analysis.analysisId)">Delete</button>
+</span>

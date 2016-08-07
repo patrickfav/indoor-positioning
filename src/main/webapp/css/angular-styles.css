@@ -1,0 +1,9 @@
+/* angularjs inbuilt css */
+
+input[type="text"].ng-dirty,input[type="number"].ng-dirty,input[type="textarea"].ng-dirty  {
+    background-color: rgba(255, 223, 0, 0.20);
+}
+input[type="text"].ng-invalid.ng-dirty,input[type="number"].ng-invalid.ng-dirty,input[type="textarea"].ng-invalid.ng-dirty {
+    border: 2px solid #e74c3c;
+    background-color: rgba(231, 76, 60, 0.20);
+}

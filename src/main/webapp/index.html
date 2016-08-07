@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html ng-app="adminConsoleApp">
+<head>
+    <meta charset="utf-8">
+    <link href="css/screen.css" rel="stylesheet">
+
+    <link rel="shortcut icon" href="favicon.ico" logType="image/x-icon"/>
+    <title>Sensor Management Console</title>
+</head>
+<body class="container-fluid">
+    <a id="top"></a>
+    <div ng-include="'partials/navbar.html'"></div>
+    <div class="row">
+        <div id="content" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-view></div>
+    </div>
+</body>
+
+<script type="text/javascript" src="js/lib/angular-file-upload-html5-shim.min.js"></script>  <!--This must be included before angularjs-->
+<script type="text/javascript" src="js/lib/angular.min.js"></script>
+<script type="text/javascript" src="js/lib/angular-route.min.js"></script>
+<script type="text/javascript" src="js/lib/angular-sanitize.min.js"></script>
+
+<script type="text/javascript" src="js/lib/ui-bootstrap-tpls.min.js"></script>
+<script type="text/javascript" src="js/lib/highcharts-standalone-adapter.js"></script>
+<script type="text/javascript" src="js/lib/highcharts.js"></script>
+<script type="text/javascript" src="js/lib/highcharts-ng.js"></script>
+<script type="text/javascript" src="js/lib/regression.min.js"></script>
+<script type="text/javascript" src="js/lib/paper-full.min.js"></script>
+<script type="text/javascript" src="js/lib/ng-csv.min.js"></script>
+
+<script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="js/modules/filters.js"></script>
+<script type="text/javascript" src="js/modules/sensor-ng.js"></script>
+
+<script type="text/javascript" src="js/modules/signalmap/signalmap-directive.js"></script>
+<script type="text/javascript" src="js/modules/signalmap/signalmap-callbacks.js"></script>
+<script type="text/javascript" src="js/modules/signalmap/signalmap-api.js"></script>
+<script type="text/javascript" src="js/modules/signalmap/signalmap-inits.js"></script>
+<script type="text/javascript" src="js/modules/signalmap/signalmap-util.js"></script>
+<script type="text/javascript" src="js/modules/signalmap/signalmap-update-transform.js"></script>
+<script type="text/javascript" src="js/modules/signalmap/signalmap-state.js"></script>
+<script type="text/javascript" src="js/modules/signalmap/signalmap-mousemanager.js"></script>
+
+<script type="text/javascript" src="js/lib/angular-fullscreen.js"></script>
+<script type="text/javascript" src="js/lib/angular-file-upload.min.js"></script>
+<script type="text/javascript" src="js/lib/angular-ladda.min.js"></script> <!-- loading buttons -->
+<script type="text/javascript" src="js/lib/angular-local-storage.js"></script>
+
+<script type="text/javascript" src="js/services/navStatus-service.js"></script>
+<script type="text/javascript" src="js/services/analysis-service.js"></script>
+
+<script type="text/javascript" src="js/navbar-controller.js"></script>
+<script type="text/javascript" src="js/networks.js"></script>
+<script type="text/javascript" src="js/network-add.js"></script>
+<script type="text/javascript" src="js/network-detail.js"></script>
+<script type="text/javascript" src="js/network-details-analysis.js"></script>
+<script type="text/javascript" src="js/network-details-signalmap.js"></script>
+<script type="text/javascript" src="js/pathloss-edit.js"></script>
+<script type="text/javascript" src="js/node-detail.js"></script>
+<script type="text/javascript" src="js/node-add.js"></script>
+<script type="text/javascript" src="js/config.js"></script>
+<script type="text/javascript" src="js/blacklist-edit.js"></script>
+<script type="text/javascript" src="js/positioning.js"></script>
+
+</html>

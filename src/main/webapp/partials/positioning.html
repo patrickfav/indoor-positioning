@@ -1,0 +1,148 @@
+<h1>Client Positioning</h1>
+
+<div ng-include="'partials/error-list.html'"></div>
+
+<div class="row">
+    <div class="col-xs-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form name="form" role="form" >
+                    <div class="form-group">
+                        <label for="clientIp">Client IP</label>
+                        <div class="input-group">
+                            <input ng-blur="checkIp()" ng-enter="checkIp()" type="text" class="form-control" id="clientIp" ng-model="uri.ip" placeholder="192.168.x.x:80" required>
+                            <div class="input-group-addon" ladda="uri.loading" data-spinner-size="20" data-spinner-color="#646464"><span class="glyphicon" style="font-size: 110%"  ng-class="{'glyphicon-question-sign text-mute':!uri.known&&!uri.loading,'glyphicon-ok-sign text-success':uri.known&&uri.pingSuccess,'glyphicon-remove-sign text-danger':uri.known&&!uri.pingSuccess}"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="clientIp">Adapter</label>
+                        <select class="form-control" ng-model="client.selectedAdapter" ng-options="adapterLabel(adapter) for adapter in sensorInfo.adapterList" ng-disabled="!sensorInfo.adapterList || sensorInfo.adapterList.length == 0"></select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="collapse-label only-hover-content" for="posOptions" ng-click="notOptionsCollapsed = !notOptionsCollapsed">Advanced Options <span class="glyphicon pull-right" ng-class="{'glyphicon-chevron-right only-hover-subject':!notOptionsCollapsed,'glyphicon-chevron-down':notOptionsCollapsed}"></span></label>
+	                    <div id="posOptions" collapse="!notOptionsCollapsed" class="panel panel-default">
+		                    <div class="panel-body clearfix">
+			                    <div id="posSlider">
+									<span style="font-size: 14px;">
+						                <small class="text-muted" style="display: block">Client RSS Multiplier
+							                {{client.multi}}x
+						                </small>
+						                <input style="width: 100%" type="range" min="0.5" max="1.5" step="0.01"
+						                       ng-model="client.multi" ng-change="updateMulti()">
+						            </span>
+			                    </div>
+			                    <div style="height: 0.7em;"></div>
+
+			                    <div class="dropdown">
+				                    Measurements:
+				                    <a href class="dropdown-toggle">
+					                    {{client.measurmentCount}}x <span class="caret"></span>
+				                    </a>
+				                    <ul class="dropdown-menu">
+					                    <li><a ng-click="setMeasurementCount(1)" href>1</a></li>
+					                    <li><a ng-click="setMeasurementCount(2)" href>2</a></li>
+					                    <li><a ng-click="setMeasurementCount(3)" href>3</a></li>
+					                    <li><a ng-click="setMeasurementCount(4)" href>4</a></li>
+					                    <li><a ng-click="setMeasurementCount(5)" href>5</a></li>
+					                    <li><a ng-click="setMeasurementCount(10)" href>10</a></li>
+					                    <li><a ng-click="setMeasurementCount(15)" href>15</a></li>
+				                    </ul>
+			                    </div>
+			                    <div style="height: 0.7em;"></div>
+			                    <div class="dropdown">
+				                    Delay:
+				                    <a href class="dropdown-toggle">
+					                    {{client.delay}}ms <span class="caret"></span>
+				                    </a>
+				                    <ul class="dropdown-menu">
+					                    <li><a ng-click="setDelay(100)" href>100ms</a></li>
+					                    <li><a ng-click="setDelay(500)" href>500ms</a></li>
+					                    <li><a ng-click="setDelay(1000)" href>1sec</a></li>
+					                    <li><a ng-click="setDelay(3000)" href>3sec</a></li>
+					                    <li><a ng-click="setDelay(5000)" href>5sec</a></li>
+					                    <li><a ng-click="setDelay(10000)" href>10sec</a></li>
+				                    </ul>
+			                    </div>
+			                    <div style="height: 0.7em;"></div>
+
+
+			                    <div class="checkbox">
+				                    <label>
+					                    <input type="checkbox" ng-model="client.shouldIncludeExtendedNodes"
+					                           ng-change="switchShouldIncludeExtendedNodes()"> Include Extended Nodes in
+					                    Calculation
+				                    </label>
+			                    </div>
+			                    <hr/>
+			                    <button class="btn btn-danger btn-sm" type="button" ng-click="clearActualPosition()">
+				                    <span class="glyphicon glyphicon glyphicon-floppy-remove"></span> Clear Actual
+				                    Position Cache
+			                    </button>
+		                    </div>
+	                    </div>
+                    </div>
+                    <button class="btn btn-info pull-right" type="button" ng-click="startPositioning()" ladda="uri.positioningLoading" ng-disabled="!uri.pingSuccess || !client.selectedAdapter">
+                        <span class="glyphicon glyphicon-search"></span> Find
+                    </button>
+                </form>
+            </div>
+        </div>
+
+	    <span ng-show="probablePositionsWrapper.probablePositions.bestPositions.length > 0">
+            <h3>Position Details</h3>
+	        <div class="network-details-line"><strong>Network: </strong> {{selectedNetwork.networkName}}</div>
+		    <div class="network-details-line"><strong>Time: </strong> <span class="coordinates">{{probablePositionsWrapper.probablePositions.positionTime | date:'yyyy-MM-dd HH:mm:ss' }} - {{client.positionDuration/1000|number:1}}sec</span></div>
+		    <div class="network-details-line"><strong>Current Position: </strong> <span ng-show="!mapConf.mapPosx" style="font-style: italic">Hover over the map</span><span ng-show="mapConf.mapPosx" class="coordinates">({{mapConf.mapPosx|zeroPad:3}},{{mapConf.mapPosy|zeroPad:3}})</span></div>
+		    <div class="network-details-line"><strong><span class="legend-box actual"></span> Actual Position: </strong> <span ng-show="!mapConf.actualPos" style="font-style: italic">Click on map</span><span ng-show="mapConf.actualPos"><span class="coordinates">({{mapConf.actualPos.xTile}},{{mapConf.actualPos.yTile}})</span>Distance: {{mapConf.actualPos.cmDistDirect | number:2}}cm</span></div>
+	        <div class="network-details-line"><strong><span class="legend-box best"></span> Best Position: </strong> <span class="coordinates" ng-repeat="pos in probablePositionsWrapper.probablePositions.bestPositions">({{pos.x}},{{pos.y}})</span></div>
+		    <div class="network-details-line"><strong><span class="legend-box good"></span> Good Positions: </strong> <span class="coordinates" ng-repeat="pos in probablePositionsWrapper.probablePositions.goodPositions">({{pos.x}},{{pos.y}})</span></div>
+
+        </span>
+
+	    <span ng-show="fittingNetworks.length > 0 && measurement">
+		    <h3>Measurements</h3>
+		    <ul ng-show="measurement" class="positioning-measurement">
+			    <li ng-repeat="value in measurement | toArray |  orderBy:'ssid':false" tooltip="{{value.macAddress}}" >{{value.ssid | nullRepresentation:'[empty]'}} / <sn-colored-dbm dbm="value.statistics.mean" fraction-count="2"></sn-colored-dbm></li>
+		    </ul>
+		</span>
+    </div>
+    <div class="col-xs-9">
+        <div ng-show="!mainLoader.description && !mainLoader.errorMsg && fittingNetworks.length > 1 && selectedNetwork == undefined">
+            <h3 style="margin-top: 0;">Ambiguous Possible Networks <br/><small>Please select for which the position should be calculated</small></h3>
+            <ul class="positioning-ambiguous-networks">
+                <li ng-repeat="network in fittingNetworks" ng-click="setSelectedNetwork(network)" class="only-hover-content">
+                    <span class="glyphicon glyphicon-chevron-right pull-right only-hover-subject" style="margin-top: 0.8em;"></span>
+                    <strong>{{network.networkName}}</strong><br/>
+                    <small class="text-muted">{{network.description | cut:true:85}}</small>
+                </li>
+            </ul>
+        </div>
+
+        <div ng-show="!mainLoader.description && !mainLoader.errorMsg && fittingNetworks && fittingNetworks.length == 0 && selectedNetwork == undefined">
+            <h3 style="margin-top: 0;">Could not find Network for given Measurements<br/><small>Please try again at a different place. Here are all found APs:</small></h3>
+            <ul ng-show="measurement" style="font-size: 85%;font-family: monospace">
+                <li ng-repeat="(key,value) in measurement">{{value.ssid | nullRepresentation:'[empty]'}} / {{value.macAddress}} / <sn-colored-dbm dbm="value.statistics.mean" fraction-count="2"></sn-colored-dbm></li>
+            </ul>
+        </div>
+
+	    <div ng-show="!mainLoader.description && !mainLoader.errorMsg && probablePositionsWrapper.probablePositions && probablePositionsWrapper.probablePositions.bestPositions.length > 0">
+		    <div class="content-scroll content-height" ng-if="probablePositionsWrapper.analysis">
+			    <sn-signal-map-canvas signal-map="probablePositionsWrapper.analysis.signalMap" freq="probablePositionsWrapper.freq" pixel-per-cm="mapConf.pixelPerCm"></sn-signal-map-canvas>
+		    </div>
+		</div>
+
+	    <div class="positioning-loading-container" ng-show="mainLoader && mainLoader.description && !mainLoader.errorMsg">
+            <ng-include src="'partials/css-loading-spinner.html'" class="dark-spinner med-spinner center-spinner"></ng-include>
+            <progressbar value="mainLoader.progress"></progressbar>
+            <div class="loading-container-label">{{mainLoader.description}}</div>
+        </div>
+        <div class="positioning-errorMsg-container alert-danger" ng-show="mainLoader && mainLoader.errorMsg">
+            {{mainLoader.errorMsg}}
+        </div>
+
+	    <img id="blueprint_image" ng-if="probablePositionsWrapper.getFloorplanBlueprintSrc" style="display: none" ng-src="{{probablePositionsWrapper.getFloorplanBlueprintSrc}}"/>
+    </div>
+</div>

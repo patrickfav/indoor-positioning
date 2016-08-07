@@ -1,0 +1,139 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="close()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h3 class="modal-title">Radio Path Loss Config</h3>
+</div>
+<div class="modal-body">
+    <form name="radioPathLossForm" class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="environmentModel" class="col-sm-2 control-label">Environmental Model</label>
+            <div class="col-sm-9" style="margin-top: 1em">
+                <span class="dropdown" >
+                      <a href class="dropdown-toggle" id="environmentModel">{{network.environmentModel}} <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                          <li><a href ng-click="setEnvModel('FREE_SPACE')">Free Space</a></li>
+                          <li><a href ng-click="setEnvModel('INDOOR_LINE_OF_SIGHT')">Indoor Line of Sight</a></li>
+                          <li><a href ng-click="setEnvModel('INDOOR_OBSTRUCTED_RESIDENTIAL')">Indoor Residential</a></li>
+                          <li><a href ng-click="setEnvModel('INDOOR_OBSTRUCTED_OFFICE')">Indoor Office</a></li>
+                          <li><a href ng-click="setEnvModel('INDOOR_OBSTRUCTED_COMMERCIAL')">Indoor Commercial</a></li>
+                      </ul>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="radioPathLossFormITUDegrDistBound" class="col-sm-2 control-label">Bound</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <input ng-model-options="{ debounce: 400 }" ng-change="previewGrah()" id="radioPathLossFormITUDegrDistBound" type="number" min="30" max="95" class="form-control" ng-model="network.pathLossConfig.bound" placeholder="Bound in positive dBm when the factor comes into play" required>
+                    <div class="input-group-addon">dB</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="radioPathLossFormITUDegrDistFac" class="col-sm-2 control-label">Factor</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <input ng-model-options="{ debounce: 400 }" ng-change="previewGrah()" id="radioPathLossFormITUDegrDistFac" type="number" min="0.000001" max="1" class="form-control" ng-model="network.pathLossConfig.fac" placeholder="Factor used for all values over bound" required>
+                    <div class="input-group-addon">x</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="radioPathLossFormITUDegrDistOffset" class="col-sm-2 control-label">Offset</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <input ng-model-options="{ debounce: 400 }" ng-change="previewGrah()" id="radioPathLossFormITUDegrDistOffset" type="number" min="0" max="100" class="form-control" ng-model="network.pathLossConfig.offsetM" placeholder="Overall offset in m" required>
+                    <div class="input-group-addon">m</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="radioPathLossFormITUDegrDistChart" class="col-sm-2 control-label">Graph</label>
+            <div class="col-sm-9" id="radioPathLossFormITUDegrDistChart">
+                <highchart config="pathLossData.chart"></highchart>
+            </div>
+        </div>
+
+	    <span ng-repeat="(freq,list) in analysis.extendedNodeMap" ng-if="analysis.extendedNodeMap">
+		    <h3>Preview {{freq}}</h3>
+
+		    <div class="form-group">
+			    <label for="radioPathLossFormITUDegrDistPrevSlider" class="col-sm-2 control-label">Multiplier</label>
+			    <div class="col-sm-9" id="radioPathLossFormITUDegrDistPrevSlider">
+					<span style="font-size: 14px;">
+		                <small class="text-muted" style="display: block">Dist. {{distMatrixConfig[freq].multi}}x</small>
+		                <input style="width: 100%" type="range" min="0.25" max="2.5" step="0.01" ng-model="distMatrixConfig[freq].multi" ng-change="setAnalysisMultiplier(freq)">
+		            </span>
+			    </div>
+		    </div>
+
+		    <div class="form-group">
+			    <label for="radioPathLossFormITUDegrDistPrevOffset" class="col-sm-2 control-label">Offset-Sum</label>
+			    <div class="col-sm-9" id="radioPathLossFormITUDegrDistPrevOffset">
+					<div style="margin-top: 0.5em;">{{distMatrixConfig[freq].offset|number:4}}m / {{distMatrixConfig[freq].offsetdBm|number:4}}dBm</div>
+
+			    </div>
+		    </div>
+
+		    <div class="form-group">
+			    <div class="col-sm-12" id="radioPathLossFormITUDegrDistDistMatrixPrev">
+				    <table class="table table-condensed table-striped" >
+					    <thead>
+					    <tr>
+						    <th>SSID<br/>
+						        <span class="dropdown" style="font-size: 80%">
+							      <a href class="dropdown-toggle">
+								      {{distMatrixConfig[freq].viewMode}} <span class="caret"></span>
+							      </a>
+							      <ul class="dropdown-menu">
+								      <li><a ng-click="setDistMatrixViewMode(freq,'dBm')" href>dBm</a></li>
+								      <li><a ng-click="setDistMatrixViewMode(freq,'Distance')" href>Distance</a></li>
+								      <li><a ng-click="setDistMatrixViewMode(freq,'Targetdistance')" href>Targetdistance</a></li>
+							      </ul>
+							    </span>
+						    </th>
+						    <th ng-repeat="node in analysis.physicalAdaptersMap[freq]">{{node.nodeName|cut:false:14}} <small ng-show="node.multiplier != 1" class="text-muted">(x{{node.multiplier}})</small><br/>
+							    <small ng-repeat="ssid in node.ssidSet" class="text-muted">{{ssid|cut:false:14}}{{$last ? '' : ', '}}</small></th>
+					    </tr>
+					    </thead>
+					    <tbody>
+					    <tr ng-repeat="extended in list" ng-show="extended.managedNode">
+						    <td><small ng-repeat="ssid in extended.ssidSet" style="font-weight: bold;">{{ssid|cut:false:14}}{{$last ? '' : ', '}}</small></td>
+						    <td class="only-hover-content" ng-repeat="node in analysis.physicalAdaptersMap[freq]">
+							    <input ng-enter="switchEditMode(freq,node.macAddress,extended.macAddress,false)"
+							           ng-blur="switchEditMode(freq,node.macAddress,extended.macAddress,false)"
+							           style="width: 90px" ng-show="distanceMatrix[freq][node.macAddress][extended.macAddress].editMode"
+							           ng-model="distanceMatrix[freq][node.macAddress][extended.macAddress].targetDistance" type="number" min="0.1" max="100" class="form-control" placeholder="Target Distance (m)">
+							    <span ng-show="!distanceMatrix[freq][node.macAddress][extended.macAddress].editMode">
+								    <sn-relative-target ng-show="distMatrixConfig[freq].viewMode == 'Distance'" current-distance-m="distanceMatrix[freq][node.macAddress][extended.macAddress].distance" target-distance-m="distanceMatrix[freq][node.macAddress][extended.macAddress].targetDistance"></sn-relative-target>
+								    <span ng-show="distMatrixConfig[freq].viewMode == 'Targetdistance' && distanceMatrix[freq][node.macAddress][extended.macAddress].targetDistance">{{distanceMatrix[freq][node.macAddress][extended.macAddress].targetDistance}}m</span>
+								    <sn-colored-dbm ng-show="distMatrixConfig[freq].viewMode == 'dBm'" dbm="distanceMatrix[freq][node.macAddress][extended.macAddress].dbmMean" fraction-count="2"></sn-colored-dbm>
+								    <button ng-click="switchEditMode(freq,node.macAddress,extended.macAddress,true)" type="button" class="only-hover-subject btn btn-default btn-sm btn-hover" ng-if="distanceMatrix[freq][node.macAddress][extended.macAddress]">
+									    <span class="glyphicon glyphicon-pencil"></span>
+								    </button>
+								</span>
+						    </td>
+					    </tr>
+					    </tbody>
+				    </table>
+				    <button ng-click="clearTargetDistanceStorage(freq)" type="button" class="btn btn-danger btn-sm">
+					    Clear Target Distances
+				    </button>
+				    <button ng-click="getBestConfigByBruteforce(freq)" type="button" class="btn btn-info btn-sm pull-right" ladda="calcBtnLoading" style="margin-left: 0.5em">
+					    Calculate Path Loss Model
+				    </button>
+				    <button ng-click="calibrateNodeMultiplier(freq)" type="button" class="btn btn-info btn-sm pull-right" ladda="calibrateBtnLoading">
+					    Normalize Node Multiplier
+				    </button>
+				    <span ng-show="calcErrorMsg" class="alert-danger" style="padding: 2px 4px;">{{calcErrorMsg}}</span>
+			    </div>
+		    </div>
+		</span>
+    </form>
+</div>
+
+<div class="modal-footer clearfix">
+    <span ng-show="nodeForm.$invalid" style="margin-right: 1em;">Fill out the form before submitting</span>
+    <button class="btn btn-success pull-right" type="button" ng-disabled="radioPathLossForm.$invalid" ng-click="saveNetwork()">Update Config</button>
+</div>
+

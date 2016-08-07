@@ -1,0 +1,28 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="close()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h3 class="modal-title">Edit Mac {{blacklist.actAsWhiteList ? 'Whitelist' : 'Blacklist'}}</h3>
+</div>
+<div class="modal-body">
+    <div class="btn-group" style="width:100%;">
+        <button type="button" style="width:50%;font-size: 18px;" class="btn btn-primary" ng-click="setActAsWhiteList(false)" ng-class="{'active':!blacklist.actAsWhiteList}">Blacklist</button>
+        <button type="button" style="width:50%;font-size: 18px;" class="btn btn-primary" ng-click="setActAsWhiteList(true)" ng-class="{'active':blacklist.actAsWhiteList}">Whitelist</button>
+    </div>
+
+
+    <ul  class="list-group" style="margin-top: 2em;">
+        <li class="list-group-item" ng-repeat="mac in blacklist.macList track by $index">
+            <strong style="font-size: 18px">{{mac}}</strong>
+            <button tooltip="Remove" class="close pull-right" ng-click="deleteMac($index)">&times;</button>
+        </li>
+        <li class="list-group-item">
+            <form>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-8" ><input type="text" class="form-control" ng-model="blacklist.addNewMac" placeholder="01:23:45:67:89:ab"></div>
+                    <div class="col-xs-12 col-sm-4"><button type="submit" class="btn btn-info" ng-click="addMac()">Add Mac Address</button></div>
+                </div>
+            </form>
+        </li>
+    </ul>
+</div>
+
+

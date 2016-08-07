@@ -1,0 +1,5 @@
+<alert ng-repeat="error in navStatus.getErrors() track by $index" type="danger" close="navStatus.removeError(error.id)">
+    <small style="opacity: 0.6; font-size: 70%; float:right;">{{error.date | date:"H:mm"}}</small>
+    <strong>{{error.description}} <span ng-if="error.double > 1">({{error.double}})</span></strong>
+    <ul><li ng-repeat="exception in error.exceptionList"><small>{{exception}}</small></li></ul>
+</alert>

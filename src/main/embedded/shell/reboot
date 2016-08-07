@@ -1,0 +1,17 @@
+#!/bin/sh
+
+echo "Content-Type: text/html; charset=utf-8"
+echo "Cache-Control: no-cache, no-store, must-revalidate"
+echo "Pragma: no-cache"
+echo "Expires: 0"
+echo ""
+echo "<!DOCTYPE html>"
+echo "<html lang='en'>"
+echo "<head><meta charset='utf-8'><title>Ping Webserver</title></head>"
+echo "<body style='background-color: yellow'>"
+echo "<h1>Reboot Router in Progress<h2>"
+echo "<p>"
+date
+echo "</p>"
+echo "</body></html>"
+reboot

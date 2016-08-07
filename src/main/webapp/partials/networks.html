@@ -1,0 +1,22 @@
+
+<h1>Sensor Networks</h1>
+
+<div ng-include="'partials/error-list.html'"></div>
+
+<a href="#/networks/{{network.networkId}}" class="sensor-box" ng-repeat="network in networks.list">
+    <div class="lead">{{network.networkName}}</div>
+    <div class="text-muted">{{network.description | cut:true:40:'...'}}</div>
+    <div class="text-muted" style="margin-top: 1em; font-size: 105%">
+        <strong>Status: </strong>
+	    <span class="text-success"><span style="" class="glyphicon glyphicon-ok-sign "></span> {{networks.pingCount[network.networkId].online}}</span>
+	    <span style="margin-left: 0.2em"  class="text-danger" ng-show="networks.pingCount[network.networkId].offline > 0"><span class="glyphicon glyphicon-remove-sign text-danger" ></span> {{networks.pingCount[network.networkId].offline}}</span>
+    </div>
+    <div class="text-muted" style="font-size: 105%">
+        <strong>Schedule: </strong>
+        <span ng-show="network.cronEnabled" class="text-success">active</span>
+        <span ng-show="!network.cronEnabled" class="text-danger">disabled</span>
+    </div>
+
+</a>
+
+<span class="glyphicon glyphicon-plus sensor-box sensor-box-add" ng-click="openAddNetworkModal()"></span>

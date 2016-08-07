@@ -1,0 +1,97 @@
+#!/bin/sh
+
+# This script prints out wlan info in xml format. Use 
+# with url?adapter=wlan0 where wlan0 is the adapter 
+# you want (e.g. wlan0/wl0/ath0) or without query param
+# for getting a list of all adapters
+
+#no cache headers
+echo "Content-Type: application/xml; charset=utf-8"
+echo "Cache-Control: no-cache, no-store, must-revalidate"
+echo "Pragma: no-cache"
+echo "Expires: 0"
+echo ""
+
+#parse query param 'adapter' usual values are wlan0/wl0/ath0
+s='s/^.*adapter=\([^&]*\).*$/\1/p'
+ADAPTER_TYPE=$(echo $QUERY_STRING | sed -n $s | sed "s/%20/ /g")
+
+echo '<?xml version="1.0" encoding="UTF-8"?>'
+
+echo "<router>"
+if [[ X"" != X"$ADAPTER_TYPE" ]]; then  
+
+echo "<adapter name=\"$ADAPTER_TYPE\">"
+
+echo "  <info>"
+echo "  <![CDATA["
+iwinfo $ADAPTER_TYPE info
+echo "  ]]>"
+echo "  </info>"
+
+case "$QUERY_STRING" in
+  *scan=true*) 
+    echo "  <scan>"
+    echo "  <![CDATA["
+    iwinfo $ADAPTER_TYPE scan
+    echo "  ]]>"
+    echo "  </scan>" ;;
+esac
+
+echo "  <txpowerlist>"
+echo "  <![CDATA["
+iwinfo $ADAPTER_TYPE txpowerlist
+echo "  ]]>"
+echo "  </txpowerlist>"
+
+echo "  <assoclist>"
+echo "  <![CDATA["
+iwinfo $ADAPTER_TYPE assoclist
+echo "  ]]>"
+echo "  </assoclist>"
+echo "</adapter>"
+
+
+
+else
+
+
+echo "<adapter-list>"
+echo "<![CDATA["
+iwinfo
+echo "]]>"
+echo "</adapter-list>"
+echo "<date>"
+echo "  <![CDATA["
+date
+echo "]]>"
+echo "</date>"
+echo "<uptime>"
+echo "  <![CDATA["
+uptime
+echo "]]>"
+echo "</uptime>"
+echo "<ifconfig>"
+echo "  <![CDATA["
+ifconfig
+echo "]]>"
+echo "</ifconfig>"
+echo "<cpuinfo>"
+echo "  <![CDATA["
+cat /proc/cpuinfo
+echo "]]>"
+echo "</cpuinfo>"
+echo "<meminfo>"
+echo "  <![CDATA["
+cat /proc/meminfo
+echo "]]>"
+echo "</meminfo>"
+echo "<version>"
+echo "  <![CDATA["
+cat /proc/version
+echo "]]>"
+echo "</version>"
+
+fi
+
+echo "</router>"

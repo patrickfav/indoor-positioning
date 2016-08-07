@@ -1,0 +1,31 @@
+<nav class="navbar navbar-default" role="navigation" ng-controller="NavbarCtrl">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Sensor Network Console</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li ng-class="{active: mainMenuIndex == 0}"><a href="#/networks">Networks</a></li>
+                <li ng-class="{active: mainMenuIndex == 1}"><a href="#/positioning">Positioning</a></li>
+                <li ng-class="{active: mainMenuIndex == 2}"><a href="#/config"><span class="glyphicon glyphicon-cog" style="font-size: 18px"></span></a></li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right" style="cursor: default">
+                <li class="hidden-sm hidden-xs" ng-if="loading()">
+                    <p class="navbar-text">
+                        <div ng-include="'partials/css-loading-spinner.html'"></div>
+                    </p>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>

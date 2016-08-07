@@ -1,0 +1,113 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="close()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h3 class="modal-title">{{createNewMode ? 'Create New Sensor Network' : 'Edit Sensor Network'}}</h3>
+</div>
+<div class="modal-body">
+    <form name="form" role="form" >
+        <div class="form-group" ng-class="{'has-error' : form.networkName.$dirty && form.networkName.$error.required}">
+            <label for="networkName">Network Name*</label>
+            <input type="text" class="form-control" id="networkName" name="networkName" ng-model="network.networkName" placeholder="Descriptive human readable networkName (e.g. Main Building, 4th floor)" required>
+        </div>
+
+        <div class="form-group">
+            <label for="networkDescription">Description</label>
+            <textarea class="form-control" rows="3" id="networkDescription" ng-model="network.description" placeholder="A full description of the network (optional)"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="surveyPerNodeForAnalysis">Surveys Per Node For Analysis</label>
+            <input type="text" class="form-control" id="surveyPerNodeForAnalysis" name="surveyPerNodeForAnalysis" ng-model="network.surveysPerNodeForAnalysis" placeholder="Usually > 50" required>
+        </div>
+
+        <div class="form-group" ng-show="!createNewMode">
+            <label for="cronSurveyText">Cron Survey Schedule (<a href="http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger">Quartz Syntax</a>)</label>
+            <input type="text" class="form-control" id="cronSurveyText" ng-model="network.cronScheduleSurvey" placeholder="0 0 0/1 1/1 * ? * (hourly)"></textarea>
+        </div>
+        <div class="form-group" ng-show="!createNewMode">
+            <label for="cronPingText">Cron Ping Schedule (<a href="http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger">Quartz Syntax</a>)</label>
+            <input type="text" class="form-control" id="cronPingText" ng-model="network.cronSchedulePing" placeholder="0 0/2 * 1/1 * ? * (every 2 min)"></textarea>
+        </div>
+        <div class="form-group" ng-show="!createNewMode">
+            <label for="cronAnalysisText">Cron Analysis Schedule (<a href="http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger">Quartz Syntax</a>)</label>
+            <input type="text" class="form-control" id="cronAnalysisText" ng-model="network.cronScheduleAnalysis" placeholder="0 0/90 * 1/1 * ? * (every 90 min)"></textarea>
+        </div>
+        <div class="row" ng-show="createNewMode">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="cronSurvey">Survey Schedule</label>
+                    <!--<input type="text" class="form-control" id="cronSurvey" ng-model="network.cronScheduleSurvey" placeholder="0 0 0/1 1/1 * ? * (hourly)"/>-->
+                    <span class="dropdown">
+                      <a href class="dropdown-toggle" id="cronSurvey">{{cronSurveyTitle}} <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                          <li><a href ng-click="setSurveySchedule('Every Minute',1,true)">Every Minute</a></li>
+                          <li><a href ng-click="setSurveySchedule('Every 2 Minutes',2,true)">Every 2 Minutes</a></li>
+                          <li><a href ng-click="setSurveySchedule('Every 10 Minutes',10,true)">Every 10 Minutes</a></li>
+                          <li><a href ng-click="setSurveySchedule('Every 30 Minutes',30,true)">Every 30 Minutes</a></li>
+                          <li><a href ng-click="setSurveySchedule('Every Hour',1,false)">Every Hour</a></li>
+                          <li><a href ng-click="setSurveySchedule('Every 2 Hours',2,false)">Every 2 Hours</a></li>
+                          <li><a href ng-click="setSurveySchedule('Every 6 Hours',6,false)">Every 6 Hours</a></li>
+                          <li><a href ng-click="setSurveySchedule('Every 12 Hours',12,false)">Every 12 Hours</a></li>
+                      </ul>
+                    </span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="cronPing">Ping Schedule</label>
+                    <span class="dropdown" >
+                      <a href class="dropdown-toggle" id="cronPing">{{cronPingTitle}} <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                          <li><a href ng-click="setPingSchedule('Every Minute',1,true)">Every Minute</a></li>
+                          <li><a href ng-click="setPingSchedule('Every 2 Minutes',2,true)">Every 2 Minutes</a></li>
+                          <li><a href ng-click="setPingSchedule('Every 10 Minutes',10,true)">Every 10 Minutes</a></li>
+                          <li><a href ng-click="setPingSchedule('Every 30 Minutes',30,true)">Every 30 Minutes</a></li>
+                          <li><a href ng-click="setPingSchedule('Every Hour',1,false)">Every Hour</a></li>
+                          <li><a href ng-click="setPingSchedule('Every 2 Hours',2,false)">Every 2 Hours</a></li>
+                          <li><a href ng-click="setPingSchedule('Every 6 Hours',6,false)">Every 6 Hours</a></li>
+                          <li><a href ng-click="setPingSchedule('Every 12 Hours',12,false)">Every 12 Hours</a></li>
+                      </ul>
+                    </span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="cronAnalysis">Analysis Schedule</label>
+                    <span class="dropdown" >
+                      <a href class="dropdown-toggle" id="cronAnalysis">{{cronAnalysisTitle}} <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                          <li><a href ng-click="setAnalysisSchedule('Every 10 Minutes',10,true)">Every 10 Minutes</a></li>
+                          <li><a href ng-click="setAnalysisSchedule('Every 30 Minutes',30,true)">Every 30 Minutes</a></li>
+                          <li><a href ng-click="setAnalysisSchedule('Every 3 Hours',3,false)">Every 3 Hours</a></li>
+                          <li><a href ng-click="setAnalysisSchedule('Every 6 Hours',6,false)">Every 6 Hours</a></li>
+                          <li><a href ng-click="setAnalysisSchedule('Every 12 Hours',12,false)">Every 12 Hours</a></li>
+                      </ul>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group" ng-show="!createNewMode">
+            <label for="blueprintFiledrop">Floorplan Blueprint</label>
+            <div id="blueprintFiledrop" ng-hide="fileToUpload" ng-file-drop="onFileSelect($files)" class="filedrop" ng-file-drag-over-class="filedrop-active" >
+                <span class="glyphicon glyphicon-import"></span>
+                Drop file here<br/><span ng-show="uploadErrorMsg" class="alert-danger" style="padding: 2px 4px;">{{uploadErrorMsg}}</span>
+            </div>
+
+            <div class="filedrop-preview" ng-show="fileToUpload">
+                <img class="img" ng-show="fileToUpload.dataUrl" ng-src="{{fileToUpload.dataUrl}}">
+                <div class="progress" style="{{'width:'+fileToUpload.progress+'%'}}"></div>
+                <div class="text">
+                    {{fileToUpload.name}}<br/>{{fileToUpload.size|fileSize}}
+                    <button type="button" class="del close" ng-click="clearChosenFile()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer clearfix">
+    <button type="submit" class="btn btn-danger pull-left" ng-disabled="form.$invalid" ng-click="deleteNetwork()" ng-if="!createNewMode">Delete</button>
+    <button type="submit" class="btn btn-success pull-right" ng-disabled="form.$invalid" ng-click="save()">{{createNewMode ? 'Add Network' : 'Update Network'}}</button>
+</div>
+

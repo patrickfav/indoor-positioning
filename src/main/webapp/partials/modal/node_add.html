@@ -1,0 +1,134 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="close()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h3 class="modal-title">{{createNewMode ? 'Create New Node' : 'Edit Node'}}</h3>
+</div>
+<div class="modal-body">
+    <form name="nodeForm" role="form" >
+
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group" ng-class="{'has-error' : nodeForm.nname.$dirty && nodeForm.nname.$error.required}">
+                    <label for="nname">Node Name*</label>
+                    <input type="text" class="form-control" name="nname"  id="nname" ng-model="node.nodeName" placeholder="Descriptive human readable name (e.g. Router in Room 3)" required>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="room">Room</label>
+                    <input type="text" class="form-control" name="room"  id="room" ng-class="{'typeaheadSelected':roomObj.roomId}" ng-model="roomObj.name" ng-change="roomTfChanged()"  typeahead-on-select="roomSelect($item, $model, $label)"
+                           typeahead="room as room.name for room in roomList.rooms | filter:{name:$viewValue} | limitTo:8" placeholder="Enter Roomname or leave empty">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="gain">Antenna Gain (dBi)</label>
+                    <input type="text" class="form-control" name="gain"  id="gain" ng-model="node.antennaDBi" placeholder="e.g. 2/5/9 dBi">
+                </div>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+
+        <div class="form-group" >
+            <label for="address">Adress: Ip*, Port and Custom Api Url</label>
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 smallPaddingGrid">
+                    <div class="row">
+                        <div class="col-xs-11 smallPaddingGrid" style="text-align: center; font-size:18px">
+                            <input type="text" ng-class="{'has-error' : nodeForm.address.$dirty && nodeForm.address.$error.required}" class="form-control pull-left" name="address" id="address" ng-model="node.ip" placeholder="192.168.x.x" required>
+                        </div>
+                        <div class="col-xs-1 noPaddingGrid" style="text-align: center; font-size:26px">
+                            :
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-4">
+                    <input type="text" class="form-control" ng-model="node.port" placeholder="80 (optional)">
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <input type="text" class="form-control" ng-model="node.customResourcePath" placeholder="/cgi-bin (optional)">
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="form-group row">
+            <div class="col-xs-12 col-sm-8">
+
+                <span ng-show="ping.httpCgi != null" ng-class="{'text-success':ping.httpCgi,'text-danger':!ping.httpCgi}">ping <span class="glyphicon " ng-class="{'glyphicon-ok':ping.httpCgi,'glyphicon-remove':!ping.httpCgi}"></span></span>
+                <span ng-show="ping.httpsCgi != null" ng-class="{'text-success':ping.httpsCgi,'text-danger':!ping.httpsCgi}">ssl ping <span class="glyphicon " ng-class="{'glyphicon-ok':ping.httpsCgi,'glyphicon-remove':!ping.httpsCgi}"></span></span>
+
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <button type="button" class="btn btn-info btn-sm pull-right" ng-click="discover()" ladda="localLoading">Discover</button>
+            </div>
+        </div>
+        <div class="panel panel-default" ng-show="node.machineInfo != undefined">
+            <div class="panel-body">
+                <div><strong>Type: </strong> {{node.machineInfo.systemType}}</div>
+                <div><strong>CPU Model: </strong> {{node.machineInfo.cpuModel}}</div>
+                <div><strong>Machine: </strong> {{node.machineInfo.machine}}</div>
+                <div><strong>Version: </strong> <small>{{node.machineInfo.version}}</small></div>
+            </div>
+
+            <table class="table table-condensed" ng-show="node.adapters.length > 0">
+                <thead>
+                <th>Name</th>
+                <th>Mac</th>
+                <th>Mode</th>
+                <th>SSID</th>
+                <th>Ch</th>
+                <th>Tx Power</th>
+                <th>Noise</th>
+                <th></th>
+                </thead>
+                <tbody>
+                <tr ng-repeat="adapter in node.adapters">
+                    <td><input type="text" ng-model="adapter.name" placeholder="wl0/wlan0" size="7"></td>
+                    <td><input type="text" ng-model="adapter.macAddress" placeholder="01:23:45:67:89:ab" size="16"></td>
+                    <td>{{adapter.mode}}</td>
+                    <td><small>{{adapter.ssid}}</small></td>
+                    <td>{{adapter.channel}}</td>
+                    <td class="dB">{{adapter.txPowerDbm}}dBm</td>
+                    <td class="dB">{{adapter.noiseDbm}}dBm</td>
+                    <td><button tooltip-trigger="mouseenter" tooltip="Remove"
+                                class="close" ng-click="deleteAdapter(adapter.macAddress)" style="width: 100%;">&times;</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div ng-repeat="adapter in node.adapters" ng-show="adapter.scan.length > 0">
+        <h3>{{adapter.name}}</h3>
+            <table class="table table-condensed">
+                <thead>
+                    <th>SSID</th>
+                    <th>Mac</th>
+                    <th>Ch</th>
+                    <th>Signal Strength</th>
+                </thead>
+                <tbody>
+                <tr ng-repeat="scanNode in adapter.scan">
+                    <td><small>{{scanNode.ssid}}</small></td>
+                    <td><small>{{scanNode.macAddress}}</small></td>
+                    <td>{{scanNode.channel}}</td>
+                    <td style="text-align: right" ng-class="{'text-success':scanNode.signalStrengthDbm >= -50,'text-warning':scanNode.signalStrengthDbm >= -90 && scanNode.signalStrengthDbm < -50,'text-danger':scanNode.signalStrengthDbm < -91}">{{scanNode.signalStrengthDbm}}dBm</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </form>
+</div>
+
+<div class="modal-footer clearfix">
+    <span ng-show="nodeForm.$invalid" style="margin-right: 1em;">Fill out the form before submitting</span>
+    <button class="btn btn-success pull-right" type="button" ng-disabled="nodeForm.$invalid" ng-click="save()">{{createNewMode ? 'Add Node' : 'Update Node'}}</button>
+</div>
+

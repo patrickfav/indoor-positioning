@@ -1,0 +1,116 @@
+<div id="signal-map-content" ng-if="tabs.physSelected">
+    <span class="toolbarLabel first">Position:</span>
+    <span style="font-size: 90%">x:{{mapConf.mapPosx|zeroPad:3}} y:{{mapConf.mapPosy|zeroPad:3}}</span>
+
+    <span class="toolbarLabel">View Options:</span>
+    <button type="button" ng-click="switchShowGrid()" ng-class="{'active':mapConf.showMapGrid}" class="btn btn-sm btn-info"><span class="md md-grid-on"></span></button>
+    <button type="button" ng-click="switchFloorplan()" ng-class="{'active':mapConf.showFloorplan}" class="btn btn-sm btn-info"><span class="md md-map"></span></button>
+    <button type="button" ng-click="switchShowEdges()" ng-class="{'active':mapConf.showEdges}" class="btn btn-sm btn-info"><span class="md md-import-export"></span></button>
+    <button type="button" ng-click="switchShowExtendedNodes()" ng-class="{'active':mapConf.showExtendedNodes}" class="btn btn-sm btn-info"><span class="md md-hdr-strong"></span></button>
+    <button type="button" ng-click="switchShowSignalStrengthCircles()" ng-class="{'active':mapConf.showSignalStrengthCircles}" class="btn btn-sm btn-info"><span class="md md-leak-add"></span></button>
+
+    <span class="toolbarLabel">Graph:</span>
+    <button type="button" ng-click="signalmapApi.flipVertical()" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-resize-horizontal"></span></button>
+    <button type="button" ng-click="signalmapApi.flipHorizontal()" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-resize-vertical"></span></button>
+    <button type="button" ng-click="signalmapApi.rotateClockwise()" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-repeat"></span></button>
+    <button type="button" ng-click="signalmapApi.rotateCounterclockwise()" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-repeat" style="transform: scale(-1, 1);"></span></button>
+    <button type="button" ng-click="switchDragMode()" ng-class="{'active':mapConf.dragMode}" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-move"></span></button>
+    <button type="button" ng-click="resetSignalGraph()" class="btn btn-sm btn-warning">Cancel Changes</button>
+
+    <span class="toolbarLabel"></span>
+    <button type="button" ng-click="saveSignalMap(freq)" class="btn btn-sm btn-success" ladda="mapConf.saveSignalMap"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+    <button type="button" ng-click="fullscreenMap()" ng-class="{'active':mapConf.mapFullscreenEnabled()}" class="btn btn-sm btn-default btn-hover pull-right"><span class="glyphicon glyphicon-fullscreen"></span></button>
+
+    <div class="tab-spacer"></div>
+
+    <div ng-class="{'row':mapConf.mapFullscreenEnabled()}">
+        <div style="padding-right: 0;" ng-class="{'col-xs-9':mapConf.mapFullscreenEnabled() && !isToolbarCollapsed , 'col-xs-11':mapConf.mapFullscreenEnabled() && isToolbarCollapsed}">
+            <div class="content-scroll content-height">
+                <sn-signal-map-canvas signal-map="analysis.signalMap" conf-callback="mapConf.canvasConf" freq="freq" pixel-per-cm="mapConf.pixelPerCm"  ng-class="{'moveable':mapConf.dragMode || mapConf.dragModeFloorplan}"></sn-signal-map-canvas>
+            </div>
+        </div>
+        <div class="col-xs-3 content-height" style="border-left: 1px solid rgba(0, 0, 0, 0.1);padding-left: 30px;" ng-if="mapConf.mapFullscreenEnabled()" ng-hide="isToolbarCollapsed">
+            <h3>Measurements
+                <span class="pull-right">
+                    <button type="button" ng-click="switchToolbarCollapse()" class="btn btn-sm btn-default btn-hover"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                </span>
+            </h3>
+            <strong>Grid:</strong> {{analysis.signalMap[freq].lengthX}}x{{analysis.signalMap[freq].lengthY}} <small class="px">({{analysis.signalMap[freq].tileLengthCm}}x{{analysis.signalMap[freq].tileLengthCm}}cm/{{analysis.signalMap[freq].tileLengthCm*mapConf.pixelPerCm}}x{{analysis.signalMap[freq].tileLengthCm*mapConf.pixelPerCm}}px)</small></br>
+            <strong>Canvas:</strong> {{mapConf.canvasConf.viewSize.width/mapConf.pixelPerCm/100|number:2}}x{{mapConf.canvasConf.viewSize.height/mapConf.pixelPerCm/100|number:2}}m <small class="px">({{mapConf.canvasConf.viewSize.width}}x{{mapConf.canvasConf.viewSize.height}}px)</small> </br>
+            <h3>Floorplan
+                <span class="pull-right">
+                    <button type="button" ng-click="signalmapApi.rotateClockwiseFloorplan()" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-repeat"></span></button>
+                    <button type="button" ng-click="signalmapApi.rotateCounterclockwiseFloorplan()" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-repeat" style="transform: scale(-1, 1);"></span></button>
+                    <button type="button" ng-click="switchDragModeFloorplan()" ng-class="{'active':mapConf.dragModeFloorplan}" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-move"></span></button>
+                </span>
+            </h3>
+            <strong>Floorplan:</strong> {{mapConf.canvasConf.floorplanSize.width*analysis.signalMap[freq].floorplanConfig.scale/mapConf.pixelPerCm/100|number:2}}x{{mapConf.canvasConf.floorplanSize.height*analysis.signalMap[freq].floorplanConfig.scale/mapConf.pixelPerCm/100|number:2}}m
+            <small class="px">({{mapConf.canvasConf.floorplanSize.width*analysis.signalMap[freq].floorplanConfig.scale|number:0}}x{{mapConf.canvasConf.floorplanSize.height*analysis.signalMap[freq].floorplanConfig.scale|number:0}}px)</small><br/>
+            <strong>Scale:</strong> x{{analysis.signalMap[freq].floorplanConfig.scale|number:3}}
+            <input style="vertical-align: middle; margin: 1em 0;" type="range" min="0.1" max="4.0" step="0.005" ng-model="analysis.signalMap[freq].floorplanConfig.scale" ng-change="signalmapApi.setFloorplanScale(analysis.signalMap[freq].floorplanConfig.scale)">
+
+            <h3>Active Nodes
+                <span class="pull-right">
+                    <button type="button" ng-click="recalculateManagedNodes(freq)" class="btn btn-sm btn-danger" ladda="mapConf.recalculateManagedNodesBtnLoading"><span class="glyphicon glyphicon-retweet"></span> Reset</button>
+                </span>
+            </h3>
+
+            <div class="vertex-info" ng-repeat="node in analysis.signalMap[freq].managedNodes">
+                <div class="title"><div class="circle managedNode"></div> {{node.name}}</div>
+                <small>Visibility: {{node.visibility}}, Prob.: {{node.probability|number:2}}, Possible Pos.: {{node.possiblePositions}}</small>
+            </div>
+
+            <h3>Extended Nodes
+                <span class="pull-right">
+                    <div class="btn-group" dropdown>
+                        <button type="button" ng-click="calcExtendedNodes(freq,analysis.signalMap[freq].spreadCmExtendedNodes)" class="btn btn-sm btn-info" ladda="mapConf.calcExtendedNodes"><span class="glyphicon glyphicon-play"></span> Calculate</button>
+                        <button type="button" class="btn btn-sm btn-info dropdown-toggle">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" style="font-size: 50%" role="menu">
+                            <li><a ng-click="setSpread(freq,50)">Set Spread to 50cm</a></li>
+                            <li><a ng-click="setSpread(freq,70)">Set Spread to 70cm</a></li>
+                            <li><a ng-click="setSpread(freq,90)">Set Spread to 90cm</a></li>
+                            <li><a ng-click="setSpread(freq,110)">Set Spread to 110cm</a></li>
+                            <li><a ng-click="setSpread(freq,130)">Set Spread to 130cm</a></li>
+                            <li><a ng-click="setSpread(freq,150)">Set Spread to 150cm</a></li>
+	                        <li><a ng-click="setSpread(freq,180)">Set Spread to 180cm</a></li>
+	                        <li><a ng-click="setSpread(freq,300)">Set Spread to 300cm</a></li>
+	                        <li><a ng-click="setSpread(freq,500)">Set Spread to 500cm</a></li>
+	                        <li><a ng-click="setSpread(freq,700)">Set Spread to 700cm</a></li>
+                        </ul>
+                    </div>
+                </span>
+            </h3>
+            <div class="vertex-info" ng-repeat="node in analysis.signalMap[freq].extendedNodes">
+                <div class="title"><div class="circle extendedNode" tooltip="node.mac"></div> {{node.name}}
+                    <button type="button" ng-click="removeExtendedNode(node.mac,freq)" class="close pull-right"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>
+                <small>Visibility: {{node.visibility}}, Prob.: {{node.probability|number:2}}, Possible Pos.: {{node.possiblePositions}}</small>
+            </div>
+            <strong>Used Spread: </strong>{{analysis.signalMap[freq].spreadCmExtendedNodes}}cm
+
+            <h3 ng-if="analysis.signalMap[freq].logListExtendedNodes.length > 0">Log</h3>
+            <div class="console" ng-if="analysis.signalMap[freq].logListExtendedNodes.length > 0">
+                <ul class="list-unstyled">
+                    <li ng-class="{'text-warning':log.priority == 'warn','text-danger':log.priority == 'error'}" ng-repeat="log in analysis.signalMap[freq].logListExtendedNodes">{{log.msg}}</li>
+                </ul>
+            </div>
+            <hr/>
+
+            <button type="button" ng-click="signalmapApi.exportCanvas(wrapper.network.networkName,'svg')" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-download-alt"></span> SVG</button>
+            <button type="button" ng-click="signalmapApi.exportCanvas(wrapper.network.networkName,'json')" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-download-alt"></span> Json</button>
+        </div>
+
+        <div id="signal-map-collapsed-toolbar" style="border-left: 1px solid rgba(0, 0, 0, 0.1); padding-left: 30px;" class="col-xs-1 content-height" ng-if="mapConf.mapFullscreenEnabled()" ng-hide="!isToolbarCollapsed">
+            <button type="button" ng-click="switchToolbarCollapse()" class="btn btn-sm btn-default btn-hover"><span class="glyphicon glyphicon-chevron-left"></span></button>
+            <hr/>
+            <button type="button" ng-click="signalmapApi.rotateClockwiseFloorplan()" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-repeat"></span></button>
+            <button type="button" ng-click="signalmapApi.rotateCounterclockwiseFloorplan()" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-repeat" style="transform: scale(-1, 1);"></span></button>
+            <button type="button" ng-click="switchDragModeFloorplan()" ng-class="{'active':mapConf.dragModeFloorplan}" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-move"></span></button>
+            <hr/>
+            <button type="button" ng-click="recalculateManagedNodes(freq)" class="btn btn-sm btn-danger" ladda="mapConf.recalculateManagedNodesBtnLoading"><span class="glyphicon glyphicon-retweet"></span> Reset</button>
+            <hr/>
+            <button type="button" ng-click="calcExtendedNodes(freq,analysis.signalMap[freq].spreadCmExtendedNodes)" class="btn btn-sm btn-default" ladda="mapConf.calcExtendedNodes"><span class="glyphicon glyphicon-play"></span> Calculate</button>
+        </div>
+    </div>
+</div>

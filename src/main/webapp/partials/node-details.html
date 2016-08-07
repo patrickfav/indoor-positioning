@@ -1,0 +1,127 @@
+<div class="row firstLevelContainer">
+    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 clearfix">
+        <h2 style="margin-top: 0">
+            <a href="#/networks/{{networkId}}" style="color: #2c3e50;">{{wrapper.network.networkName}}</a> / {{wrapper.node.nodeName}}
+            <span style="font-size: 26px" tooltip-trigger="mouseenter" tooltip="Last Ping: {{wrapper.pingList[0].created|date:'yyyy-MM-dd HH:mm:ss'}}">
+                <span ng-if="wrapper.pingList[0].success===true" class="glyphicon glyphicon-ok-sign text-success"></span>
+                <span ng-if="wrapper.pingList[0].success===false" class="glyphicon glyphicon-remove-sign text-danger"></span>
+                <span ng-if="wrapper.pingList[0]==undefined" class="glyphicon glyphicon-question-sign text-muted"></span>
+             </span>
+            <button ng-click="openUpdateNodeModal()" type="button" class="btn btn-default btn-hover">
+                <span class="glyphicon glyphicon-pencil" style="font-size: 16px;"></span>
+            </button>
+        </h2>
+
+        <button class="btn btn-default btn-hover pull-right" style="margin-right: 0.5em; padding: 5px 10px;" type="button" ng-click="refreshSurvey()"><span class="glyphicon glyphicon-refresh"></span></button>
+
+        <span class="dropdown pull-right" style="margin-right: 0.7em; margin-top: 0.3em">
+            <a href class="dropdown-toggle">
+                Sample Size: {{sampleSize}} <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu">
+                <li><a href ng-click="setSampleSize(25)">25</a></li>
+                <li><a href ng-click="setSampleSize(50)">50</a></li>
+                <li><a href ng-click="setSampleSize(100)">100</a></li>
+                <li><a href ng-click="setSampleSize(150)">150</a></li>
+                <li><a href ng-click="setSampleSize(250)">250</a></li>
+                <li><a href ng-click="setSampleSize(500)">500</a></li>
+            </ul>
+        </span>
+
+        <tabset>
+            <tab ng-repeat="(adapterName, survey) in surveys" heading="{{adapterName}}">
+                <a href class="pull-right" ng-show="survey.highlight.highlighted" ng-click="resetHighlight(adapterName)"><small>Reset View</small></a>
+
+                <div style="padding-top: 1.5em;">
+                    <highchart config="survey.surveyChartConfig"></highchart>
+                    <highchart config="survey.frequencyChartConfig" ng-if="survey.frequencyChartConfig != undefined"></highchart>
+
+                    <table class="table table-striped table-hover" style="margin-top: 1.5em;" ng-show="survey.surveyChartConfig.series">
+                        <thead>
+                        <th>SSID</th>
+                        <th>Mac</th>
+                        <th>Min/Max</th>
+                        <th>Median/Mode</th>
+                        <th>Var/σ</th>
+                        <th>Size</th>
+                        <th>60%</th>
+                        <th>80%</th>
+                        <th>Dist.</th>
+                        <th>Avg. Signal</th>
+                        <th ng-show="wrapper.node.multiplierMap[getFreqForAdapterName(adapterName)] != 1">x{{wrapper.node.multiplierMap[getFreqForAdapterName(adapterName)]}}</th>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="stat in survey.stats" ng-class="{'highlightRow':survey.highlight.mac == stat.macAddress}">
+                            <td ng-class="{'ignoreMac':stat.ignored}"><strong ng-repeat="ssid in stat.ssidSet"  ><a ng-click="highlightLine(ssid,stat.macAddress,adapterName)" href style="{{'color:'+getGraphColor(ssid,stat.macAddress,adapterName)}}">{{ssid | nullRepresentation:'[empty]'}}</a> </strong></a></td>
+                            <td ng-class="{'ignoreMac':stat.ignored}"><small>{{stat.macAddress}}</small></td>
+                            <td ng-class="{'ignoreMac':stat.ignored}"><small class="text-muted dB">{{stat.statistics.min|number : 0}}dBm / {{stat.statistics.max|number : 0}}dBm</small></td>
+                            <td ng-class="{'ignoreMac':stat.ignored}"><small class="text-muted dB">{{stat.statistics.median|number : 0}}dBm / {{stat.statistics.mode|number : 0}}dBm</small></td>
+                            <td ng-class="{'ignoreMac':stat.ignored}"><small class="text-muted dB">{{stat.statistics.variance|number : 2}}dBm / {{stat.statistics.stdDev|number : 2}}dBm</small></td>
+                            <td ng-class="{'ignoreMac':stat.ignored}"><small class="text-muted dB">{{stat.statistics.dataSize|number : 0}}</small></td>
+                            <td ng-class="{'ignoreMac':stat.ignored}"><small class="dB">+/-{{stat.statistics.sdtErr60Interval | number : 2}}</small></td>
+                            <td ng-class="{'ignoreMac':stat.ignored}"><small class="dB">+/-{{stat.statistics.sdtErr80Interval | number : 2}}</small></td>
+                            <td ng-class="{'ignoreMac':stat.ignored}"><small class="dB">{{stat.radioModelData.distanceMap.ITUIndoorModelDegradingDist.meanDistance | number : 2}}m</small></td>
+                            <td ng-class="{'ignoreMac':stat.ignored}">
+                                <strong><sn-colored-dbm fraction-count="2" dbm="stat.statistics.mean"></sn-colored-dbm></strong>
+                            </td>
+                            <td  ng-show="wrapper.node.multiplierMap[getFreqForAdapterName(adapterName)] != 1">
+                                <strong><sn-colored-dbm fraction-count="2" dbm="stat.statistics.mean * wrapper.node.multiplierMap[getFreqForAdapterName(adapterName)]"></sn-colored-dbm></strong></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <div ng-include="'partials/error-list.html'"></div>
+
+        <div class="list-group">
+            <div class="list-group-item active">
+                <button type="button" style="margin-bottom: 1em" class="btn btn-block" ng-click="switchEnabled()" ng-class="{'btn-success active':wrapper.node.enabled,'btn-danger': !wrapper.node.enabled}">{{wrapper.node.enabled ? 'enabled' : 'disabled'}}</button>
+                <p class="list-group-item-text">
+                    <strong>IP:</strong> {{wrapper.node.ip}}<span ng-if="wrapper.node.port!= undefined && wrapper.node.port!=0">:{{wrapper.node.port}}</span>{{wrapper.node.customResourcePath}}</br>
+                    <strong>Room:</strong> {{getRoomNameById(wrapper.node.roomId)}}<br/>
+                    <strong>Antenna:</strong> <span class="dB">{{wrapper.node.antennaDBi}}dBi</span><br/>
+                    <strong>Type:</strong> {{wrapper.node.machineInfo.systemType}}<br/>
+                    <strong>Cpu:</strong> {{wrapper.node.machineInfo.cpuModel}}
+                    <span class="panelLine"></span>
+
+
+                    <span ng-repeat="(freq,mult) in wrapper.node.multiplierMap" ng-if="freq != 'UNKNOWN'">
+                         <span style="margin: 1em 0; display:block;">
+                            <small class="text-muted" style="display: block">{{freq}} Mult. {{wrapper.node.multiplierMap[freq]}}x</small>
+                            <input style="width: 100%" type="range" min="0.1" max="2.0" step="0.01" ng-model="wrapper.node.multiplierMap[freq]" ng-mouseup="setMultiplier()">
+                         </span>
+                    </span>
+
+
+                    <span class="panelLine"></span>
+
+                    <button style="font-size: 16px;font-weight: bold;" ng-disabled="rebootButtonDisabled" ng-click="rebootDevice()" type="button" class="btn btn-default btn-hover-alt dropdown-toggle btn-block">
+                        Reboot Device
+                    </button>
+	                <button style="font-size: 16px;font-weight: bold;"  ng-csv="getExportArray()" field-separator=";" filename="{{wrapper.node.nodeName}}_export.csv"  lazyLoad="true"  type="button" class="btn btn-default btn-hover-alt dropdown-toggle btn-block">
+	                    Export Data
+	                </button>
+                </p>
+            </div>
+        </div>
+
+        <div class="panel" ng-class="{'panel-default':!wrapper.node.enabled,'panel-primary':wrapper.node.enabled}" ng-repeat="adapter in wrapper.node.adapters">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{adapter.name}}</h3>
+            </div>
+            <div class="panel-body">
+                <strong>SSID:</strong> {{adapter.ssid}}</br>
+                <strong>Mac:</strong> {{adapter.macAddress}}</br>
+                <strong>Frequency:</strong> {{adapter.frequencyRange}} <strong>Channel:</strong> {{adapter.channel}}</br>
+                <strong>TxPower:</strong> <span class="dB">{{adapter.txPowerDbm}}dBm </span>
+                <strong>Noise:</strong> <span class="dB">{{adapter.noiseDbm}}dBm</span>
+
+            </div>
+        </div>
+
+    </div>
+</div>

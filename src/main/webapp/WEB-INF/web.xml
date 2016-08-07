@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+           version="2.5">
+    <display-name>Sensor-Management-Server</display-name>
+
+    <servlet>
+        <servlet-name>serverStartup</servlet-name>
+        <servlet-class>at.ac.tuwien.inso.indoor.sensorserver.services.servlets.StartUpServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>serverStartup</servlet-name>
+        <url-pattern>/reset</url-pattern>
+    </servlet-mapping>
+
+    <!-- Listener for shutdownNow-->
+    <!--<listener>-->
+        <!--<listener-class>at.ac.tuwien.inso.indoor.sensorserver.services.servlets.ContainerListener</listener-class>-->
+    <!--</listener>-->
+    <!-- <filter>
+        <filter-name>imageCaching</filter-name>
+        <filter-class>com.samaxes.filter.CacheFilter</filter-class>
+        <init-param>
+            <param-name>static</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>expirationTime</param-name>
+            <param-value>604800</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>imageCaching</filter-name>
+        <url-pattern>*.png</url-pattern>
+        <url-pattern>*.jpg</url-pattern>
+        <url-pattern>*.gif</url-pattern>
+        <url-pattern>*.ico</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>textFileCaching</filter-name>
+        <filter-class>com.samaxes.filter.CacheFilter</filter-class>
+        <init-param>
+            <param-name>static</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>expirationTime</param-name>
+            <param-value>10800</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>textFileCaching</filter-name>
+        <url-pattern>*.js</url-pattern>
+        <url-pattern>*.css</url-pattern>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+
+
+    -->
+
+    <servlet>
+        <servlet-name>Jersey Servlet Container</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>at.ac.tuwien.inso.indoor.sensorserver.services.rest</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>Test Servlet</servlet-name>
+        <servlet-class>myservlets.watermelon</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Test Servlet</servlet-name>
+        <url-pattern>/test</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Jersey Servlet Container</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>
+                Sensor Management Console
+            </web-resource-name>
+            <url-pattern>/index.html</url-pattern>
+            <url-pattern>/status.html</url-pattern>
+            <url-pattern>/log.html</url-pattern>
+            <url-pattern>/reset.html</url-pattern>
+            <url-pattern>/rest/internal-api/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>manager</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-role>
+        <role-name>manager</role-name>
+    </security-role>
+
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>Admin Console</realm-name>
+    </login-config>
+</web-app>

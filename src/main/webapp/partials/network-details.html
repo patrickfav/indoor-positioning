@@ -1,0 +1,109 @@
+<div class="row firstLevelContainer">
+    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+        <h1 style="margin-top: 0;">{{wrapper.network.networkName}}
+            <button ng-click="openUpdateNetworkModal()" type="button" class="btn  btn-default btn-hover">
+                <span class="glyphicon glyphicon-pencil" style="font-size: 16px;"></span>
+            </button>
+            <button class="btn btn-default btn-hover pull-right" type="button" ng-click="refresh()"><span class="glyphicon glyphicon-refresh"></span></button>
+
+        </h1>
+
+        <h2>
+            Active Nodes
+            <button type="button" class="btn btn-success pull-right" ng-click="openAddNodeModal()">Add Node</button>
+        </h2>
+        <table class="table table-striped table-hover" ng-if="wrapper.nodes.length > 0" >
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>IP</th>
+                    <th>Mac Address</th>
+                    <th>Room</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="only-hover-content">
+                <tr ng-repeat="node in wrapper.nodes| orderBy:'nodeName':false" ng-class="{'disabledRow':!node.enabled}" >
+                    <td>
+                        <span ng-click="ping(node)" tooltip-trigger="mouseenter" tooltip="Last Ping: {{node.ping.created|date:'yyyy-MM-dd HH:mm:ss'}}">
+                            <span ng-if="node.ping.success===true" class="glyphicon glyphicon-ok-sign text-success"></span>
+                            <span ng-if="node.ping.success===false" class="glyphicon glyphicon-remove-sign text-danger"></span>
+                            <span ng-if="node.ping==undefined" class="glyphicon glyphicon-question-sign text-muted"></span>
+                        </span>
+                        <a href="#/networks/{{wrapper.network.networkId}}/node/{{node.nodeId}}">{{node.nodeName}}</a></td>
+                    <td>{{node.ip}}<span ng-if="node.port!= undefined && node.port!=0">:{{node.port}}</span>{{node.customResourcePath}}</td>
+                    <td><small ng-repeat="adapter in node.adapters">{{adapter.macAddress}}{{$last ? '' : ', '}}</small></td>
+                    <td>{{getRoomNameById(node.roomId)}}</td>
+                    <td>
+                        <button ng-click="ping(node)" type="button" class="only-hover-subject btn btn-hover btn-default btn-xs pull-right" tooltip="Ping Node">
+                            <span class="glyphicon glyphicon-globe"></span>
+                        </button>
+                        <button ng-click="compactSurveys(node.nodeId)" type="button" class=" only-hover-subject btn btn-hover btn-default btn-xs pull-right" tooltip="Compact Survey Data" >
+                            <span class="glyphicon glyphicon-compressed"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <span ng-include="'partials/network-details-analysis.html'" ng-controller="NetworkDetailAnalysisCtrl"></span>
+
+
+    </div>
+    <!--#76C0B2-->
+    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <div ng-include="'partials/error-list.html'"></div>
+
+        <div class="list-group">
+            <div class="list-group-item active">
+                <p class="list-group-item-text" ng-show="wrapper.network.description">
+                    <em>{{wrapper.network.description|cut:true:255:'...'}}</em>
+                    <span class="panelLine"></span>
+                </p>
+
+                <button style="font-size: 16px;font-weight: bold;" ng-click="openPathLossModal()" type="button" class="btn btn-default btn-hover-alt dropdown-toggle btn-block">
+                    Path Loss Config
+                </button>
+
+                <button style="font-size: 16px;font-weight: bold;" ng-click="openBlacklistModal()" type="button" class="btn btn-default btn-hover-alt dropdown-toggle btn-block">
+                    Blacklist
+                </button>
+
+                <div class="btn-group" dropdown style="width: 100%;">
+                    <button style="width: 100%;font-size: 16px;font-weight: bold;" type="button" class="btn btn-default btn-hover-alt dropdown-toggle">
+                        Schedule Job <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href ng-click="scheduleJob('ping')">Start Single Run Ping Check</a></li>
+                        <li><a href ng-click="scheduleJob('survey')">Start Single Run Survey</a></li>
+                        <li><a href ng-click="scheduleJob('analysis')">Start Single Run Analysis</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Recent Jobs</h4>
+                <button type="button" style="margin-top: 0.7em" class="btn btn-block" ng-click="switchCronEnabled()" ng-class="{'btn-success active':wrapper.network.cronEnabled,'btn-danger': !wrapper.network.cronEnabled}">{{wrapper.network.cronEnabled ? 'Scheduled Jobs enabled' : 'Scheduled Jobs disabled'}}</button>
+            </div>
+            <!-- List group -->
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="job in jobs.list">
+                    <div style="font-size: 75%" class="text-muted pull-right">
+                        <small ng-if="job.status!='RUNNING'">{{job.end|date:'yyyy-MM-dd HH:mm:ss'}}</small>
+                        <small ng-if="job.status=='RUNNING'"><em>{{(job.estimatedRuntimeMs - (job.estimatedRuntimeMs*job.progress))/1000|number:0}} sec remaining</em></small>
+                    </div>
+                    <strong>{{job.jobTitle}}</strong>
+                    <progressbar style="margin-bottom: 0px"  ng-class="{'active':job.status=='RUNNING'}" value="(job.progress*100).toFixed(0)" type="{{job.status=='RUNNING' ? 'info' : job.status=='SUCCESS' ? 'default' : job.status=='ERROR' ? 'danger' : 'primary'}}">
+                        <span ng-if="job.status=='RUNNING'">{{(job.progress*100).toFixed(0)}}% </span>
+                        <span ng-if="job.status=='SUCCESS'">Done. {{(job.end-job.start)/1000|number:0}} sec</span>
+                        <span ng-if="job.status=='ERROR'" tooltip="{{job.statusDescription}}">Error. {{(job.end-job.start)/1000|number:0}} sec</span>
+                    </progressbar>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<img id="blueprint_image" ng-if="wrapper.getFloorplanBlueprintSrc" style="display: none" ng-src="{{wrapper.getFloorplanBlueprintSrc}}"/>
