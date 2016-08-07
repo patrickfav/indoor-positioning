@@ -1,5 +1,9 @@
 # Introduction
 This is a full-featured indoor positioning system that was developed during my master thesis.
+Its server component uses servlets and an Angular JS front end whereas the Router/AP service is written in Lua.
+
+![UI Overview](https://github.com/patrickfav/indoor-positioning/blob/master/misc/ui-overview.png?raw=true)
+
 
 # Requirements
 
@@ -76,15 +80,20 @@ positions of the Active Nodes again). Then press "Calculate" next to the "Extend
 of all APs/Routers in the vicinity. You may want to correct the positions you know of. Press "save". You now are ready
 to position.
 
+![Node Editor](https://github.com/patrickfav/indoor-positioning/blob/master/misc/ui-node-editor.jpg?raw=true)
+
 # Positioning
 
 You need a AP with the custom webservices installed, same as Active Nodes. This AP must be in your network.
+
+![Positioning](https://github.com/patrickfav/indoor-positioning/blob/master/misc/ui-positioning.png?raw=true)
 
 Go to "Positioning". Input the IP of the client (AP) and press "Find". If multiple networks match for this positioning
 you have to select one, otherwise you will be shown a UI with the estimated position. You may press on a square in the grid
 to select the actual position to let the system calculate the offset.
 
 # Performance
+
 Properties of the Proposed System
 
 * Adapts well to the specific environment
