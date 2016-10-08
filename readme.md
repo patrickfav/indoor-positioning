@@ -1,6 +1,6 @@
 # Introduction
 This is a full-featured indoor positioning system that was developed during my master thesis.
-Its server component uses servlets and an Angular JS front end whereas the Router/AP service is written in Lua.
+Its server component uses servlets and an Angular JS front end, whereas the Router/AP service is written in Lua.
 
 ![UI Overview](https://github.com/patrickfav/indoor-positioning/blob/master/misc/ui-overview.png?raw=true)
 
@@ -58,12 +58,12 @@ maven <build> -> <finalName>, so if you have a backup change the finalName accor
 
 ## System Configuration
 
-As prequesits you must have at least 4 APs ready (with installed webserives) in your network (knowing the IPs of each).
+As prerequisites you must have at least 4 APs ready (with installed webserives) in your network (knowing the IPs of each).
 
 Open the browser and enter the url you deployed the war (usallay something like [http://localhost:8080/MyProject](http://localhost:8080/)).
-Create a new Netowrk by pressing the box with the "+". Enter the details and set "Surveys Per Node to 100" and "Survey Schedule" to
-"Every Minute" to accelarate measurement.
-Then next to "Active Nodes", add new nodes with "Add Node". Enter name and ip address, then press "discover" to see if
+Create a new network by pressing the box with the "+". Enter the details and set "Surveys Per Node to 100" and "Survey Schedule" to
+"Every Minute" to accelerate measurement.
+Then next to "Active Nodes", add new nodes with "Add Node". Enter name and IP address, then press "discover" to see if
 the node is reachable. After adding all nodes wait a couple of hours to let it measure.
 
 Next press "Schedule Job" -> "Start Single Run Analysis" and wait a couple of seconds. The analysis should appear under
@@ -74,9 +74,9 @@ Next press "Schedule Job" -> "Start Single Run Analysis" and wait a couple of se
 
 Next, again, press "Schedule Job" -> "Start Single Run Analysis" and wait a couple of seconds. Select the current analysis
 (with the adapted model). Choose "Signal Strength Map" and correct the positions of the active nodes. You may want to upload
-a floorplan blueprint first in the network details (the pen icon next to the main header). After that go to map full screen
+a floorplan blueprint first in the network details (the pen icon next to the main header). After that, go to map full screen
 mode (four arrows icon). Scale the floorplan with the slider until the meter sizes are correct (you may have to correct the
-positions of the Active Nodes again). Then press "Calculate" next to the "Extended Nodes" headers. This will caclulate the positions
+positions of the Active Nodes again). Then press "Calculate" next to the "Extended Nodes" headers. This will calculate the positions
 of all APs/Routers in the vicinity. You may want to correct the positions you know of. Press "save". You now are ready
 to position.
 
@@ -88,7 +88,7 @@ You need a AP with the custom webservices installed, same as Active Nodes. This 
 
 ![Positioning](https://github.com/patrickfav/indoor-positioning/blob/master/misc/ui-positioning.png?raw=true)
 
-Go to "Positioning". Input the IP of the client (AP) and press "Find". If multiple networks match for this positioning
+Go to "Positioning". Input the IP of the client (AP) and press "Find". If multiple networks match for this position
 you have to select one, otherwise you will be shown a UI with the estimated position. You may press on a square in the grid
 to select the actual position to let the system calculate the offset.
 
@@ -98,7 +98,7 @@ Properties of the Proposed System
 
 * Adapts well to the specific environment
 * Good scalability and low maintenance with easy setup
-* Accuracy between 2 to 4 meter on average (see diagram)
+* Accuracy between 2 to 4 meters on average (see diagram)
 * Initial positioning with trilateration works well
 * Quality degrades with non-correlating RSS
 
