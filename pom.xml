@@ -11,7 +11,7 @@
     <name>Indoor Sensor Managment</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <skipTests>true</skipTests>
+        <skipTests>false</skipTests>
     </properties>
     <build>
         <finalName>sensor-management</finalName>
