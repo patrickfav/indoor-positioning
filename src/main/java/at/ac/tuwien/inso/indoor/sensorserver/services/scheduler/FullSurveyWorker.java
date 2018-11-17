@@ -1,8 +1,8 @@
 package at.ac.tuwien.inso.indoor.sensorserver.services.scheduler;
 
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.Survey;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.Adapter;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNode;
-import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.Survey;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.jobs.ISensorJob;
 import org.apache.log4j.Logger;
 
@@ -60,7 +60,7 @@ public class FullSurveyWorker implements Callback<Survey>{
                 log.info("Skip node "+node.getNodeName()+" because it is not enabled");
             }
         }
-        estimatedRuntime = Math.round((runTime / runs) * Math.max(1,runs- ISensorJob.MAX_CONCURRENT_THREADS)) + ((runs * (runTime / runs))/100) + 2000;
+        estimatedRuntime = Math.round(((double) runTime / (float) runs) * Math.max(1, runs - ISensorJob.MAX_CONCURRENT_THREADS)) + ((runs * (runTime / runs)) / 100) + 2000;
     }
 
     public Map<String,Survey> startFullSurvey() {

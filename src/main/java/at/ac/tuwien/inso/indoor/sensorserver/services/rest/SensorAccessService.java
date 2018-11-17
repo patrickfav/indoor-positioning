@@ -2,8 +2,8 @@ package at.ac.tuwien.inso.indoor.sensorserver.services.rest;
 
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.MiscManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.PingLog;
-import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNode;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.WlanScanNode;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNode;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.responsewrapper.BaseResponse;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.responsewrapper.SuccessResponse;
 import at.ac.tuwien.inso.indoor.sensorserver.services.exceptions.ExceptionHandler;
@@ -99,7 +99,7 @@ public class SensorAccessService {
     public static Response survey(SensorNode node, @QueryParam("adapter") String adapterName, @QueryParam("delay") Long delay, @QueryParam("repeat") Integer repeat) {
         try {
             if(delay == null || delay == 0) {
-                delay = 1500l;
+                delay = 1500L;
             }
             if(repeat == null || repeat == 0) {
                 repeat = 4;

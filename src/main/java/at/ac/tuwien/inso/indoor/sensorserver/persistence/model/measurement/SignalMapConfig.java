@@ -18,7 +18,7 @@ public class SignalMapConfig {
     private int minDbmNeededToConsiderForTrilateration = -85;
     private int minVisibilityNeededForTrilateration = 3;
 
-    private long randomSeed = 1319874l; //-1 is total random
+    private long randomSeed = 1319874L; //-1 is total random
 
     private int maxPathLossForSignalStrengthMatrixCalculation = 90;
     private int minPathLossValueForSignalStrengthMatrix = 30;

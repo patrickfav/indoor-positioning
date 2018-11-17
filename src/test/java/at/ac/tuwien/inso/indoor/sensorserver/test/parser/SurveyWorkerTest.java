@@ -19,7 +19,7 @@ public class SurveyWorkerTest {
     private static Logger log = Logger.getLogger(SurveyWorkerTest.class);
 
     private List<WlanScanNode> wlanScanNodes;
-    private Random rnd = new Random(322768354l);
+    private Random rnd = new Random(322768354L);
     @Before
     public void setup() {
         wlanScanNodes = new ArrayList<WlanScanNode>(3);
@@ -68,7 +68,7 @@ public class SurveyWorkerTest {
     public void testNormalSurveyShouldOk() throws Exception{
         SurveyCallable worker = new SurveyCallable(100,3,"wlan0",new SensorNode()) {
             @Override
-            protected List<WlanScanNode> scan(SensorNode node, String adapterName) throws Exception {
+            protected List<WlanScanNode> scan(SensorNode node, String adapterName) {
                 List<WlanScanNode> measurements = new ArrayList<WlanScanNode>();
 
                 for (WlanScanNode measurement : wlanScanNodes) {
