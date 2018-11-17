@@ -2,6 +2,10 @@
 This is a full-featured indoor positioning system that was developed during my master thesis.
 Its server component uses servlets and an Angular JS front end, whereas the Router/AP service is written in Lua.
 
+[![Build Status](https://travis-ci.org/patrickfav/indoor-positioning.svg?branch=master)](https://travis-ci.org/patrickfav/indoor-positioning)
+[![Coverage Status](https://coveralls.io/repos/github/patrickfav/indoor-positioning/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/indoor-positioning?branch=master) 
+[![Maintainability](https://api.codeclimate.com/v1/badges/43b7770f0ee00b85f92a/maintainability)](https://codeclimate.com/github/patrickfav/indoor-positioning/maintainability)
+
 ![UI Overview](https://github.com/patrickfav/indoor-positioning/blob/master/misc/ui-overview.png?raw=true)
 
 
