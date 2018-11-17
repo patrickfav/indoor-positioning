@@ -11,8 +11,8 @@ public class SignalMapConfig {
     private int defaultSpreadExtendedNodesCm = 70;
     private int defaultSpreaManagedNodesCm = 120;
 
-    private int canvasDimensionManagedNodesCm = 30*100;
-    private int canvasDimensionExtendedNodesCm = 40*100;
+    private int canvasDimensionManagedNodesCm = 30 * 100;
+    private int canvasDimensionExtendedNodesCm = 40 * 100;
     private int cmOverflowForCalculatedCanvas = 200;
 
     private int minDbmNeededToConsiderForTrilateration = -85;
@@ -111,7 +111,6 @@ public class SignalMapConfig {
         this.randomSeed = randomSeed;
     }
 
-
     public int getMaxPathLossForSignalStrengthMatrixCalculation() {
         return maxPathLossForSignalStrengthMatrixCalculation;
     }
@@ -129,7 +128,7 @@ public class SignalMapConfig {
     }
 
     public Random generateRnd() {
-        if(randomSeed == -1) {
+        if (randomSeed == -1) {
             return new Random();
         }
         return new Random(randomSeed);

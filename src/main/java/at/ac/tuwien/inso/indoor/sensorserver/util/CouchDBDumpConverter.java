@@ -16,7 +16,10 @@ import java.util.Map;
 /**
  * Created by PatrickF on 29.04.2015.
  */
-public class CouchDBDumpConverter {
+public final class CouchDBDumpConverter {
+
+    private CouchDBDumpConverter() {
+    }
 
     public static void main(String[] args) {
         try {
@@ -32,18 +35,17 @@ public class CouchDBDumpConverter {
 
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-            Root r = mapper.readValue(file,Root.class);
+            Root r = mapper.readValue(file, Root.class);
 
-            System.out.println(""+r);
+            System.out.println("" + r);
 
             Importable i = new Importable();
 
             for (Row row : r.getRows()) {
-                Map<Object,Object> doc = row.getDoc();
+                Map<Object, Object> doc = row.getDoc();
                 doc.remove("_rev");
                 i.getDocs().add(doc);
             }
-
 
 
             File out = new File("C:\\Users\\Patrick\\Desktop\\out2.txt");
@@ -57,7 +59,7 @@ public class CouchDBDumpConverter {
     }
 
     public static class Importable {
-        private List<Map<Object,Object>> docs = new ArrayList<Map<Object, Object>>();
+        private List<Map<Object, Object>> docs = new ArrayList<Map<Object, Object>>();
 
         public List<Map<Object, Object>> getDocs() {
             return docs;
@@ -112,7 +114,7 @@ public class CouchDBDumpConverter {
         private String id;
         private String key;
         private Value value;
-        private Map<Object,Object> doc;
+        private Map<Object, Object> doc;
 
         public String getId() {
             return id;
@@ -138,11 +140,11 @@ public class CouchDBDumpConverter {
             this.value = value;
         }
 
-        public Map<Object,Object> getDoc() {
+        public Map<Object, Object> getDoc() {
             return doc;
         }
 
-        public void setDoc(Map<Object,Object> doc) {
+        public void setDoc(Map<Object, Object> doc) {
             this.doc = doc;
         }
     }

@@ -10,8 +10,8 @@ import java.util.Map;
  * Created by PatrickF on 11.11.2014.
  */
 public class BayesRuleDetermination implements IPositionAlgorithm {
-	@Override
-	public PositionData getMostLikelyPositions(Map<String, SimpleMeasurement> measurements, List<RSSMatrixCreator.RSSPoint> referencePoints, double multiplicator) {
-		return null;
-	}
+    @Override
+    public PositionData getMostLikelyPositions(Map<String, SimpleMeasurement> measurements, List<RSSMatrixCreator.RSSPoint> referencePoints, double multiplicator) {
+        return null;
+    }
 }

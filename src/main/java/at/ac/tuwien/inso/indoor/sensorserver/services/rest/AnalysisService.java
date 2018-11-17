@@ -113,7 +113,7 @@ public class AnalysisService {
             ServerUtil.checkParameter(new ServerUtil.RestParam("analysisId", analysisId), new ServerUtil.RestParam("freq", range), new ServerUtil.RestParam("signalMap", signalMap));
 
             Analysis analysis = MiscManager.getInstance().getByAnalysisId(analysisId);
-            analysis.getSignalMap().put(range,signalMap);
+            analysis.getSignalMap().put(range, signalMap);
 
             for (SignalMap.Vertex vertex : signalMap.getExtendedNodes().values()) {
                 vertex.setOriginalPos(vertex.getCurrentPos());
@@ -129,16 +129,17 @@ public class AnalysisService {
         }
         return null;
     }
+
     @POST
     @Path("/{analysisId}/recalc-signalmap")
     public Analysis reCalculateSignalMap(@PathParam("analysisId") String analysisId, @QueryParam("freq") EFrequencyRange range) {
         try {
             ServerUtil.checkParameter(new ServerUtil.RestParam("analysisId", analysisId), new ServerUtil.RestParam("freq", range));
             Analysis analysis = MiscManager.getInstance().getByAnalysisId(analysisId);
-	        SignalMap.FloorplanConfig oldFloorPlanConfigCopy = new SignalMap.FloorplanConfig(analysis.getSignalMap().get(range).getFloorplanConfig());
+            SignalMap.FloorplanConfig oldFloorPlanConfigCopy = new SignalMap.FloorplanConfig(analysis.getSignalMap().get(range).getFloorplanConfig());
 
-            analysis.getSignalMap().put(range,((new ManagedNodesPositioner(analysis, range, ServerConfig.getInstance().getSignalMapConfig())).createSignalMap()));
-	        analysis.getSignalMap().get(range).setFloorplanConfig(oldFloorPlanConfigCopy);
+            analysis.getSignalMap().put(range, ((new ManagedNodesPositioner(analysis, range, ServerConfig.getInstance().getSignalMapConfig())).createSignalMap()));
+            analysis.getSignalMap().get(range).setFloorplanConfig(oldFloorPlanConfigCopy);
             MiscManager.getInstance().updateAnaylsis(analysis);
             return analysis;
         } catch (Exception e) {

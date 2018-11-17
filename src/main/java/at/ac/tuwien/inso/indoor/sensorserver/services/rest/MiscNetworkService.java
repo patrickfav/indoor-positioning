@@ -3,8 +3,8 @@ package at.ac.tuwien.inso.indoor.sensorserver.services.rest;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.EtagManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.MiscManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.SensorManager;
-import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.Blacklist;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.PingLog;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.Blacklist;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.RoomList;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNode;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.responsewrapper.BaseResponse;
@@ -42,7 +42,7 @@ public class MiscNetworkService {
                     List<PingLog> pingLogs = MiscManager.getInstance().getAllPingLogsFromNodeSorted(sensorNode.getNodeId(), 5);
                     Collections.sort(pingLogs);
 
-                    if(!pingLogs.isEmpty()) {
+                    if (!pingLogs.isEmpty()) {
                         recentLogs.add(pingLogs.get(0));
                     }
                 }
@@ -88,7 +88,6 @@ public class MiscNetworkService {
         return null;
     }
 
-
     @PUT
     @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Path("/{networkId}/roomlist")
@@ -123,11 +122,11 @@ public class MiscNetworkService {
 
     @PUT
     @Path("/{networkId}/roomlist/mapping")
-    public SuccessResponse setNewRoomMacMapping(@PathParam("networkId") String networkId,@QueryParam("roomId") String roomId,@QueryParam("macAddress") String macAddress) {
+    public SuccessResponse setNewRoomMacMapping(@PathParam("networkId") String networkId, @QueryParam("roomId") String roomId, @QueryParam("macAddress") String macAddress) {
         SuccessResponse response = new SuccessResponse();
         try {
-            ServerUtil.checkParameter(new ServerUtil.RestParam("networkId", networkId),new ServerUtil.RestParam("roomId", roomId),new ServerUtil.RestParam("macAddress", macAddress));
-            response.setUpdatedRev(MiscManager.getInstance().addNewMacRoomMapping(networkId,macAddress,roomId).getRevision());
+            ServerUtil.checkParameter(new ServerUtil.RestParam("networkId", networkId), new ServerUtil.RestParam("roomId", roomId), new ServerUtil.RestParam("macAddress", macAddress));
+            response.setUpdatedRev(MiscManager.getInstance().addNewMacRoomMapping(networkId, macAddress, roomId).getRevision());
             response.setSuccess(true);
         } catch (Exception e) {
             ExceptionHandler.handle(new BaseResponse(), e);

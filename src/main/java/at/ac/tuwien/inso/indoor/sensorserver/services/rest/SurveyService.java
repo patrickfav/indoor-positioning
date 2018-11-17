@@ -36,14 +36,14 @@ public class SurveyService {
             CacheControl cc = CacheUtil.getCacheControl(ApiConst.CacheControl.SURVEY);
             if (builder == null) {
 
-                if(limit == null || limit ==0) {
+                if (limit == null || limit == 0) {
                     limit = 15;
                 }
 
-                List<Survey> surveys = MiscManager.getInstance().getAllSurveysFromNodeSorted(nodeId,adapter, limit);
+                List<Survey> surveys = MiscManager.getInstance().getAllSurveysFromNodeSorted(nodeId, adapter, limit);
 
                 SurveyStatWrapper wrapper = new SurveyStatWrapper();
-                wrapper.setSurveyList(filterBlacklisted(surveys,MiscManager.getInstance().getBlacklistByNetworkId(SensorManager.getInstance().getSensorNodeById(nodeId).getNetworkId())));
+                wrapper.setSurveyList(filterBlacklisted(surveys, MiscManager.getInstance().getBlacklistByNetworkId(SensorManager.getInstance().getSensorNodeById(nodeId).getNetworkId())));
                 wrapper.setStatistics(SurveyUtil.createAverageFromSurveys(surveys, SensorManager.getInstance().getSensorNodeById(nodeId).getNetworkId()));
 
                 builder = Response.ok(wrapper).cacheControl(cc).tag(CacheUtil.getEtag(EtagManager.getInstance().getETag(Survey.class)));
@@ -55,40 +55,40 @@ public class SurveyService {
         return null;
     }
 
-	private List<Survey> filterBlacklisted(List<Survey> original,Blacklist blacklist) {
-		List<Survey> filtered = new ArrayList<Survey>(original);
+    private List<Survey> filterBlacklisted(List<Survey> original, Blacklist blacklist) {
+        List<Survey> filtered = new ArrayList<Survey>(original);
 
-		for (Survey survey : filtered) {
-			List<AverageWlanScanMeasurement> scanNodes = new ArrayList<AverageWlanScanMeasurement>();
+        for (Survey survey : filtered) {
+            List<AverageWlanScanMeasurement> scanNodes = new ArrayList<AverageWlanScanMeasurement>();
 
-			for (AverageWlanScanMeasurement scanNode : survey.getAverageScanNodes()) {
-				boolean found = false;
-				for (String mac : blacklist.getMacList()) {
-					if(mac.equals(scanNode.getMacAddress())) {
-						found = true;
-						break;
-					}
-				}
+            for (AverageWlanScanMeasurement scanNode : survey.getAverageScanNodes()) {
+                boolean found = false;
+                for (String mac : blacklist.getMacList()) {
+                    if (mac.equals(scanNode.getMacAddress())) {
+                        found = true;
+                        break;
+                    }
+                }
 
-				if((blacklist.isActAsWhiteList() && found) || (!blacklist.isActAsWhiteList() && !found)) {
-					scanNodes.add(scanNode);
-				}
-			}
-			survey.getAverageScanNodes().clear();
-			survey.getAverageScanNodes().addAll(scanNodes);
-		}
+                if ((blacklist.isActAsWhiteList() && found) || (!blacklist.isActAsWhiteList() && !found)) {
+                    scanNodes.add(scanNode);
+                }
+            }
+            survey.getAverageScanNodes().clear();
+            survey.getAverageScanNodes().addAll(scanNodes);
+        }
 
-		return filtered;
-	}
+        return filtered;
+    }
 
     @PUT
     @Path("/compact")
-    public SuccessResponse removeOldSurveys(@QueryParam("nodeId") String nodeId,@QueryParam("keep")Integer keep) {
+    public SuccessResponse removeOldSurveys(@QueryParam("nodeId") String nodeId, @QueryParam("keep") Integer keep) {
         SuccessResponse successResponse = new SuccessResponse();
         try {
             ServerUtil.checkParameter(new ServerUtil.RestParam("nodeId", nodeId), new ServerUtil.RestParam("keep", keep));
 
-            MiscManager.getInstance().deleteOldSurveys(nodeId,keep);
+            MiscManager.getInstance().deleteOldSurveys(nodeId, keep);
             successResponse.setSuccess(true);
             return successResponse;
         } catch (Exception e) {
@@ -96,6 +96,4 @@ public class SurveyService {
         }
         return null;
     }
-
-
 }

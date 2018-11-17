@@ -43,8 +43,8 @@ public class ITUIndoorModelTest {
     public void testDegradingDistAlgoShouldHaveSameValuesBothWays() {
         ITUIndoorModelDegradingDist modelDegradingDist = null;
         for (int bound = 50; bound < 70; bound++) {
-            for (double fac = 0.1; fac < 1; fac+=0.1) {
-                for(double offset=-0.5;offset<1;offset+=0.1) {
+            for (double fac = 0.1; fac < 1; fac += 0.1) {
+                for (double offset = -0.5; offset < 1; offset += 0.1) {
                     modelDegradingDist = new ITUIndoorModelDegradingDist(EEnvironmentModel.INDOOR_OBSTRUCTED_OFFICE, bound, fac, offset);
                     //log.info("ITUIndoorModelDegradingDist: " + modelDegradingDist);
 
@@ -70,14 +70,14 @@ public class ITUIndoorModelTest {
 
         for (int i = 0; i < 150; i++) {
             double dist1 = ituModel.getDistanceInMeter(i, freq_24ghz, 0);
-            double dist2 = ituModel.getDistanceInMeter(i+1, freq_24ghz, 0);
+            double dist2 = ituModel.getDistanceInMeter(i + 1, freq_24ghz, 0);
 
-            Assert.assertNotEquals("Different inputs should have different output",dist1,dist2,delta);
+            Assert.assertNotEquals("Different inputs should have different output", dist1, dist2, delta);
 
             double pathLoss1 = ituModel.getPathLossDb(dist1, freq_24ghz, 0);
             double pathLoss2 = ituModel.getPathLossDb(dist2, freq_24ghz, 0);
 
-            Assert.assertNotEquals("Different inputs should have different output",pathLoss1,pathLoss2,delta);
+            Assert.assertNotEquals("Different inputs should have different output", pathLoss1, pathLoss2, delta);
         }
     }
 }

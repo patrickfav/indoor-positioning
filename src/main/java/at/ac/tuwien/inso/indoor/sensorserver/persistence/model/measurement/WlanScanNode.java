@@ -77,7 +77,6 @@ public class WlanScanNode extends TypeAbleCouchDBDocument implements Comparable<
         this.date = date;
     }
 
-
     @Override
     public String toString() {
         return "ScanNode{" +
@@ -101,9 +100,11 @@ public class WlanScanNode extends TypeAbleCouchDBDocument implements Comparable<
         if (channel != wlanScanNode.channel) return false;
         if (Double.compare(wlanScanNode.signalStrengthDbm, signalStrengthDbm) != 0) return false;
         if (date != null ? !date.equals(wlanScanNode.date) : wlanScanNode.date != null) return false;
-        if (encryption != null ? !encryption.equals(wlanScanNode.encryption) : wlanScanNode.encryption != null) return false;
+        if (encryption != null ? !encryption.equals(wlanScanNode.encryption) : wlanScanNode.encryption != null)
+            return false;
         if (frequencyRange != wlanScanNode.frequencyRange) return false;
-        if (macAddress != null ? !macAddress.equals(wlanScanNode.macAddress) : wlanScanNode.macAddress != null) return false;
+        if (macAddress != null ? !macAddress.equals(wlanScanNode.macAddress) : wlanScanNode.macAddress != null)
+            return false;
         if (ssid != null ? !ssid.equals(wlanScanNode.ssid) : wlanScanNode.ssid != null) return false;
 
         return true;

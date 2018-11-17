@@ -1,7 +1,7 @@
 package at.ac.tuwien.inso.indoor.sensorserver.services.rest;
 
-import at.ac.tuwien.inso.indoor.sensorserver.math.positioning.ManhattanDistanceDetermination;
 import at.ac.tuwien.inso.indoor.sensorserver.math.positioning.IPositionAlgorithm;
+import at.ac.tuwien.inso.indoor.sensorserver.math.positioning.ManhattanDistanceDetermination;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.MiscManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.SensorManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.*;
@@ -30,22 +30,22 @@ public class PositioningService {
 
     @GET
     @Path("/survey")
-    public Map<String,SimpleMeasurement> getSurveyForPositioning(@QueryParam("adapterName")String adapterName,@QueryParam("ip")String ip,@QueryParam("port")Integer port,@QueryParam("htttps")Boolean shouldUseHttps,@QueryParam("count")Integer count,@QueryParam("delayMs")Integer delayMs) {
+    public Map<String, SimpleMeasurement> getSurveyForPositioning(@QueryParam("adapterName") String adapterName, @QueryParam("ip") String ip, @QueryParam("port") Integer port, @QueryParam("htttps") Boolean shouldUseHttps, @QueryParam("count") Integer count, @QueryParam("delayMs") Integer delayMs) {
         try {
             SensorNode shell = new SensorNode();
             shell.setIp(ip);
-            if(port !=  null) {
+            if (port != null) {
                 shell.setPort(port);
             }
             shell.setHttpsEnabled(shouldUseHttps);
 
-            SurveyCallable surveyWorker = new SurveyCallable(delayMs,count,adapterName,shell);
+            SurveyCallable surveyWorker = new SurveyCallable(delayMs, count, adapterName, shell);
 
             Survey survey = surveyWorker.call();
 
-            Map<String,SimpleMeasurement> measurementMap = new HashMap<String, SimpleMeasurement>();
+            Map<String, SimpleMeasurement> measurementMap = new HashMap<String, SimpleMeasurement>();
             for (AverageWlanScanMeasurement averageWlanScanMeasurement : survey.getAverageScanNodes()) {
-                measurementMap.put(averageWlanScanMeasurement.getMacAddress(),new SimpleMeasurement(averageWlanScanMeasurement));
+                measurementMap.put(averageWlanScanMeasurement.getMacAddress(), new SimpleMeasurement(averageWlanScanMeasurement));
             }
 
             return measurementMap;
@@ -57,7 +57,7 @@ public class PositioningService {
 
     @POST
     @Path("/networks")
-    public List<SensorNetwork> getPossibleNetworksForGivenSurvey(@QueryParam("freq")EFrequencyRange frequencyRange, Map<String,SimpleMeasurement> measurements) {
+    public List<SensorNetwork> getPossibleNetworksForGivenSurvey(@QueryParam("freq") EFrequencyRange frequencyRange, Map<String, SimpleMeasurement> measurements) {
         try {
             FindFittingNetwork networkFinder = new FindFittingNetwork(frequencyRange);
             return networkFinder.findNetwork(measurements);
@@ -69,25 +69,27 @@ public class PositioningService {
 
     @POST
     @Path("/position")
-    public PositionAnalysisWrapper getProbablePositions(@QueryParam("freq")EFrequencyRange frequencyRange, @QueryParam("networkId") String sensorNetworkId, Map<String,SimpleMeasurement> measurements,@QueryParam("multi")Double multi,@QueryParam("shouldIncludeExtended") Boolean shouldIncludeExtended) {
+    public PositionAnalysisWrapper getProbablePositions(@QueryParam("freq") EFrequencyRange frequencyRange, @QueryParam("networkId") String sensorNetworkId,
+                                                        Map<String, SimpleMeasurement> measurements, @QueryParam("multi") Double multi,
+                                                        @QueryParam("shouldIncludeExtended") Boolean shouldIncludeExtended) {
         try {
-	        if(multi == null) {
-		        multi =0d;
-	        }
-	        if(shouldIncludeExtended == null) {
-		        shouldIncludeExtended = true;
-	        }
+            if (multi == null) {
+                multi = 0d;
+            }
+            if (shouldIncludeExtended == null) {
+                shouldIncludeExtended = true;
+            }
 
             SensorNetwork network = SensorManager.getInstance().getSensorNetworkById(sensorNetworkId);
             Analysis analysis = MiscManager.getInstance().getLatestAnalysis(sensorNetworkId);
 
-            RSSMatrixCreator creator = new RSSMatrixCreator(analysis.getSignalMap().get(frequencyRange), ServerConfig.getInstance().getSignalMapConfig(),network,frequencyRange,shouldIncludeExtended);
+            RSSMatrixCreator creator = new RSSMatrixCreator(analysis.getSignalMap().get(frequencyRange), ServerConfig.getInstance().getSignalMapConfig(), network, frequencyRange, shouldIncludeExtended);
             IPositionAlgorithm algorithm = new ManhattanDistanceDetermination(analysis.getSignalMap().get(frequencyRange));
-	        PositionAnalysisWrapper wrapper = new PositionAnalysisWrapper();
-	        wrapper.setProbablePositions(algorithm.getMostLikelyPositions(measurements, creator.getReferencePoints(), multi));
-	        wrapper.setAnalysis(MiscManager.getInstance().getLatestAnalysis(sensorNetworkId));
-	        wrapper.setFreq(frequencyRange);
-	        wrapper.setNetwork(network);
+            PositionAnalysisWrapper wrapper = new PositionAnalysisWrapper();
+            wrapper.setProbablePositions(algorithm.getMostLikelyPositions(measurements, creator.getReferencePoints(), multi));
+            wrapper.setAnalysis(MiscManager.getInstance().getLatestAnalysis(sensorNetworkId));
+            wrapper.setFreq(frequencyRange);
+            wrapper.setNetwork(network);
             return wrapper;
         } catch (Exception e) {
             ExceptionHandler.handle(new BaseResponse(), e);

@@ -11,7 +11,6 @@ public class NodeProbabilityDetails {
     private double maxProbability;
     private List<NodeProbabilityPoint> allPossiblePoints = new ArrayList<NodeProbabilityPoint>();
 
-
     public NodeProbabilityPoint getSelectedPoint() {
         return selectedPoint;
     }

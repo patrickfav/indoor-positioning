@@ -14,12 +14,12 @@ import java.util.Map;
 /**
  * @author PatrickF
  * @since 02.12.13
- *        Time: 14:31
+ * Time: 14:31
  */
 public class ObjectMapperManager extends StdObjectMapperFactory {
 
     public static ObjectMapper createMapperForAPI() {
-        ObjectMapper mapper =  new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper = addMixinsForAPI(mapper);
         return mapper;
@@ -45,28 +45,51 @@ public class ObjectMapperManager extends StdObjectMapperFactory {
     }
 
     public static ObjectMapper addMixinsForDB(ObjectMapper mapper) {
-        mapper.addMixInAnnotations(AverageWlanScanMeasurement.class,AverageWlanScanMeasurement.AverageWlanScanMeasurementDBMixin.class);
+        mapper.addMixInAnnotations(AverageWlanScanMeasurement.class, AverageWlanScanMeasurement.AverageWlanScanMeasurementDBMixin.class);
         return mapper;
     }
 
     public abstract static class EktropMappingIgnoreMixin {
         @JsonIgnore
         String dbType;
-        @JsonIgnore public abstract String getDbType();
-        @JsonIgnore public abstract void setDbType(String s);
+
+        @JsonIgnore
+        public abstract String getDbType();
+
+        @JsonIgnore
+        public abstract void setDbType(String s);
+
         @JsonIgnore
         String id;
-        @JsonIgnore public abstract String getId();
-        @JsonIgnore public abstract void setId(String s);
+
+        @JsonIgnore
+        public abstract String getId();
+
+        @JsonIgnore
+        public abstract void setId(String s);
+
         @JsonIgnore
         String revision;
-        @JsonIgnore public abstract String getRevision();
-        @JsonIgnore public abstract void setRevision(String s);
-        @JsonIgnore private Revisions revisions;
-        @JsonIgnore abstract void setRevisions(Revisions r);
+
+        @JsonIgnore
+        public abstract String getRevision();
+
+        @JsonIgnore
+        public abstract void setRevision(String s);
+
+        @JsonIgnore
+        private Revisions revisions;
+
+        @JsonIgnore
+        abstract void setRevisions(Revisions r);
+
         @JsonIgnore
         String attachments;
-        @JsonIgnore abstract Map<String, Attachment> getAttachments();
-        @JsonIgnore abstract void setAttachments(Map<String, Attachment> attachments);
+
+        @JsonIgnore
+        abstract Map<String, Attachment> getAttachments();
+
+        @JsonIgnore
+        abstract void setAttachments(Map<String, Attachment> attachments);
     }
 }

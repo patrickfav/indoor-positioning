@@ -28,13 +28,13 @@ public abstract class ARequest<T> {
 
     protected ARequest() {
         client = ClientBuilder.newClient();
-        client.property(ClientProperties.CONNECT_TIMEOUT, 1000*20);
-        client.property(ClientProperties.READ_TIMEOUT, 1000*20);
+        client.property(ClientProperties.CONNECT_TIMEOUT, 1000 * 20);
+        client.property(ClientProperties.READ_TIMEOUT, 1000 * 20);
     }
 
     public abstract T startRequest() throws SensorRequestException;
 
-    protected ResponseWrapper runRequest(String method, String uri, String requestBody,boolean shouldLogBody) {
+    protected ResponseWrapper runRequest(String method, String uri, String requestBody, boolean shouldLogBody) {
 
         long startTime = new Date().getTime();
         WebTarget target = client.target(uri);
@@ -72,7 +72,7 @@ public abstract class ARequest<T> {
 
         log.debug("Response: " + response.getResponse().getStatus() + " (" + responseTime + "ms)");
         log.debug("\tHeader:" + response.getResponse().getHeaders().toString());
-        if(shouldLogBody) log.debug("\tBody:" + ServerUtil.foldTooLongString(response.getBody(), 6000) + "\n");
+        if (shouldLogBody) log.debug("\tBody:" + ServerUtil.foldTooLongString(response.getBody(), 6000) + "\n");
 
         return response;
     }

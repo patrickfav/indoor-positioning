@@ -26,15 +26,15 @@ public class RouterSingleAdapterInfoRequest extends ARequest<List<Adapter>> {
     @Override
     public List<Adapter> startRequest() throws SensorRequestException {
         try {
-            Map<String,String> queryMap= new HashMap<String, String>();
-            queryMap.put(ApiConst.ROUTER_ADAPTER_QUERY_PARAM,adapterName);
-            queryMap.put(ApiConst.ROUTER_SCAN_BOOL_QUERY_PARAM,"false");
+            Map<String, String> queryMap = new HashMap<String, String>();
+            queryMap.put(ApiConst.ROUTER_ADAPTER_QUERY_PARAM, adapterName);
+            queryMap.put(ApiConst.ROUTER_SCAN_BOOL_QUERY_PARAM, "false");
 
-            ResponseWrapper responseWrapper = runRequest("GET",getNode().getFullUrl()+ ApiConst.ROUTER_SERVICE_IWINFO+ ServerUtil.createQueryString(queryMap),"",false);
+            ResponseWrapper responseWrapper = runRequest("GET", getNode().getFullUrl() + ApiConst.ROUTER_SERVICE_IWINFO + ServerUtil.createQueryString(queryMap), "", false);
             IwinfoXmlReader.IwinfoAdapter iwinfoAdapter = IwinfoXmlReader.parseSpecificIwinfoAdapter(responseWrapper.getBody());
-            return  IwinfoAdapterListParser.parse(iwinfoAdapter.getInfo(), true);
+            return IwinfoAdapterListParser.parse(iwinfoAdapter.getInfo(), true);
         } catch (Exception e) {
-            throw new SensorRequestException("Could not complete "+getClass().getSimpleName(),e);
+            throw new SensorRequestException("Could not complete " + getClass().getSimpleName(), e);
         }
     }
 }

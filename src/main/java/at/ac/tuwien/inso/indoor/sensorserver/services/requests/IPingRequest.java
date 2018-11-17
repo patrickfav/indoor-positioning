@@ -6,5 +6,5 @@ import at.ac.tuwien.inso.indoor.sensorserver.services.exceptions.SensorRequestEx
  * Created by PatrickF on 05.10.2014.
  */
 public interface IPingRequest {
-    public Boolean startRequest() throws SensorRequestException;
+    Boolean startRequest() throws SensorRequestException;
 }

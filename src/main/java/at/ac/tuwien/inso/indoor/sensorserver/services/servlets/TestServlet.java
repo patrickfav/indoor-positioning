@@ -11,9 +11,9 @@ import java.io.IOException;
  */
 public class TestServlet extends HttpServlet {
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		super.doPost(req, resp);
-		System.out.println("post");
-	}
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doPost(req, resp);
+        System.out.println("post");
+    }
 }

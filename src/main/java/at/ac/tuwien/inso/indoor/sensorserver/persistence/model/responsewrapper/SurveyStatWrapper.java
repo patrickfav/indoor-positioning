@@ -1,7 +1,7 @@
 package at.ac.tuwien.inso.indoor.sensorserver.persistence.model.responsewrapper;
 
-import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.SurveyStatistics;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.Survey;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.SurveyStatistics;
 
 import java.util.List;
 
@@ -11,7 +11,6 @@ import java.util.List;
 public class SurveyStatWrapper {
     private List<Survey> surveyList;
     private List<SurveyStatistics> statistics;
-
 
     public List<Survey> getSurveyList() {
         return surveyList;

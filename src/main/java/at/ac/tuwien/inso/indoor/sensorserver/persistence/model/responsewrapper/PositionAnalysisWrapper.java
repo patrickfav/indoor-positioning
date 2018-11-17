@@ -9,40 +9,40 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNet
  * Created by PatrickF on 17.02.2015.
  */
 public class PositionAnalysisWrapper {
-	private Analysis analysis;
-	private SensorNetwork network;
-	private IPositionAlgorithm.PositionData probablePositions;
-	private EFrequencyRange freq;
+    private Analysis analysis;
+    private SensorNetwork network;
+    private IPositionAlgorithm.PositionData probablePositions;
+    private EFrequencyRange freq;
 
-	public SensorNetwork getNetwork() {
-		return network;
-	}
+    public SensorNetwork getNetwork() {
+        return network;
+    }
 
-	public void setNetwork(SensorNetwork network) {
-		this.network = network;
-	}
+    public void setNetwork(SensorNetwork network) {
+        this.network = network;
+    }
 
-	public Analysis getAnalysis() {
-		return analysis;
-	}
+    public Analysis getAnalysis() {
+        return analysis;
+    }
 
-	public void setAnalysis(Analysis analysis) {
-		this.analysis = analysis;
-	}
+    public void setAnalysis(Analysis analysis) {
+        this.analysis = analysis;
+    }
 
-	public IPositionAlgorithm.PositionData getProbablePositions() {
-		return probablePositions;
-	}
+    public IPositionAlgorithm.PositionData getProbablePositions() {
+        return probablePositions;
+    }
 
-	public void setProbablePositions(IPositionAlgorithm.PositionData probablePositions) {
-		this.probablePositions = probablePositions;
-	}
+    public void setProbablePositions(IPositionAlgorithm.PositionData probablePositions) {
+        this.probablePositions = probablePositions;
+    }
 
-	public EFrequencyRange getFreq() {
-		return freq;
-	}
+    public EFrequencyRange getFreq() {
+        return freq;
+    }
 
-	public void setFreq(EFrequencyRange freq) {
-		this.freq = freq;
-	}
+    public void setFreq(EFrequencyRange freq) {
+        this.freq = freq;
+    }
 }

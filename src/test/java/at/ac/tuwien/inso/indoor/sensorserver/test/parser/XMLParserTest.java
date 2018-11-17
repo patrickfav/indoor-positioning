@@ -14,7 +14,7 @@ public class XMLParserTest {
     private static Logger log = Logger.getLogger(XMLParserTest.class);
 
     @Test
-    public void testIwinfoWlan0AdapterParseShouldOk() throws Exception{
+    public void testIwinfoWlan0AdapterParseShouldOk() throws Exception {
         IwinfoXmlReader.IwinfoAdapter adapter = IwinfoXmlReader.parseSpecificIwinfoAdapter(XMLExamples.xmlExample_iwinfo_adapter_wlan0);
         assertNotNull(adapter);
         assertNotNull(adapter.getInfo());
@@ -26,7 +26,7 @@ public class XMLParserTest {
     }
 
     @Test
-    public void testIwinfoListAdapterParseShouldOk() throws Exception{
+    public void testIwinfoListAdapterParseShouldOk() throws Exception {
         IwinfoXmlReader.IwinfoList adapter = IwinfoXmlReader.parseIwinfoAdapterList(XMLExamples.xmlExample_iwinfo_adapter_list);
         assertNotNull(adapter);
         assertNotNull(adapter.getAdapterList());

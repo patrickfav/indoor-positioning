@@ -3,7 +3,10 @@ package at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.SimpleStatistics;
 import at.ac.tuwien.inso.indoor.sensorserver.util.ServerUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by PatrickF on 22.09.2014.
@@ -14,9 +17,9 @@ public class ExtendedNodeInfo implements Comparable<ExtendedNodeInfo> {
     private Set<String> ssidSet = new HashSet<String>();
     private Set<Integer> channels = new HashSet<Integer>();
     private Set<EFrequencyRange> frequencyRanges = new HashSet<EFrequencyRange>();
-    private boolean isManagedNode=false;
+    private boolean isManagedNode = false;
     private List<ManagedNode> managedNodes = new ArrayList<ManagedNode>();
-    private boolean ignored =false;
+    private boolean ignored = false;
     private TrendInfo trendInfo;
 
     public boolean isManagedNode() {
@@ -85,7 +88,7 @@ public class ExtendedNodeInfo implements Comparable<ExtendedNodeInfo> {
 
     @Override
     public int compareTo(ExtendedNodeInfo o) {
-        return ServerUtil.implode("",new ArrayList<String>(ssidSet)).compareTo(ServerUtil.implode("",new ArrayList<String>(o.getSsidSet())));
+        return ServerUtil.implode("", new ArrayList<String>(ssidSet)).compareTo(ServerUtil.implode("", new ArrayList<String>(o.getSsidSet())));
     }
 
     public static class ManagedNode implements Comparable<ManagedNode> {
@@ -152,8 +155,8 @@ public class ExtendedNodeInfo implements Comparable<ExtendedNodeInfo> {
 
     public static class TrendInfo {
         private double shortTermTrend = 0;
-        private double longTermTrend= 0;
-        private int longTermTrendSampleSize=0;
+        private double longTermTrend = 0;
+        private int longTermTrendSampleSize = 0;
 
         public double getShortTermTrend() {
             return shortTermTrend;

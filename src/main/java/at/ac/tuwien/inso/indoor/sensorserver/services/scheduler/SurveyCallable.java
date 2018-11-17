@@ -1,6 +1,6 @@
 package at.ac.tuwien.inso.indoor.sensorserver.services.scheduler;
 
-import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.*;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.Statistics;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.comparator.AverageScanMeasurementConfidenceComparator;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.AverageWlanScanMeasurement;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.Survey;
@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
 /**
  * Created by PatrickF on 14.09.2014.
  */
-public class SurveyCallable implements Callable<Survey>{
+public class SurveyCallable implements Callable<Survey> {
     protected static Logger log = Logger.getLogger(SurveyCallable.class);
 
     private static final int MAX_REPEAT_COUNT = 100;
@@ -36,19 +36,19 @@ public class SurveyCallable implements Callable<Survey>{
         this.adapterName = adapterName;
         this.node = node;
 
-        if(this.repeatCount > MAX_REPEAT_COUNT) {
+        if (this.repeatCount > MAX_REPEAT_COUNT) {
             this.repeatCount = MAX_REPEAT_COUNT;
-            log.warn("Repeat count too high, reduce it to "+MAX_REPEAT_COUNT);
+            log.warn("Repeat count too high, reduce it to " + MAX_REPEAT_COUNT);
         }
 
-        if(this.delayMs < MIN_DELAY) {
+        if (this.delayMs < MIN_DELAY) {
             this.delayMs = MIN_DELAY;
-            log.warn("Delay too low, setting it to "+MIN_DELAY+"ms");
+            log.warn("Delay too low, setting it to " + MIN_DELAY + "ms");
         }
     }
 
     public SurveyCallable(long delayMs, int repeatCount, String adapterName, SensorNode node, Callback<Survey> resultCallback, Callback<Double> progressCallback) {
-        this(delayMs,repeatCount,adapterName,node);
+        this(delayMs, repeatCount, adapterName, node);
         this.resultsCallback = resultCallback;
         this.progressCallback = progressCallback;
     }
@@ -65,22 +65,22 @@ public class SurveyCallable implements Callable<Survey>{
         Survey survey = new Survey();
         List<List<WlanScanNode>> scans = new ArrayList<List<WlanScanNode>>();
 
-        for(int i=0;i<repeatCount;i++) {
-            scans.add(scan(node,adapterName));
-            currentRepeatCycle+=0.5;
+        for (int i = 0; i < repeatCount; i++) {
+            scans.add(scan(node, adapterName));
+            currentRepeatCycle += 0.5;
             updateProgress();
 
             Thread.sleep(delayMs);
-            currentRepeatCycle+=0.5;
+            currentRepeatCycle += 0.5;
             updateProgress();
         }
 
         survey.setAdapter(adapterName);
         survey.setNodeId(node.getNodeId());
         survey.setNetworkId(node.getNetworkId());
-        survey.setAverageScanNodes(getAvgScanNodes(scans,repeatCount));
+        survey.setAverageScanNodes(getAvgScanNodes(scans, repeatCount));
 
-        if(resultsCallback != null) {
+        if (resultsCallback != null) {
             resultsCallback.callback(survey);
         }
 
@@ -88,25 +88,25 @@ public class SurveyCallable implements Callable<Survey>{
     }
 
     private void updateProgress() {
-        if(progressCallback != null) {
+        if (progressCallback != null) {
             progressCallback.callback(Math.min(0.99d, getCurrentProgress()));
         }
     }
 
-    protected List<WlanScanNode> scan(SensorNode node,String adapterName) throws Exception{
+    protected List<WlanScanNode> scan(SensorNode node, String adapterName) throws Exception {
         return new RouterScanRequest(node, adapterName).startRequest();
     }
 
-    private List<AverageWlanScanMeasurement> getAvgScanNodes(List<List<WlanScanNode>> nodes,int measureCount) {
-        Map<String,List<WlanScanNode>> scanMap = new HashMap<String, List<WlanScanNode>>();
+    private List<AverageWlanScanMeasurement> getAvgScanNodes(List<List<WlanScanNode>> nodes, int measureCount) {
+        Map<String, List<WlanScanNode>> scanMap = new HashMap<String, List<WlanScanNode>>();
         List<AverageWlanScanMeasurement> avgList = new ArrayList<AverageWlanScanMeasurement>();
 
         for (List<WlanScanNode> nodeList : nodes) {
             for (WlanScanNode wlanScanNode : nodeList) {
-                String id = wlanScanNode.getMacAddress()+"-"+ wlanScanNode.getSsid();
+                String id = wlanScanNode.getMacAddress() + "-" + wlanScanNode.getSsid();
 
-                if(!scanMap.containsKey(id)) {
-                    scanMap.put(id,new ArrayList<WlanScanNode>());
+                if (!scanMap.containsKey(id)) {
+                    scanMap.put(id, new ArrayList<WlanScanNode>());
                 }
 
                 scanMap.get(id).add(wlanScanNode);
@@ -134,15 +134,15 @@ public class SurveyCallable implements Callable<Survey>{
 
         }
 
-        Collections.sort(avgList,new AverageScanMeasurementConfidenceComparator());
+        Collections.sort(avgList, new AverageScanMeasurementConfidenceComparator());
 
         return avgList;
     }
 
-    private Double getConfidence(List<WlanScanNode> measurements,int measureCount,double variance, double avg) {
+    private Double getConfidence(List<WlanScanNode> measurements, int measureCount, double variance, double avg) {
         double confidence = 0;
-        if(measureCount > 0) {
-            confidence = (double)measurements.size()/(double)measureCount;
+        if (measureCount > 0) {
+            confidence = (double) measurements.size() / (double) measureCount;
         }
         double variancePercent = Math.abs(avg) * variance / 10000;
         return confidence - (variancePercent * 2);

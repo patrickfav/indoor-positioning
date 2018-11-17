@@ -41,16 +41,20 @@ public class SensorAccessService {
 
     @POST
     @Path("/ping")
-    public SuccessResponse pingSensorSimple(SensorNode node,@QueryParam("persist") Boolean persist) {
-        if(persist == null) {persist = true;}
-        return ping(node,new RouterWebserverPingRequest(node),persist);
+    public SuccessResponse pingSensorSimple(SensorNode node, @QueryParam("persist") Boolean persist) {
+        if (persist == null) {
+            persist = true;
+        }
+        return ping(node, new RouterWebserverPingRequest(node), persist);
     }
 
     @POST
     @Path("/ping-cgi")
-    public SuccessResponse pingSensorCgi(SensorNode node,@QueryParam("persist") Boolean persist) {
-        if(persist == null) {persist = true;}
-        return ping(node,new RouterScriptPingRequest(node),persist);
+    public SuccessResponse pingSensorCgi(SensorNode node, @QueryParam("persist") Boolean persist) {
+        if (persist == null) {
+            persist = true;
+        }
+        return ping(node, new RouterScriptPingRequest(node), persist);
     }
 
     private SuccessResponse ping(SensorNode node, IPingRequest request, boolean persist) {
@@ -70,7 +74,7 @@ public class SensorAccessService {
                 pingLog.setError(true);
             }
 
-            if(persist) {
+            if (persist) {
                 log.debug("add new pinglog " + pingLog);
                 MiscManager.getInstance().addPing(pingLog);
             }
@@ -86,7 +90,7 @@ public class SensorAccessService {
     @Path("/scan")
     public Response simpleScan(SensorNode node, @QueryParam("adapter") String adapterName) {
         try {
-            List<WlanScanNode> scanList =  new RouterScanRequest(node,adapterName).startRequest();
+            List<WlanScanNode> scanList = new RouterScanRequest(node, adapterName).startRequest();
             return Response.ok(scanList).build();
         } catch (Exception e) {
             ExceptionHandler.handle(new BaseResponse(), e);
@@ -98,13 +102,13 @@ public class SensorAccessService {
     @Path("/survey")
     public static Response survey(SensorNode node, @QueryParam("adapter") String adapterName, @QueryParam("delay") Long delay, @QueryParam("repeat") Integer repeat) {
         try {
-            if(delay == null || delay == 0) {
+            if (delay == null || delay == 0) {
                 delay = 1500L;
             }
-            if(repeat == null || repeat == 0) {
+            if (repeat == null || repeat == 0) {
                 repeat = 4;
             }
-            SurveyCallable surveyWorker = new SurveyCallable(delay,repeat,adapterName,node);
+            SurveyCallable surveyWorker = new SurveyCallable(delay, repeat, adapterName, node);
             return Response.ok(surveyWorker.call()).build();
         } catch (Exception e) {
             ExceptionHandler.handle(new BaseResponse(), e);

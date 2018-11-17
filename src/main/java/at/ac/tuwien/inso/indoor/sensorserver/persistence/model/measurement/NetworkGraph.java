@@ -123,6 +123,7 @@ public class NetworkGraph {
             return result;
         }
     }
+
     public static class NetworkEdge {
         private String id;
         private String source;

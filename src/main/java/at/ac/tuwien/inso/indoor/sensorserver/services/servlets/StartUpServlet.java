@@ -1,6 +1,5 @@
 package at.ac.tuwien.inso.indoor.sensorserver.services.servlets;
 
-
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.couchdb.DB;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.SensorManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNetwork;
@@ -70,7 +69,7 @@ public class StartUpServlet extends HttpServlet {
         ServerConfig.getInstance().setVersion(ServerUtil.getImplementationVersionFromManifest(getServletContext()));
 
         ServerConfig savedConfig = ServerConfig.getInstance().getServerConfigDao().getServerConfig();
-        if(savedConfig != null) {
+        if (savedConfig != null) {
             ServerConfig.getInstance().set(savedConfig);
             log.info("A saved ServerConfig was found and configs reused");
         } else {
@@ -80,7 +79,7 @@ public class StartUpServlet extends HttpServlet {
         ServerConfig.getInstance().saveToDb();
 
         //TODO: This will only work if the client is on same machine as server (using localhost as url) - find a better solution later
-        ServerConfig.getInstance().setCouchDBUrl(DB.DB_URL+"/"+DB.getInstance().getDBName());
+        ServerConfig.getInstance().setCouchDBUrl(DB.DB_URL + "/" + DB.getInstance().getDBName());
     }
 
     private void addTestData() {
@@ -94,7 +93,7 @@ public class StartUpServlet extends HttpServlet {
                 SchedulerManager.getInstance().addPingLogJob(sensorNetwork);
                 SchedulerManager.getInstance().addAnalysisLogJob(sensorNetwork);
             } catch (SchedulerException e) {
-                log.error("Could not add scheduler job for network "+sensorNetwork);
+                log.error("Could not add scheduler job for network " + sensorNetwork);
             }
         }
     }

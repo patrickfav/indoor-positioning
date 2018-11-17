@@ -57,7 +57,7 @@ public class ServerUtil {
         byte[] returnBuffer = {};
         try {
             int len;
-            byte buffer[] = new byte[2048];
+            byte[] buffer = new byte[2048];
             gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedContent));
 
             while ((len = gzipInputStream.read(buffer)) > 0) {
@@ -73,7 +73,6 @@ public class ServerUtil {
 
         return returnBuffer;
     }
-
 
     public static byte[] compressGzip(byte[] content) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream(content.length);
@@ -125,7 +124,6 @@ public class ServerUtil {
         return sb.toString();
     }
 
-
     public static String readFile(File f, boolean keepNewlines) {
         StringBuilder contents = new StringBuilder();
 
@@ -153,7 +151,7 @@ public class ServerUtil {
         return contents.toString();
     }
 
-    public static List<String> readFileAndGetAllLines(File f,boolean ommitHashComments) {
+    public static List<String> readFileAndGetAllLines(File f, boolean ommitHashComments) {
         List<String> lines = new ArrayList<String>();
         if (!f.exists()) {
             log.error("File " + f + " does not exist");
@@ -165,7 +163,7 @@ public class ServerUtil {
             try {
                 String line = null;
                 while ((line = input.readLine()) != null) {
-                    if(!ommitHashComments || !line.startsWith("#")) {
+                    if (!ommitHashComments || !line.startsWith("#")) {
                         lines.add(line.trim());
                     }
                 }
@@ -194,7 +192,7 @@ public class ServerUtil {
         try {
             URL url = new URL(urlString);
             String query = url.getQuery();
-            if(query != null && !query.isEmpty()) {
+            if (query != null && !query.isEmpty()) {
                 String[] pairs = query.split("&");
                 for (String pair : pairs) {
                     int idx = pair.indexOf("=");
@@ -202,25 +200,25 @@ public class ServerUtil {
                 }
             }
         } catch (Exception e) {
-            log.error("Could not getQueryStringMap for "+urlString,e);
+            log.error("Could not getQueryStringMap for " + urlString, e);
         }
         return query_pairs;
     }
 
-    public static String createQueryString(Map<String,String> queryMap) {
+    public static String createQueryString(Map<String, String> queryMap) {
         StringBuilder sb = new StringBuilder();
         sb.append("?");
         for (String key : queryMap.keySet()) {
             try {
-                sb.append(URLEncoder.encode(key, "UTF-8")+"="+ URLEncoder.encode(queryMap.get(key), "UTF-8")+"&");
+                sb.append(URLEncoder.encode(key, "UTF-8") + "=" + URLEncoder.encode(queryMap.get(key), "UTF-8") + "&");
             } catch (Exception e) {
-                log.warn("could not url encode ("+key+"="+queryMap.get(key)+")",e);
+                log.warn("could not url encode (" + key + "=" + queryMap.get(key) + ")", e);
             }
         }
-        return sb.toString().substring(0,sb.toString().length()-1);
+        return sb.toString().substring(0, sb.toString().length() - 1);
     }
 
-    public static String getStringFromInputStream(InputStream is,boolean keepNewlines) {
+    public static String getStringFromInputStream(InputStream is, boolean keepNewlines) {
 
         BufferedReader br = null;
         StringBuilder sb = new StringBuilder();
@@ -231,7 +229,7 @@ public class ServerUtil {
             br = new BufferedReader(new InputStreamReader(is));
             while ((line = br.readLine()) != null) {
                 sb.append(line);
-                if(keepNewlines) {
+                if (keepNewlines) {
                     sb.append("\n");
                 }
             }
@@ -256,6 +254,7 @@ public class ServerUtil {
         sdf.applyPattern("yyyy-MM-dd'T'HH:mm:ss");
         return sdf.format(d);
     }
+
     public static String getDateString(Date d) {
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern("yyyy-MM-dd");
@@ -271,22 +270,22 @@ public class ServerUtil {
     }
 
     public static String getFileExtension(String filename) {
-        if(filename == null || filename.isEmpty()) {
+        if (filename == null || filename.isEmpty()) {
             return "";
         }
 
         String extension = "";
         int i = filename.lastIndexOf('.');
         if (i > 0) {
-            extension = filename.substring(i+1);
+            extension = filename.substring(i + 1);
         }
         return extension;
     }
 
-	public static double round(double value, int digits) {
-		BigDecimal bd = new BigDecimal(value).setScale(digits, RoundingMode.HALF_UP);
-		return bd.doubleValue();
-	}
+    public static double round(double value, int digits) {
+        BigDecimal bd = new BigDecimal(value).setScale(digits, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
 
     public static class RestParam {
         private final String name;

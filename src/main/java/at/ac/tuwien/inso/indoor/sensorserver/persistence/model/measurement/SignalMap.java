@@ -12,15 +12,14 @@ public class SignalMap {
     private int spreadCmExtendedNodes;
     private int defaultSignalRadiusCm;
 
-    private Map<String,Vertex> managedNodes = new HashMap<String, Vertex>();
-    private Map<String,Vertex> extendedNodes = new HashMap<String, Vertex>();
+    private Map<String, Vertex> managedNodes = new HashMap<String, Vertex>();
+    private Map<String, Vertex> extendedNodes = new HashMap<String, Vertex>();
     private List<Edge> mangedNodeEdges = new ArrayList<Edge>();
     private List<Edge> extendedNodeEdges = new ArrayList<Edge>();
     private FloorplanConfig floorplanConfig = new FloorplanConfig();
     private List<Log> logListExtendedNodes = new ArrayList<Log>();
 
-
-    public SignalMap(int tileLengthCm, int lengthX,int lengthY, SignalMapConfig config, int defaultSignalRadiusCm) {
+    public SignalMap(int tileLengthCm, int lengthX, int lengthY, SignalMapConfig config, int defaultSignalRadiusCm) {
         this.tileLengthCm = tileLengthCm;
         this.lengthY = lengthY;
         this.lengthX = lengthX;
@@ -127,11 +126,11 @@ public class SignalMap {
         private String name;
         private PhysicalAdapter physicalAdapter;
         private int visibility;
-        private int possiblePositions=1;
-        private double probability=1d;
-        private double signalStrengthFac=1d;
+        private int possiblePositions = 1;
+        private double probability = 1d;
+        private double signalStrengthFac = 1d;
 
-        public Vertex(Point pos,String mac) {
+        public Vertex(Point pos, String mac) {
             this.originalPos = pos;
             this.currentPos = pos;
             this.mac = mac;
@@ -264,22 +263,22 @@ public class SignalMap {
     }
 
     public static class FloorplanConfig {
-        private int posX =-1;
-        private int posY =-1;
-        private double scale =1;
-        private int rotationDegrees=0;
+        private int posX = -1;
+        private int posY = -1;
+        private double scale = 1;
+        private int rotationDegrees = 0;
 
-	    public FloorplanConfig() {
-	    }
+        public FloorplanConfig() {
+        }
 
-	    public FloorplanConfig(FloorplanConfig floorplanConfig1) {
-		    this.posX = floorplanConfig1.getPosX();
-		    this.posY = floorplanConfig1.getPosY();
-		    this.scale = floorplanConfig1.getScale();
-		    this.rotationDegrees = floorplanConfig1.getRotationDegrees();
-	    }
+        public FloorplanConfig(FloorplanConfig floorplanConfig1) {
+            this.posX = floorplanConfig1.getPosX();
+            this.posY = floorplanConfig1.getPosY();
+            this.scale = floorplanConfig1.getScale();
+            this.rotationDegrees = floorplanConfig1.getRotationDegrees();
+        }
 
-	    public int getPosX() {
+        public int getPosX() {
             return posX;
         }
 
@@ -352,7 +351,7 @@ public class SignalMap {
 
         @Override
         public int compareTo(Log o) {
-            return date.compareTo(o.getDate())*-1;
+            return date.compareTo(o.getDate()) * -1;
         }
     }
 }

@@ -10,6 +10,6 @@ import java.util.Comparator;
 public class AverageScanMeasurementConfidenceComparator implements Comparator<AverageWlanScanMeasurement> {
     @Override
     public int compare(AverageWlanScanMeasurement o1, AverageWlanScanMeasurement o2) {
-        return o1.getConfidence().compareTo(o2.getConfidence())* -1;
+        return o1.getConfidence().compareTo(o2.getConfidence()) * -1;
     }
 }

@@ -8,10 +8,10 @@ import java.util.List;
 /**
  * Created by PatrickF on 26.09.2014.
  */
-public class Blacklist extends TypeAbleCouchDBDocument{
+public class Blacklist extends TypeAbleCouchDBDocument {
     private String networkId;
     private List<String> macList = new ArrayList<String>();
-    private boolean actAsWhiteList =false;
+    private boolean actAsWhiteList = false;
 
     public boolean isActAsWhiteList() {
         return actAsWhiteList;

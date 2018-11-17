@@ -7,10 +7,11 @@ import java.util.List;
  * Created by PatrickF on 08.09.2014.
  */
 public class BaseResponse {
-    private String statusDescription="OK";
+    private String statusDescription = "OK";
     private List<String> exceptionList = new ArrayList<String>();
 
-    public BaseResponse() {}
+    public BaseResponse() {
+    }
 
     public List<String> getExceptionList() {
         return exceptionList;

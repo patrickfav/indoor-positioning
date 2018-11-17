@@ -12,7 +12,7 @@ public class PingLog extends TypeAbleCouchDBDocument implements Comparable<PingL
     private String nodeId;
     private Date created;
     private boolean success;
-    private boolean error=false;
+    private boolean error = false;
     private String jobId;
     private String url;
 

@@ -19,7 +19,7 @@ public class SimpleMeasurement {
 
     public SimpleMeasurement(AverageWlanScanMeasurement averageWlanScanMeasurement) {
         this();
-        this.ssid =averageWlanScanMeasurement.getSsid();
+        this.ssid = averageWlanScanMeasurement.getSsid();
         this.macAddress = averageWlanScanMeasurement.getMacAddress();
         this.channel = averageWlanScanMeasurement.getChannel();
         this.signalStrengths = averageWlanScanMeasurement.getSignalStrengths();
@@ -70,7 +70,7 @@ public class SimpleMeasurement {
     }
 
     public SimpleStatistics getStatistics() {
-        if(statistics == null && signalStrengths != null) {
+        if (statistics == null && signalStrengths != null) {
             statistics = new SimpleStatistics(signalStrengths);
         }
         return statistics;

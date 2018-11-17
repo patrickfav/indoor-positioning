@@ -11,13 +11,13 @@ import java.util.Set;
 public class NodeProbabilityPoint {
     private static final String SENSOR_REPRESENTATION = "$";
 
-    private Map<String,Map<String,Double>> probMap = new HashMap<String, Map<String, Double>>();
+    private Map<String, Map<String, Double>> probMap = new HashMap<String, Map<String, Double>>();
     private String fixedPosMacAddress;
 
     private int x;
     private int y;
 
-    private Map<String,Integer> foundTargetMacCache;
+    private Map<String, Integer> foundTargetMacCache;
 
     public NodeProbabilityPoint(int x, int y) {
         this.x = x;
@@ -57,23 +57,23 @@ public class NodeProbabilityPoint {
         this.x = x;
     }
 
-    public Set<Double> getProbabilitySet(String subjMac,Set<String> neededSrcMac) {
+    public Set<Double> getProbabilitySet(String subjMac, Set<String> neededSrcMac) {
         Set<Double> probList = new HashSet<Double>();
         for (String macSrc : neededSrcMac) {
-            if(!probMap.containsKey(macSrc) || !probMap.get(macSrc).containsKey(subjMac)) {
+            if (!probMap.containsKey(macSrc) || !probMap.get(macSrc).containsKey(subjMac)) {
                 return new HashSet<Double>();
             }
             probList.add(probMap.get(macSrc).get(subjMac));
         }
 
-        if(probList.size() < neededSrcMac.size()) {
+        if (probList.size() < neededSrcMac.size()) {
             return new HashSet<Double>();
         }
 
         return probList;
     }
 
-    public Double getProbabilitySum(String subjMac,Set<String> neededSrcMac) {
+    public Double getProbabilitySum(String subjMac, Set<String> neededSrcMac) {
         double sum = 0;
         for (Double prob : getProbabilitySet(subjMac, neededSrcMac)) {
             sum += prob;
@@ -81,8 +81,8 @@ public class NodeProbabilityPoint {
         return sum;
     }
 
-    public Double getProbabilityFac(String subjMac,Set<String> neededSrcMac) {
-        if(neededSrcMac.isEmpty()) {
+    public Double getProbabilityFac(String subjMac, Set<String> neededSrcMac) {
+        if (neededSrcMac.isEmpty()) {
             return 0d;
         }
 
@@ -93,7 +93,7 @@ public class NodeProbabilityPoint {
         return fac;
     }
 
-    public void addProbability(String sourceMacAddr, String subjMacAddress,Double probability) {
+    public void addProbability(String sourceMacAddr, String subjMacAddress, Double probability) {
         if (!probMap.containsKey(sourceMacAddr)) {
             probMap.put(sourceMacAddr, new HashMap<String, Double>());
         }
@@ -105,7 +105,7 @@ public class NodeProbabilityPoint {
     }
 
     public String getSingleCharStringRepresentation(String sourceMacAddr) {
-        if(isFixedPosNode() && getFixedPosMacAddress().equalsIgnoreCase(sourceMacAddr)) {
+        if (isFixedPosNode() && getFixedPosMacAddress().equalsIgnoreCase(sourceMacAddr)) {
             return SENSOR_REPRESENTATION;
         } else {
             if (!probMap.containsKey(sourceMacAddr)) {
@@ -114,17 +114,17 @@ public class NodeProbabilityPoint {
                 if (probMap.get(sourceMacAddr).keySet().size() == 1) {
                     double prob = probMap.get(sourceMacAddr).values().iterator().next();
 
-                    if(prob > 0.9) {
+                    if (prob > 0.9) {
                         return "#";
-                    } else if(prob > 0.7) {
+                    } else if (prob > 0.7) {
                         return "*";
-                    } else if(prob > 0.5) {
+                    } else if (prob > 0.5) {
                         return "~";
-                    } else if(prob > 0.2) {
+                    } else if (prob > 0.2) {
                         return ";";
-                    } else if(prob > 0.1) {
+                    } else if (prob > 0.1) {
                         return ":";
-                    } else if(prob <= 0.1) {
+                    } else if (prob <= 0.1) {
                         return ".";
                     }
                 }
@@ -138,18 +138,18 @@ public class NodeProbabilityPoint {
     }
 
     public String getSingleCharStringRepresentation() {
-        if(isFixedPosNode()) {
+        if (isFixedPosNode()) {
             return SENSOR_REPRESENTATION;
         } else {
             if (probMap.keySet().size() == 0) {
                 return PosHelper.EMPTY_STRING_REPRESENTATION;
             } else {
-                int max=1;
+                int max = 1;
 
-                Map<String,Integer> foundTargetMac = createAndGetFoundTargetMacCache();
+                Map<String, Integer> foundTargetMac = createAndGetFoundTargetMacCache();
 
                 for (String s : foundTargetMac.keySet()) {
-                    if(foundTargetMac.get(s) > max) {
+                    if (foundTargetMac.get(s) > max) {
                         max = foundTargetMac.get(s);
                     }
                 }
@@ -163,15 +163,15 @@ public class NodeProbabilityPoint {
         }
     }
 
-    private Map<String,Integer> createAndGetFoundTargetMacCache() {
-        if(foundTargetMacCache == null) {
+    private Map<String, Integer> createAndGetFoundTargetMacCache() {
+        if (foundTargetMacCache == null) {
             foundTargetMacCache = new HashMap<String, Integer>();
             for (String src : probMap.keySet()) {
                 for (String target : probMap.get(src).keySet()) {
-                    if(!foundTargetMacCache.containsKey(target)) {
-                        foundTargetMacCache.put(target,1);
+                    if (!foundTargetMacCache.containsKey(target)) {
+                        foundTargetMacCache.put(target, 1);
                     } else {
-                        foundTargetMacCache.put(target,foundTargetMacCache.get(target)+1);
+                        foundTargetMacCache.put(target, foundTargetMacCache.get(target) + 1);
                     }
                 }
             }

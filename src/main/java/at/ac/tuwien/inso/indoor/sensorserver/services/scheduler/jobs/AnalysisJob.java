@@ -30,7 +30,7 @@ public class AnalysisJob extends ISensorJob {
 
     @Override
     public void interrupt() throws UnableToInterruptJobException {
-        if(thread != null && thread.isAlive()) {
+        if (thread != null && thread.isAlive()) {
             thread.interrupt();
         }
     }
@@ -39,7 +39,7 @@ public class AnalysisJob extends ISensorJob {
     public void execute(final JobExecutionContext jobExecutionContext) throws JobExecutionException {
         jobExecutionContext.setResult(0.0d);
         final String networkId = jobExecutionContext.getJobDetail().getJobDataMap().getString(SchedulerManager.NETWORK_ID_KEY);
-        log.debug("Start new analysis job for "+networkId);
+        log.debug("Start new analysis job for " + networkId);
 
 
         job = new JobLog(jobExecutionContext.getJobDetail().getJobDataMap().getString(SchedulerManager.JOB_ID_KEY), networkId, null);
@@ -58,9 +58,9 @@ public class AnalysisJob extends ISensorJob {
                         new AnalysisBuilder().createAndPresistAnalysis(networkId);
                         jobExecutionContext.setResult(0.9d);
                         MiscManager.getInstance().endJob(job, JobLog.Status.SUCCESS);
-                        log.debug("Analysis Job successful for "+networkId);
+                        log.debug("Analysis Job successful for " + networkId);
                     } catch (Exception e) {
-                        log.error("Error in Job: "+e.getMessage(),e);
+                        log.error("Error in Job: " + e.getMessage(), e);
                         MiscManager.getInstance().endJob(job, JobLog.Status.ERROR, e.getMessage());
                     }
 
@@ -68,7 +68,7 @@ public class AnalysisJob extends ISensorJob {
             });
             thread.start();
         } catch (Exception e) {
-            log.error("Error in Job: "+e.getMessage(),e);
+            log.error("Error in Job: " + e.getMessage(), e);
             MiscManager.getInstance().endJob(job, JobLog.Status.ERROR, e.getMessage());
         }
     }

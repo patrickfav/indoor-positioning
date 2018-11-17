@@ -12,12 +12,12 @@ import org.junit.Test;
 public class IwinfoParserTest {
 
     @Test
-    public void testParseScanShouldOk() throws Exception{
-        IwinfoScanParser.parse(ScanExamples.scan_TL_WR710N_Barrier_Breaker_r42434,true);
+    public void testParseScanShouldOk() throws Exception {
+        IwinfoScanParser.parse(ScanExamples.scan_TL_WR710N_Barrier_Breaker_r42434, true);
     }
 
     @Test
-    public void testParseAdapterListShouldOk() throws Exception{
+    public void testParseAdapterListShouldOk() throws Exception {
         IwinfoAdapterListParser.parse(AdapterListExamples.adapterlist_TL_WR710N_Barrier_Breaker_r42434, true);
     }
 }

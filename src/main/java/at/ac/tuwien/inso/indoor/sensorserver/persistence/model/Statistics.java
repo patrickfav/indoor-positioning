@@ -1,32 +1,34 @@
 package at.ac.tuwien.inso.indoor.sensorserver.persistence.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by PatrickF on 18.09.2014.
  */
-public class Statistics extends SimpleStatistics{
-    private Double geometricMean=0d;
-    private Double skewness =0d;
-    private Double kurtosis=0d;
-    private Double sum=0d;
-    private Double sdtErr60Interval=0d;
-    private Double sdtErr70Interval=0d;
-    private Double sdtErr90Interval=0d;
-    private Double sdtErr95Interval=0d;
-    private Double sdtErr99Interval=0d;
-    private List<Integer> frequencyDistribution =new ArrayList<Integer>();
+public class Statistics extends SimpleStatistics {
+    private Double geometricMean = 0d;
+    private Double skewness = 0d;
+    private Double kurtosis = 0d;
+    private Double sum = 0d;
+    private Double sdtErr60Interval = 0d;
+    private Double sdtErr70Interval = 0d;
+    private Double sdtErr90Interval = 0d;
+    private Double sdtErr95Interval = 0d;
+    private Double sdtErr99Interval = 0d;
+    private List<Integer> frequencyDistribution = new ArrayList<Integer>();
 
     public Statistics() {
     }
 
     public Statistics(List<Double> dataList) {
         super(dataList);
-        if(!dataList.isEmpty()) {
+        if (!dataList.isEmpty()) {
             Collections.sort(dataList);
             sum = getSum(dataList);
             geometricMean = getGeometricMean(dataList);
-            skewness = getSkewness(dataList,getMean(),getStdDev());
+            skewness = getSkewness(dataList, getMean(), getStdDev());
             kurtosis = getKurtosis(dataList, getMean(), getStdDev());
             sdtErr60Interval = getConfidenceInterval(0.842d, getVariance());
             sdtErr70Interval = getConfidenceInterval(1.036d, getVariance());
@@ -50,33 +52,33 @@ public class Statistics extends SimpleStatistics{
         for (Double data : dataSet) {
             avg *= data;
         }
-        avg = Math.pow(avg,1.0d/(double)dataSet.size());
+        avg = Math.pow(avg, 1.0d / (double) dataSet.size());
         return avg;
     }
 
-    protected static Double getSkewness(List<Double> dataList,Double mean,Double stdDev) {
+    protected static Double getSkewness(List<Double> dataList, Double mean, Double stdDev) {
         double skew = 0.0d;
         for (Double data : dataList) {
             skew += Math.pow(data - mean, 3);
         }
-        return skew / ((dataList.size()-1)*Math.pow(stdDev,3));
+        return skew / ((dataList.size() - 1) * Math.pow(stdDev, 3));
     }
 
-    protected static Double getKurtosis(List<Double> dataList,Double mean,Double stdDev) {
+    protected static Double getKurtosis(List<Double> dataList, Double mean, Double stdDev) {
         double kurt = 0.0d;
         for (Double data : dataList) {
             kurt += Math.pow(data - mean, 4);
         }
-        return (kurt / ((dataList.size()-1)*Math.pow(stdDev,4)));
+        return (kurt / ((dataList.size() - 1) * Math.pow(stdDev, 4)));
     }
 
-    private static List<Integer> getDistributionList(List<Double> dataList,int min, int max) {
+    private static List<Integer> getDistributionList(List<Double> dataList, int min, int max) {
         List<Integer> frequency = new ArrayList<Integer>(1);
 
-        if(min == max) {
+        if (min == max) {
             frequency.add(0, dataList.size());
         } else {
-            int count = Math.abs(max - min)+1;
+            int count = Math.abs(max - min) + 1;
 
             frequency = new ArrayList<Integer>(count);
 
@@ -85,7 +87,7 @@ public class Statistics extends SimpleStatistics{
             }
 
             for (Double data : dataList) {
-                int pos = (int) Math.round(Math.abs(data))-Math.abs(max);
+                int pos = (int) Math.round(Math.abs(data)) - Math.abs(max);
                 frequency.set(pos, frequency.get(pos) + 1);
             }
             Collections.reverse(frequency);

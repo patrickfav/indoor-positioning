@@ -2,7 +2,7 @@ package at.ac.tuwien.inso.indoor.sensorserver.util;
 
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.MiscManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.SensorManager;
-import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.*;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.Statistics;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.*;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.Blacklist;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNetwork;
@@ -15,12 +15,12 @@ import java.util.*;
 public class SurveyUtil {
 
     public static List<SurveyStatistics> createAverageFromSurveys(List<Survey> surveys, String networkId) {
-        Map<String,SurveyStatistics> map = new HashMap<String, SurveyStatistics>();
+        Map<String, SurveyStatistics> map = new HashMap<String, SurveyStatistics>();
 
         for (Survey survey : surveys) {
             for (AverageWlanScanMeasurement avgM : survey.getAverageScanNodes()) {
-                if(!map.containsKey(avgM.getMacAddress())) {
-                    map.put(avgM.getMacAddress(),getAverageFromSurvey(surveys,avgM.getMacAddress(),avgM.getFrequencyRange(),networkId));
+                if (!map.containsKey(avgM.getMacAddress())) {
+                    map.put(avgM.getMacAddress(), getAverageFromSurvey(surveys, avgM.getMacAddress(), avgM.getFrequencyRange(), networkId));
                 }
             }
         }
@@ -30,7 +30,7 @@ public class SurveyUtil {
         return list;
     }
 
-    private static SurveyStatistics getAverageFromSurvey(List<Survey> surveys,String macAddress,EFrequencyRange frequencyRange, String networkId) {
+    private static SurveyStatistics getAverageFromSurvey(List<Survey> surveys, String macAddress, EFrequencyRange frequencyRange, String networkId) {
         SensorNetwork sensorNetwork = SensorManager.getInstance().getSensorNetworkById(networkId);
 
         SurveyStatistics avgSurvey = new SurveyStatistics();
@@ -40,7 +40,7 @@ public class SurveyUtil {
 
         for (Survey survey : surveys) {
             for (AverageWlanScanMeasurement avgM : survey.getAverageScanNodes()) {
-                if(avgM.getMacAddress().equals(macAddress)) {
+                if (avgM.getMacAddress().equals(macAddress)) {
                     avgSurvey.getSsidSet().add(avgM.getSsid());
                     signalStrengths.addAll(avgM.getSignalStrengths());
                 }
@@ -48,11 +48,11 @@ public class SurveyUtil {
         }
 
         avgSurvey.setStatistics(new Statistics(signalStrengths));
-        avgSurvey.setRadioModelData(new RadioModelData(avgSurvey.getStatistics(),frequencyRange,1,sensorNetwork.getEnvironmentModel(), null,null,1.0,sensorNetwork.getPathLossConfig())); //TODO
+        avgSurvey.setRadioModelData(new RadioModelData(avgSurvey.getStatistics(), frequencyRange, 1, sensorNetwork.getEnvironmentModel(), null, null, 1.0, sensorNetwork.getPathLossConfig())); //TODO
 
         Blacklist blacklist = MiscManager.getInstance().getBlacklistByNetworkId(networkId);
         for (String checkMac : blacklist.getMacList()) {
-            if(checkMac.equalsIgnoreCase(avgSurvey.getMacAddress())) {
+            if (checkMac.equalsIgnoreCase(avgSurvey.getMacAddress())) {
                 if (blacklist.isActAsWhiteList()) {
                     avgSurvey.setIgnored(true);
 

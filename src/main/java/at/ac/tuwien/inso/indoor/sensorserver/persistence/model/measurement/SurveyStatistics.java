@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Created by PatrickF on 18.09.2014.
  */
-public class SurveyStatistics implements Comparable<SurveyStatistics>{
+public class SurveyStatistics implements Comparable<SurveyStatistics> {
     private String macAddress;
     private EFrequencyRange frequencyRange;
     private Set<String> ssidSet = new HashSet<String>();

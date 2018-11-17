@@ -7,11 +7,10 @@ import java.util.*;
 /**
  * Created by PatrickF on 30.09.2014.
  */
-public class RoomList extends TypeAbleCouchDBDocument{
+public class RoomList extends TypeAbleCouchDBDocument {
     private String networkId;
     private List<Room> rooms = new ArrayList<Room>();
-    private Map<String,String> macToRoomIdMap = new HashMap<String, String>();
-
+    private Map<String, String> macToRoomIdMap = new HashMap<String, String>();
 
     public String getNetworkId() {
         return networkId;
@@ -44,7 +43,7 @@ public class RoomList extends TypeAbleCouchDBDocument{
 
         public Room() {
             roomId = UUID.randomUUID().toString();
-            created=new Date();
+            created = new Date();
         }
 
         public String getRoomId() {
@@ -70,7 +69,5 @@ public class RoomList extends TypeAbleCouchDBDocument{
         public void setCreated(Date created) {
             this.created = created;
         }
-
-
     }
 }

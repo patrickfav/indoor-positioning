@@ -11,7 +11,6 @@ import javax.ws.rs.core.Response;
  */
 public class RouterRebootRequest extends ARequest<Boolean> {
 
-
     public RouterRebootRequest(SensorNode node) {
         super(node);
     }
@@ -19,10 +18,10 @@ public class RouterRebootRequest extends ARequest<Boolean> {
     @Override
     public Boolean startRequest() throws SensorRequestException {
         try {
-            ResponseWrapper responseWrapper = runRequest("GET",getNode().getFullUrl()+ ApiConst.ROUTER_SERVICE_REBOOT,"",false);
+            ResponseWrapper responseWrapper = runRequest("GET", getNode().getFullUrl() + ApiConst.ROUTER_SERVICE_REBOOT, "", false);
             return responseWrapper.getResponse().getStatus() == Response.Status.OK.getStatusCode();
         } catch (Exception e) {
-            throw new SensorRequestException("Could not complete "+getClass().getSimpleName(),e);
+            throw new SensorRequestException("Could not complete " + getClass().getSimpleName(), e);
         }
     }
 }

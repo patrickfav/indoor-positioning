@@ -18,22 +18,22 @@ public class ExtendedNodeMapCreator {
 
     private List<Analysis> prevAnalysis;
 
-    public Map<EFrequencyRange,List<ExtendedNodeInfo>> create(List<Survey> surveyList,String networkId) {
+    public Map<EFrequencyRange, List<ExtendedNodeInfo>> create(List<Survey> surveyList, String networkId) {
         prevAnalysis = MiscManager.getInstance().getAnalysisListForNetworkId(networkId, 10);
-        Map<String,PhysicalAdapter> physicalAdapterMap = createPhysicalAdapterMap(networkId);
-        Map<String,ExtendedNodeInfo> extendedNodeMap = fillMap(networkId,physicalAdapterMap,surveyList);
-        Map<EFrequencyRange,List<ExtendedNodeInfo>> resultMap =  createResultingMap(extendedNodeMap);
-        checkForIgnoredMac(resultMap,networkId);
+        Map<String, PhysicalAdapter> physicalAdapterMap = createPhysicalAdapterMap(networkId);
+        Map<String, ExtendedNodeInfo> extendedNodeMap = fillMap(networkId, physicalAdapterMap, surveyList);
+        Map<EFrequencyRange, List<ExtendedNodeInfo>> resultMap = createResultingMap(extendedNodeMap);
+        checkForIgnoredMac(resultMap, networkId);
         return resultMap;
     }
 
-    private  Map<String,PhysicalAdapter> createPhysicalAdapterMap(String networkId) {
-        Map<String,PhysicalAdapter> physicalAdapterMap = new HashMap<String, PhysicalAdapter>();
+    private Map<String, PhysicalAdapter> createPhysicalAdapterMap(String networkId) {
+        Map<String, PhysicalAdapter> physicalAdapterMap = new HashMap<String, PhysicalAdapter>();
 
         for (SensorNode node : SensorManager.getInstance().getAllNodesFromNetwork(networkId)) {
             for (Adapter adapter : node.getAdapters()) {
 
-                if(!physicalAdapterMap.containsKey(adapter.getMacAddress())) {
+                if (!physicalAdapterMap.containsKey(adapter.getMacAddress())) {
                     physicalAdapterMap.put(adapter.getMacAddress(), new PhysicalAdapter(adapter.getMacAddress()));
                     physicalAdapterMap.get(adapter.getMacAddress()).setNodeId(node.getNodeId());
                     physicalAdapterMap.get(adapter.getMacAddress()).setFrequencyRange(adapter.getFrequencyRange());
@@ -49,14 +49,14 @@ public class ExtendedNodeMapCreator {
         return physicalAdapterMap;
     }
 
-    private Map<String,ExtendedNodeInfo> fillMap(String networkId,Map<String,PhysicalAdapter> physicalAdapterMap,List<Survey> surveyList) {
-        Map<String,ExtendedNodeInfo> extendedNodeMap = new HashMap<String, ExtendedNodeInfo>();
+    private Map<String, ExtendedNodeInfo> fillMap(String networkId, Map<String, PhysicalAdapter> physicalAdapterMap, List<Survey> surveyList) {
+        Map<String, ExtendedNodeInfo> extendedNodeMap = new HashMap<String, ExtendedNodeInfo>();
 
         SensorNetwork sensorNetwork = SensorManager.getInstance().getSensorNetworkById(networkId);
         RoomList roomList = MiscManager.getInstance().getRoomlistByNetworkId(networkId);
 
         for (PhysicalAdapter physicalAdapter : physicalAdapterMap.values()) {
-            Map<String,ScanInfo> scanInfoMap = new HashMap<String, ScanInfo>();
+            Map<String, ScanInfo> scanInfoMap = new HashMap<String, ScanInfo>();
 
             for (Survey survey : surveyList) {
                 if (survey.getNodeId().equals(physicalAdapter.getNodeId()) &&
@@ -81,7 +81,7 @@ public class ExtendedNodeMapCreator {
                 if (!extendedNodeMap.containsKey(scanInfo.getMacAddress())) {
                     extendedNodeMap.put(scanInfo.getMacAddress(), new ExtendedNodeInfo());
                     extendedNodeMap.get(scanInfo.getMacAddress()).setMacAddress(scanInfo.getMacAddress());
-                    if(physicalAdapterMap.containsKey(scanInfo.getMacAddress())) {
+                    if (physicalAdapterMap.containsKey(scanInfo.getMacAddress())) {
                         extendedNodeMap.get(scanInfo.getMacAddress()).setManagedNode(true);
                     }
                 }
@@ -93,39 +93,41 @@ public class ExtendedNodeMapCreator {
                 ExtendedNodeInfo.ManagedNode managedNode = new ExtendedNodeInfo.ManagedNode();
                 managedNode.setPhysicalAdapter(scanInfo.getScannedBy());
                 managedNode.setStatistics(new Statistics(scanInfo.getSignalStrengthList()));
-                int channel=1;
-                if(!scanInfo.getChannelList().isEmpty()) {channel=scanInfo.getChannelList().get(0);}
-                managedNode.setRadioModelData(new RadioModelData(managedNode.getStatistics(), RadioUtil.guessFrequencyFromChannel(channel),channel,
-                        sensorNetwork.getEnvironmentModel(),scanInfo.getScannedBy().getRoomId(),roomList.getMacToRoomIdMap().get(scanInfo.getMacAddress()),scanInfo.getScannedBy().getMultiplier(),sensorNetwork.getPathLossConfig()));
-                managedNode.setTrendInfo(createTrendInfo(scanInfo.getMacAddress(),managedNode,networkId));
+                int channel = 1;
+                if (!scanInfo.getChannelList().isEmpty()) {
+                    channel = scanInfo.getChannelList().get(0);
+                }
+                managedNode.setRadioModelData(new RadioModelData(managedNode.getStatistics(), RadioUtil.guessFrequencyFromChannel(channel), channel,
+                        sensorNetwork.getEnvironmentModel(), scanInfo.getScannedBy().getRoomId(), roomList.getMacToRoomIdMap().get(scanInfo.getMacAddress()), scanInfo.getScannedBy().getMultiplier(), sensorNetwork.getPathLossConfig()));
+                managedNode.setTrendInfo(createTrendInfo(scanInfo.getMacAddress(), managedNode, networkId));
                 extendedNodeMap.get(scanInfo.getMacAddress()).getManagedNodes().add(managedNode);
                 Collections.sort(extendedNodeMap.get(scanInfo.getMacAddress()).getManagedNodes());
             }
         }
 
         for (ExtendedNodeInfo extendedNodeInfo : extendedNodeMap.values()) {
-            double shortTrend=0,longTrend=0,dataSize=0;
+            double shortTrend = 0, longTrend = 0, dataSize = 0;
             for (ExtendedNodeInfo.ManagedNode managedNode : extendedNodeInfo.getManagedNodes()) {
                 shortTrend += managedNode.getTrendInfo().getShortTermTrend();
                 longTrend += managedNode.getTrendInfo().getLongTermTrend();
                 dataSize += managedNode.getTrendInfo().getLongTermTrendSampleSize();
             }
             ExtendedNodeInfo.TrendInfo trendInfo = new ExtendedNodeInfo.TrendInfo();
-            trendInfo.setShortTermTrend(shortTrend/(double)extendedNodeInfo.getManagedNodes().size());
-            trendInfo.setLongTermTrend(longTrend/(double)extendedNodeInfo.getManagedNodes().size());
-            trendInfo.setLongTermTrendSampleSize((int)dataSize);
+            trendInfo.setShortTermTrend(shortTrend / (double) extendedNodeInfo.getManagedNodes().size());
+            trendInfo.setLongTermTrend(longTrend / (double) extendedNodeInfo.getManagedNodes().size());
+            trendInfo.setLongTermTrendSampleSize((int) dataSize);
             extendedNodeInfo.setTrendInfo(trendInfo);
         }
         return extendedNodeMap;
     }
 
-    private ExtendedNodeInfo.TrendInfo createTrendInfo(String scanNodeMac,ExtendedNodeInfo.ManagedNode managedNode,String networkId) {
+    private ExtendedNodeInfo.TrendInfo createTrendInfo(String scanNodeMac, ExtendedNodeInfo.ManagedNode managedNode, String networkId) {
         ExtendedNodeInfo.TrendInfo trendInfo = new ExtendedNodeInfo.TrendInfo();
 
         if (prevAnalysis != null && !prevAnalysis.isEmpty()) {
             List<Double> prevValues = new ArrayList<Double>();
 
-            for (Analysis a : prevAnalysis){
+            for (Analysis a : prevAnalysis) {
                 Map<EFrequencyRange, List<ExtendedNodeInfo>> extMap = a.getExtendedNodeMap();
                 if (extMap.containsKey(managedNode.getPhysicalAdapter().getFrequencyRange())) {
                     outerLoop:
@@ -143,12 +145,12 @@ public class ExtendedNodeMapCreator {
             }
 
             if (!prevValues.isEmpty()) {
-                trendInfo.setShortTermTrend(managedNode.getStatistics().getMean()-prevValues.get(0));
+                trendInfo.setShortTermTrend(managedNode.getStatistics().getMean() - prevValues.get(0));
 
                 //TODO
                 double avg = 0;
                 for (Double prevValue : prevValues) {
-                    avg+=prevValue;
+                    avg += prevValue;
                 }
                 avg = avg / (double) prevValues.size();
                 trendInfo.setLongTermTrend(managedNode.getStatistics().getMean() - avg);
@@ -159,15 +161,12 @@ public class ExtendedNodeMapCreator {
         return trendInfo;
     }
 
-
-
-
-    private Map<EFrequencyRange,List<ExtendedNodeInfo>> createResultingMap(Map<String,ExtendedNodeInfo> extendedNodeMap) {
-        Map<EFrequencyRange,List<ExtendedNodeInfo>> map = new HashMap<EFrequencyRange, List<ExtendedNodeInfo>>();
+    private Map<EFrequencyRange, List<ExtendedNodeInfo>> createResultingMap(Map<String, ExtendedNodeInfo> extendedNodeMap) {
+        Map<EFrequencyRange, List<ExtendedNodeInfo>> map = new HashMap<EFrequencyRange, List<ExtendedNodeInfo>>();
         for (ExtendedNodeInfo extendedNodeInfo : extendedNodeMap.values()) {
             for (EFrequencyRange eFrequencyRange : extendedNodeInfo.getFrequencyRanges()) {
-                if(!map.containsKey(eFrequencyRange)) {
-                    map.put(eFrequencyRange,new ArrayList<ExtendedNodeInfo>());
+                if (!map.containsKey(eFrequencyRange)) {
+                    map.put(eFrequencyRange, new ArrayList<ExtendedNodeInfo>());
                 }
                 map.get(eFrequencyRange).add(extendedNodeInfo);
             }
@@ -180,17 +179,17 @@ public class ExtendedNodeMapCreator {
         return map;
     }
 
-    private void checkForIgnoredMac(Map<EFrequencyRange,List<ExtendedNodeInfo>> extendedNodeMap, String networkId) {
+    private void checkForIgnoredMac(Map<EFrequencyRange, List<ExtendedNodeInfo>> extendedNodeMap, String networkId) {
         try {
             Blacklist blacklist = MiscManager.getInstance().getBlacklistByNetworkId(networkId);
 
             for (EFrequencyRange eFrequencyRange : extendedNodeMap.keySet()) {
                 for (ExtendedNodeInfo extendedNodeInfo : extendedNodeMap.get(eFrequencyRange)) {
-                    if(blacklist.isActAsWhiteList()) {
+                    if (blacklist.isActAsWhiteList()) {
                         extendedNodeInfo.setIgnored(true);
 
                         for (String mac : blacklist.getMacList()) {
-                            if(extendedNodeInfo.getMacAddress().equalsIgnoreCase(mac)) {
+                            if (extendedNodeInfo.getMacAddress().equalsIgnoreCase(mac)) {
                                 extendedNodeInfo.setIgnored(false);
                                 break;
                             }
@@ -199,7 +198,7 @@ public class ExtendedNodeMapCreator {
                         extendedNodeInfo.setIgnored(false);
 
                         for (String mac : blacklist.getMacList()) {
-                            if(extendedNodeInfo.getMacAddress().equalsIgnoreCase(mac)) {
+                            if (extendedNodeInfo.getMacAddress().equalsIgnoreCase(mac)) {
                                 extendedNodeInfo.setIgnored(true);
                                 break;
                             }
@@ -208,11 +207,11 @@ public class ExtendedNodeMapCreator {
                 }
             }
         } catch (Exception e) {
-            log.warn("Could not get and apply blacklist",e);
+            log.warn("Could not get and apply blacklist", e);
         }
     }
 
-	private static class ScanInfo {
+    private static class ScanInfo {
         private String macAddress;
         private List<String> ssidList = new ArrayList<String>();
         private List<Integer> channelList = new ArrayList<Integer>();

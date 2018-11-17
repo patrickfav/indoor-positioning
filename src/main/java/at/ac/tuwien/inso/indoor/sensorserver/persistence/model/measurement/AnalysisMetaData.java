@@ -18,7 +18,7 @@ public class AnalysisMetaData extends TypeAbleCouchDBDocument {
     private int surveySum;
     private int surveyPerNodeSum;
     private String networkId;
-    private boolean pinnedActive=false;
+    private boolean pinnedActive = false;
 
     public AnalysisMetaData() {
         this.analysisId = UUID.randomUUID().toString();
@@ -37,7 +37,7 @@ public class AnalysisMetaData extends TypeAbleCouchDBDocument {
         networkId = analysis.getNetworkId();
     }
 
-    public AnalysisMetaData(List<Survey> surveyList,String networkId) {
+    public AnalysisMetaData(List<Survey> surveyList, String networkId) {
         this();
 
         this.surveySum = surveyList.size();
@@ -52,10 +52,10 @@ public class AnalysisMetaData extends TypeAbleCouchDBDocument {
         this.to = new Date(0);
 
         for (Survey survey : surveyList) {
-            if(survey.getCreated().getTime() < from.getTime()) {
+            if (survey.getCreated().getTime() < from.getTime()) {
                 from = new Date(survey.getCreated().getTime());
             }
-            if(survey.getCreated().getTime() > to.getTime()) {
+            if (survey.getCreated().getTime() > to.getTime()) {
                 to = new Date(survey.getCreated().getTime());
             }
         }

@@ -17,15 +17,15 @@ import static org.quartz.TriggerBuilder.newTrigger;
 /**
  * Created by PatrickF on 15.09.2014.
  */
-public class SchedulerManager {
+public final class SchedulerManager {
     protected static Logger log = Logger.getLogger(SchedulerManager.class);
 
-    public static final String NETWORK_ID_KEY ="progress-id";
-    public static final String JOB_ID_KEY ="job-id";
+    public static final String NETWORK_ID_KEY = "progress-id";
+    public static final String JOB_ID_KEY = "job-id";
 
-    private static final String SURVEY_JOB_GROUP ="network-survey";
-    private static final String PING_JOB_GROUP ="network-ping";
-    private static final String ANALYSIS_JOB_GROUP ="network-analysis";
+    private static final String SURVEY_JOB_GROUP = "network-survey";
+    private static final String PING_JOB_GROUP = "network-ping";
+    private static final String ANALYSIS_JOB_GROUP = "network-analysis";
 
     private static SchedulerManager instance;
 
@@ -37,7 +37,7 @@ public class SchedulerManager {
     }
 
     public static void reset() {
-        if(instance != null) {
+        if (instance != null) {
             instance.shutdownNow();
         }
         instance = null;
@@ -46,7 +46,7 @@ public class SchedulerManager {
     private Scheduler scheduler;
     private SchedulerFactory schedulerFactory;
 
-    private SchedulerManager()  {
+    private SchedulerManager() {
         try {
             schedulerFactory = new StdSchedulerFactory();
             scheduler = schedulerFactory.getScheduler();
@@ -59,36 +59,37 @@ public class SchedulerManager {
     /* ********************************************************************* SURVEY */
 
     public void addSurveyJob(SensorNetwork network) throws SchedulerException {
-        scheduleSurveyJob(network,false);
+        scheduleSurveyJob(network, false);
     }
 
     public void scheduleSurveyJob(SensorNetwork network, boolean runOnlyOnceNow) {
-        scheduleJob(network,runOnlyOnceNow,FullSurveyJob.class,SURVEY_JOB_GROUP,network.getCronScheduleSurvey());
+        scheduleJob(network, runOnlyOnceNow, FullSurveyJob.class, SURVEY_JOB_GROUP, network.getCronScheduleSurvey());
     }
+
     public void cancelSurveyJob(String networkId) {
-        cancelJob(networkId,SURVEY_JOB_GROUP);
+        cancelJob(networkId, SURVEY_JOB_GROUP);
     }
 
     public boolean isScheduledSurveyJob(String networkId) {
-        return isScheduledJob(networkId,SURVEY_JOB_GROUP);
+        return isScheduledJob(networkId, SURVEY_JOB_GROUP);
     }
 
     /* ********************************************************************* PING */
 
     public void addPingLogJob(SensorNetwork network) {
-        schedulePingJob(network,false);
+        schedulePingJob(network, false);
     }
 
     public void schedulePingJob(SensorNetwork network, boolean runOnlyOnceNow) {
-        scheduleJob(network,runOnlyOnceNow,PingLogJob.class,PING_JOB_GROUP,network.getCronSchedulePing());
+        scheduleJob(network, runOnlyOnceNow, PingLogJob.class, PING_JOB_GROUP, network.getCronSchedulePing());
     }
 
     public void cancelPingJob(String networkId) {
-        cancelJob(networkId,PING_JOB_GROUP);
+        cancelJob(networkId, PING_JOB_GROUP);
     }
 
     public boolean isScheduledPingJob(String networkId) {
-        return isScheduledJob(networkId,PING_JOB_GROUP);
+        return isScheduledJob(networkId, PING_JOB_GROUP);
     }
 
     /* ********************************************************************* ANALYSIS */
@@ -98,45 +99,45 @@ public class SchedulerManager {
     }
 
     public void scheduleAnalysisJob(SensorNetwork network, boolean runOnlyOnceNow) {
-        scheduleJob(network,runOnlyOnceNow,AnalysisJob.class,ANALYSIS_JOB_GROUP,network.getCronScheduleAnalysis());
+        scheduleJob(network, runOnlyOnceNow, AnalysisJob.class, ANALYSIS_JOB_GROUP, network.getCronScheduleAnalysis());
     }
 
     public void cancelAnalysisJob(String networkId) {
-        cancelJob(networkId,ANALYSIS_JOB_GROUP);
+        cancelJob(networkId, ANALYSIS_JOB_GROUP);
     }
 
     public boolean isScheduledAnalysisJob(String networkId) {
-        return isScheduledJob(networkId,ANALYSIS_JOB_GROUP);
+        return isScheduledJob(networkId, ANALYSIS_JOB_GROUP);
     }
 
     /* ********************************************************************* PRIVATE */
 
     private void scheduleJob(SensorNetwork network, boolean runOnlyOnceNow, Class<? extends Job> jobClass, String group, String cronSchedule) {
-        if(network == null || cronSchedule == null ||cronSchedule.isEmpty()) {
-            log.error("Could not add "+group+" job, cron definition is missing from network "+network);
+        if (network == null || cronSchedule == null || cronSchedule.isEmpty()) {
+            log.error("Could not add " + group + " job, cron definition is missing from network " + network);
             return;
         }
 
-        if(!network.isCronEnabled() && !runOnlyOnceNow) {
-            log.info("Cron Schedule disable in network "+network+" - ignore add job");
+        if (!network.isCronEnabled() && !runOnlyOnceNow) {
+            log.info("Cron Schedule disable in network " + network + " - ignore add job");
             return;
         }
 
-        if(runOnlyOnceNow) {
-            log.info("Add "+group+" job for network "+network.getNetworkName()+". Run only once");
+        if (runOnlyOnceNow) {
+            log.info("Add " + group + " job for network " + network.getNetworkName() + ". Run only once");
 
         } else {
-            log.info("Add "+group+" job for network "+network.getNetworkName()+" with schedule "+cronSchedule);
+            log.info("Add " + group + " job for network " + network.getNetworkName() + " with schedule " + cronSchedule);
         }
 
         try {
             JobDataMap jobDataMap = new JobDataMap();
-            jobDataMap.put(NETWORK_ID_KEY,network.getNetworkId());
-            jobDataMap.put(JOB_ID_KEY,UUID.randomUUID().toString());
+            jobDataMap.put(NETWORK_ID_KEY, network.getNetworkId());
+            jobDataMap.put(JOB_ID_KEY, UUID.randomUUID().toString());
 
             String jobName = network.getNetworkId();
-            if(runOnlyOnceNow) {
-                jobName =jobName+"_once_"+UUID.randomUUID().toString();
+            if (runOnlyOnceNow) {
+                jobName = jobName + "_once_" + UUID.randomUUID().toString();
             }
 
             JobDetail job = newJob(jobClass).setJobData(jobDataMap)
@@ -144,7 +145,7 @@ public class SchedulerManager {
                     .build();
 
             Trigger trigger;
-            if(runOnlyOnceNow) {
+            if (runOnlyOnceNow) {
                 trigger = newTrigger().withIdentity(UUID.randomUUID().toString(), group).startNow().build();
             } else {
                 trigger = newTrigger()
@@ -156,54 +157,50 @@ public class SchedulerManager {
             // Tell quartz to schedule the job using our trigger
             scheduler.scheduleJob(job, trigger);
         } catch (Exception e) {
-            log.error("Could not add "+group+" job for "+network,e);
+            log.error("Could not add " + group + " job for " + network, e);
         }
     }
 
-
-    private void cancelJob(String networkId,String group) {
+    private void cancelJob(String networkId, String group) {
         try {
-            log.info("Cancel schedule for job and group "+group+" and networkId "+networkId);
-            scheduler.deleteJob(new JobKey(networkId,group));
+            log.info("Cancel schedule for job and group " + group + " and networkId " + networkId);
+            scheduler.deleteJob(new JobKey(networkId, group));
         } catch (SchedulerException e) {
-            log.error("Could not cancel job for network "+networkId,e);
+            log.error("Could not cancel job for network " + networkId, e);
         }
     }
 
-
-    private boolean isScheduledJob(String networkId,String group) {
+    private boolean isScheduledJob(String networkId, String group) {
         try {
             for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(group))) {
-                if(jobKey.getName().equalsIgnoreCase(networkId)) {
+                if (jobKey.getName().equalsIgnoreCase(networkId)) {
                     return true;
                 }
             }
         } catch (SchedulerException e) {
-            log.error("Could not query for jobs in scheduler",e);
+            log.error("Could not query for jobs in scheduler", e);
         }
         return false;
-    } 
-
-
+    }
 
     public Double getProgress(String jobId) {
-        Double progress =0d;
+        Double progress = 0d;
         try {
             for (JobExecutionContext jobExecutionContext : scheduler.getCurrentlyExecutingJobs()) {
-                if(jobExecutionContext.getJobDetail().getJobDataMap().getString(JOB_ID_KEY).equalsIgnoreCase(jobId)) {
+                if (jobExecutionContext.getJobDetail().getJobDataMap().getString(JOB_ID_KEY).equalsIgnoreCase(jobId)) {
                     progress = (Double) jobExecutionContext.getResult();
                     break;
                 }
             }
         } catch (Exception e) {
-            log.error("Could not get job progress info",e);
+            log.error("Could not get job progress info", e);
         }
         return progress;
     }
 
     public void shutdownNow() {
         try {
-            if(scheduler.isStarted()) {
+            if (scheduler.isStarted()) {
                 for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(SURVEY_JOB_GROUP))) {
                     scheduler.interrupt(jobKey);
                     scheduler.deleteJob(jobKey);
@@ -218,7 +215,7 @@ public class SchedulerManager {
                 scheduler.shutdown(false);
             }
         } catch (SchedulerException e) {
-            log.error("Could not shutdown scheduler",e);
+            log.error("Could not shutdown scheduler", e);
         }
     }
 

@@ -11,19 +11,20 @@ import java.util.List;
  */
 public abstract class AMockRepository<T> extends CouchDbRepositorySupport<T> {
     private final CouchDbConnector connector;
+
     protected AMockRepository(Class<T> type, CouchDbConnector db) {
         super(type, db);
-        connector =db;
+        connector = db;
     }
 
     protected AMockRepository(Class<T> type, CouchDbConnector db, boolean createIfNotExists) {
         super(type, db, createIfNotExists);
-        connector =db;
+        connector = db;
     }
 
     protected AMockRepository(Class<T> type, CouchDbConnector db, String designDocName) {
         super(type, db, designDocName);
-        connector =db;
+        connector = db;
     }
 
     protected CouchDbConnector getConnector() {
@@ -33,7 +34,6 @@ public abstract class AMockRepository<T> extends CouchDbRepositorySupport<T> {
     public DbInfo getDBInfo() {
         return connector.getDbInfo();
     }
-
 
     public static class EntityWrapper<T> {
         private List<T> list;

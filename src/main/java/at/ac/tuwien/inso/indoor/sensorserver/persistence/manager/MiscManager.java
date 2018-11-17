@@ -49,7 +49,7 @@ public class MiscManager extends AManager {
         pingDao = new MiscDao.PingDao();
         jobDao = new MiscDao.JobDao();
         analysisDao = new MiscDao.AnalysisDao();
-        blacklistDao =  new MiscDao.BlacklistDao();
+        blacklistDao = new MiscDao.BlacklistDao();
         roomListDao = new MiscDao.RoomListDao();
     }
 
@@ -90,11 +90,11 @@ public class MiscManager extends AManager {
         List<Survey> surveys;
 
         do {
-            surveys = getAllSurveysFromNodeSorted(nodeId, keepSurveys+100);
+            surveys = getAllSurveysFromNodeSorted(nodeId, keepSurveys + 100);
             for (int i = keepSurveys; i < surveys.size(); i++) {
                 surveyDao.remove(surveys.get(i));
             }
-        } while(surveys.size() > keepSurveys);
+        } while (surveys.size() > keepSurveys);
 
         EtagManager.getInstance().regenerateETag(Survey.class);
     }
@@ -115,6 +115,7 @@ public class MiscManager extends AManager {
         jobDao.update(jobLog);
         EtagManager.getInstance().regenerateETag(JobLog.class);
     }
+
     public synchronized void endJob(JobLog jobLog, JobLog.Status status) {
         jobLog.setEnd(new Date());
         jobLog.setStatus(status);
@@ -130,7 +131,7 @@ public class MiscManager extends AManager {
         EtagManager.getInstance().regenerateETag(JobLog.class);
     }
 
-    public synchronized void endJob(JobLog jobLog, JobLog.Status status,String statusDescription) {
+    public synchronized void endJob(JobLog jobLog, JobLog.Status status, String statusDescription) {
         jobLog.setEnd(new Date());
         jobLog.setStatus(status);
         jobLog.setProgress(1.0d);
@@ -149,21 +150,20 @@ public class MiscManager extends AManager {
         return fillWithProgress(jobDao.findByNetworkId(networkId));
     }
 
-
     public List<JobLog> getAllJobLogsFromNetworkSorted(String networkId, int limit) {
         SensorManager.getInstance().checkIfNetworkExists(networkId); //check id
         return fillWithProgress(jobDao.findByNetworkIdLimit(networkId, limit));
     }
 
     private List<JobLog> fillWithProgress(List<JobLog> list) {
-        boolean shouldResetCache=false;
+        boolean shouldResetCache = false;
         for (JobLog jobLog : list) {
-            if(jobLog.getStatus() != null && jobLog.getStatus().equals(JobLog.Status.RUNNING)) {
+            if (jobLog.getStatus() != null && jobLog.getStatus().equals(JobLog.Status.RUNNING)) {
                 jobLog.setProgress(SchedulerManager.getInstance().getProgress(jobLog.getJobId()));
-                shouldResetCache=true;
+                shouldResetCache = true;
             }
         }
-        if(shouldResetCache) {
+        if (shouldResetCache) {
             EtagManager.getInstance().regenerateETag(JobLog.class);
         }
 
@@ -171,7 +171,6 @@ public class MiscManager extends AManager {
     }
 
     /* ************************************************************ PING */
-
 
     public synchronized void addPing(PingLog ping) {
         pingDao.add(ping);
@@ -203,8 +202,8 @@ public class MiscManager extends AManager {
 
     public Analysis getByAnalysisId(String analysisId) {
         Analysis analysis = analysisDao.findByAnalysisId(analysisId);
-        if(analysis == null) {
-            throw new ResourceNotFoundException("Could not find Analysis with id "+analysisId);
+        if (analysis == null) {
+            throw new ResourceNotFoundException("Could not find Analysis with id " + analysisId);
         }
         return analysis;
     }
@@ -233,8 +232,7 @@ public class MiscManager extends AManager {
         return metaDatas;
     }
 
-
-    public List<AnalysisMetaData> getAnalysisMetaListSortedByDatePagination(String networkId,String startKeyDate, String startDocId,int limit) {
+    public List<AnalysisMetaData> getAnalysisMetaListSortedByDatePagination(String networkId, String startKeyDate, String startDocId, int limit) {
         SensorManager.getInstance().checkIfNetworkExists(networkId); //check id
         List<Analysis> analysis = analysisDao.findByNetworkIdAndStartKeyLimit(networkId, startKeyDate, startDocId, limit);
         List<AnalysisMetaData> metaDatas = new ArrayList<AnalysisMetaData>();
@@ -246,21 +244,20 @@ public class MiscManager extends AManager {
     }
 
     public List<Analysis> getAnalysisListForNetworkId(String networkId, int limit) {
-        return analysisDao.findByNetworkIdLimit(networkId,limit);
+        return analysisDao.findByNetworkIdLimit(networkId, limit);
     }
 
     public Analysis getLatestAnalysis(String networkId) {
-        List<Analysis> analysisList = getAnalysisListForNetworkId(networkId,1);
-        if(!analysisList.isEmpty()) {
+        List<Analysis> analysisList = getAnalysisListForNetworkId(networkId, 1);
+        if (!analysisList.isEmpty()) {
             return analysisList.get(0);
         }
         return null;
     }
 
-
     public Analysis updateDistanceMultiplier(String analysisId, EFrequencyRange range, Double multiplier) {
         Analysis analysis = getByAnalysisId(analysisId);
-        analysis.getDistMultiMap().put(range,multiplier);
+        analysis.getDistMultiMap().put(range, multiplier);
         return updateAnaylsis(analysis);
     }
 
@@ -287,7 +284,7 @@ public class MiscManager extends AManager {
 
         Blacklist blacklist = blacklistDao.findByNetworkId(networkId);
 
-        if(blacklist == null) {
+        if (blacklist == null) {
             blacklist = new Blacklist();
             blacklist.setNetworkId(networkId);
             addBlacklist(blacklist);
@@ -314,7 +311,7 @@ public class MiscManager extends AManager {
 
         RoomList roomList = roomListDao.findByNetworkId(networkId);
 
-        if(roomList == null) {
+        if (roomList == null) {
             roomList = new RoomList();
             roomList.setNetworkId(networkId);
             addRoomList(roomList);
@@ -323,27 +320,27 @@ public class MiscManager extends AManager {
         return roomList;
     }
 
-    public RoomList addNewMacRoomMapping(String networkId, String macAddress,String roomId) {
+    public RoomList addNewMacRoomMapping(String networkId, String macAddress, String roomId) {
         SensorManager.getInstance().checkIfNetworkExists(networkId); //check id
-        RoomList roomList =  getRoomlistByNetworkId(networkId);
+        RoomList roomList = getRoomlistByNetworkId(networkId);
 
-        if(roomId == null || roomId.isEmpty()) {
+        if (roomId == null || roomId.isEmpty()) {
             roomList.getMacToRoomIdMap().remove(macAddress);
         } else {
             boolean found = false;
 
             for (RoomList.Room room : roomList.getRooms()) {
-                if(room.getRoomId().equals(roomId)) {
+                if (room.getRoomId().equals(roomId)) {
                     found = true;
                     break;
                 }
             }
 
-            if(!found) {
-                throw new ResourceNotFoundException("RoomId "+roomId+" was not found");
+            if (!found) {
+                throw new ResourceNotFoundException("RoomId " + roomId + " was not found");
             }
 
-            roomList.getMacToRoomIdMap().put(macAddress,roomId);
+            roomList.getMacToRoomIdMap().put(macAddress, roomId);
         }
         return updateRoomlist(roomList);
     }

@@ -7,19 +7,19 @@ import java.util.Map;
 /**
  * Created by PatrickF on 22.09.2014.
  */
-public class Analysis extends AnalysisMetaData{
+public class Analysis extends AnalysisMetaData {
 
-    private Map<EFrequencyRange,List<ExtendedNodeInfo>> extendedNodeMap = new HashMap<EFrequencyRange, List<ExtendedNodeInfo>>();
-    private Map<EFrequencyRange,List<PhysicalAdapter>> physicalAdaptersMap = new HashMap<EFrequencyRange, List<PhysicalAdapter>>();
-    private Map<EFrequencyRange,Double> distMultiMap = new HashMap<EFrequencyRange, Double>();
-    private Map<EFrequencyRange,SignalMap> signalMap = new HashMap<EFrequencyRange, SignalMap>();
-	private Map<EFrequencyRange,Map<String,Double>> nodeMultiMap = new HashMap<EFrequencyRange, Map<String, Double>>();
+    private Map<EFrequencyRange, List<ExtendedNodeInfo>> extendedNodeMap = new HashMap<EFrequencyRange, List<ExtendedNodeInfo>>();
+    private Map<EFrequencyRange, List<PhysicalAdapter>> physicalAdaptersMap = new HashMap<EFrequencyRange, List<PhysicalAdapter>>();
+    private Map<EFrequencyRange, Double> distMultiMap = new HashMap<EFrequencyRange, Double>();
+    private Map<EFrequencyRange, SignalMap> signalMap = new HashMap<EFrequencyRange, SignalMap>();
+    private Map<EFrequencyRange, Map<String, Double>> nodeMultiMap = new HashMap<EFrequencyRange, Map<String, Double>>();
 
     public Analysis() {
     }
 
-    public Analysis(List<Survey> surveyList,String networkId) {
-        super(surveyList,networkId);
+    public Analysis(List<Survey> surveyList, String networkId) {
+        super(surveyList, networkId);
     }
 
     public Map<EFrequencyRange, Double> getDistMultiMap() {
@@ -54,12 +54,12 @@ public class Analysis extends AnalysisMetaData{
         this.signalMap = signalMap;
     }
 
-	public Map<EFrequencyRange, Map<String, Double>> getNodeMultiMap() {
-		return nodeMultiMap;
-	}
+    public Map<EFrequencyRange, Map<String, Double>> getNodeMultiMap() {
+        return nodeMultiMap;
+    }
 
-	public void setNodeMultiMap(Map<EFrequencyRange, Map<String, Double>> nodeMultiMap) {
-		this.nodeMultiMap = nodeMultiMap;
-	}
+    public void setNodeMultiMap(Map<EFrequencyRange, Map<String, Double>> nodeMultiMap) {
+        this.nodeMultiMap = nodeMultiMap;
+    }
 
 }

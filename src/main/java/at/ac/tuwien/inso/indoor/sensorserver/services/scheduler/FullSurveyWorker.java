@@ -14,33 +14,33 @@ import java.util.concurrent.*;
 /**
  * Created by PatrickF on 15.09.2014.
  */
-public class FullSurveyWorker implements Callback<Survey>{
+public class FullSurveyWorker implements Callback<Survey> {
     protected static Logger log = Logger.getLogger(FullSurveyWorker.class);
 
-    public List<SensorNode> nodes;
-    public long delay;
-    public int repeatCount;
-    public ExecutorService threadPool;
-    public Map<String,Survey> surveyResultMap;
-    public List<SurveyCallable> workers;
-    public long estimatedRuntime=0;
-    public Callback<Double> progressCallback;
-    public Map<SensorNode,Double> progressMap = new ConcurrentHashMap<SensorNode, Double>();
+    private List<SensorNode> nodes;
+    private long delay;
+    private int repeatCount;
+    private ExecutorService threadPool;
+    private Map<String, Survey> surveyResultMap;
+    private List<SurveyCallable> workers;
+    private long estimatedRuntime = 0;
+    private Callback<Double> progressCallback;
+    private Map<SensorNode, Double> progressMap = new ConcurrentHashMap<SensorNode, Double>();
 
-    public FullSurveyWorker(List<SensorNode> nodes, long delay, int repeatCount,Callback<Double> progressCallback) {
+    public FullSurveyWorker(List<SensorNode> nodes, long delay, int repeatCount, Callback<Double> progressCallback) {
         this.nodes = nodes;
         this.delay = delay;
         this.repeatCount = repeatCount;
         this.progressCallback = progressCallback;
 
-        threadPool = new ThreadPoolExecutor(8,16,30, TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(1024));
+        threadPool = new ThreadPoolExecutor(8, 16, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1024));
         surveyResultMap = new ConcurrentHashMap<String, Survey>();
-        workers=new ArrayList<SurveyCallable>();
+        workers = new ArrayList<SurveyCallable>();
 
-        long runTime=0;
-        int runs =0;
+        long runTime = 0;
+        int runs = 0;
         for (final SensorNode node : nodes) {
-            if(node.isEnabled()) {
+            if (node.isEnabled()) {
 
                 progressMap.put(node, 0d);
 
@@ -57,14 +57,14 @@ public class FullSurveyWorker implements Callback<Survey>{
                     workers.add(worker);
                 }
             } else {
-                log.info("Skip node "+node.getNodeName()+" because it is not enabled");
+                log.info("Skip node " + node.getNodeName() + " because it is not enabled");
             }
         }
         estimatedRuntime = Math.round(((double) runTime / (float) runs) * Math.max(1, runs - ISensorJob.MAX_CONCURRENT_THREADS)) + ((runs * (runTime / runs)) / 100) + 2000;
     }
 
-    public Map<String,Survey> startFullSurvey() {
-        log.debug("estimated runtime: "+getEstimatedFullRuntime()+"ms");
+    public Map<String, Survey> startFullSurvey() {
+        log.debug("estimated runtime: " + getEstimatedFullRuntime() + "ms");
 
         for (SurveyCallable worker : workers) {
             threadPool.submit(worker);
@@ -75,9 +75,9 @@ public class FullSurveyWorker implements Callback<Survey>{
             threadPool.shutdown();
             threadPool.awaitTermination(estimatedRuntime * 3, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            log.error("Timeout in threadpool in ping job",e);
+            log.error("Timeout in threadpool in ping job", e);
         }
-        log.debug("surveys complete with "+surveyResultMap.values().size()+" surveys");
+        log.debug("surveys complete with " + surveyResultMap.values().size() + " surveys");
 
         threadPool.shutdown();
 
@@ -89,7 +89,7 @@ public class FullSurveyWorker implements Callback<Survey>{
     }
 
     public void cancel() {
-        if(!threadPool.isShutdown()) {
+        if (!threadPool.isShutdown()) {
             log.debug("cancel");
             threadPool.shutdownNow();
         }
@@ -97,12 +97,12 @@ public class FullSurveyWorker implements Callback<Survey>{
 
     @Override
     public void callback(Survey survey) {
-        surveyResultMap.put(survey.getNodeId()+"_"+survey.getAdapter(),survey);
+        surveyResultMap.put(survey.getNodeId() + "_" + survey.getAdapter(), survey);
     }
 
     private void updateProgress() {
-        if(progressCallback != null) {
-            double progress=0d;
+        if (progressCallback != null) {
+            double progress = 0d;
             for (SensorNode sensorNode : progressMap.keySet()) {
                 progress += progressMap.get(sensorNode);
             }

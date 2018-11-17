@@ -54,7 +54,7 @@ public class JobService {
             builder = request.evaluatePreconditions(CacheUtil.getEtag(EtagManager.getInstance().getETag(JobLog.class)));
             CacheControl cc = CacheUtil.getCacheControl(ApiConst.CacheControl.JOB);
             if (builder == null) {
-                List<JobLog> jobList = MiscManager.getInstance().getAllJobLogsFromNetworkSorted(networkId,12);
+                List<JobLog> jobList = MiscManager.getInstance().getAllJobLogsFromNetworkSorted(networkId, 12);
 
                 builder = Response.ok(jobList).cacheControl(cc).tag(CacheUtil.getEtag(EtagManager.getInstance().getETag(JobLog.class)));
             }
@@ -69,13 +69,13 @@ public class JobService {
     @Path("/schedule")
     public Boolean scheduleJob(@QueryParam("networkId") String networkId, @QueryParam("type") String type, @Context Request request) {
         try {
-            ServerUtil.checkParameter(new ServerUtil.RestParam("networkId", networkId),new ServerUtil.RestParam("type", type));
+            ServerUtil.checkParameter(new ServerUtil.RestParam("networkId", networkId), new ServerUtil.RestParam("type", type));
 
-            if(type.equalsIgnoreCase("survey")) {
-                SchedulerManager.getInstance().scheduleSurveyJob(SensorManager.getInstance().getSensorNetworkById(networkId),true);
-            } else if(type.equalsIgnoreCase("ping")) {
+            if (type.equalsIgnoreCase("survey")) {
+                SchedulerManager.getInstance().scheduleSurveyJob(SensorManager.getInstance().getSensorNetworkById(networkId), true);
+            } else if (type.equalsIgnoreCase("ping")) {
                 SchedulerManager.getInstance().schedulePingJob(SensorManager.getInstance().getSensorNetworkById(networkId), true);
-            } else if(type.equalsIgnoreCase("analysis")) {
+            } else if (type.equalsIgnoreCase("analysis")) {
                 SchedulerManager.getInstance().scheduleAnalysisJob(SensorManager.getInstance().getSensorNetworkById(networkId), true);
             } else {
                 throw new InvalidAPICallException("wrong type given, try e.g. 'survey'");
@@ -91,30 +91,30 @@ public class JobService {
     public Response changeSchedule(@QueryParam("networkId") String networkId, @QueryParam("enable") boolean scheduleEnable, @Context Request request) {
         Response.ResponseBuilder builder = null;
         try {
-            ServerUtil.checkParameter(new ServerUtil.RestParam("networkId", networkId),new ServerUtil.RestParam("enable", scheduleEnable));
+            ServerUtil.checkParameter(new ServerUtil.RestParam("networkId", networkId), new ServerUtil.RestParam("enable", scheduleEnable));
 
             SensorNetwork network = SensorManager.getInstance().getSensorNetworkById(networkId);
             network.setCronEnabled(scheduleEnable);
-            SensorManager.getInstance().updateSensorNetwork(network,true);
+            SensorManager.getInstance().updateSensorNetwork(network, true);
 
-            if(scheduleEnable) {
-                if(!SchedulerManager.getInstance().isScheduledPingJob(network.getNetworkId())) {
+            if (scheduleEnable) {
+                if (!SchedulerManager.getInstance().isScheduledPingJob(network.getNetworkId())) {
                     SchedulerManager.getInstance().addPingLogJob(network);
                 }
-                if(!SchedulerManager.getInstance().isScheduledSurveyJob(network.getNetworkId())) {
+                if (!SchedulerManager.getInstance().isScheduledSurveyJob(network.getNetworkId())) {
                     SchedulerManager.getInstance().addSurveyJob(network);
                 }
-                if(!SchedulerManager.getInstance().isScheduledAnalysisJob(network.getNetworkId())) {
+                if (!SchedulerManager.getInstance().isScheduledAnalysisJob(network.getNetworkId())) {
                     SchedulerManager.getInstance().addAnalysisLogJob(network);
                 }
             } else {
-                if(SchedulerManager.getInstance().isScheduledPingJob(network.getNetworkId())) {
+                if (SchedulerManager.getInstance().isScheduledPingJob(network.getNetworkId())) {
                     SchedulerManager.getInstance().cancelPingJob(network.getNetworkId());
                 }
-                if(SchedulerManager.getInstance().isScheduledSurveyJob(network.getNetworkId())) {
+                if (SchedulerManager.getInstance().isScheduledSurveyJob(network.getNetworkId())) {
                     SchedulerManager.getInstance().cancelSurveyJob(network.getNetworkId());
                 }
-                if(SchedulerManager.getInstance().isScheduledAnalysisJob(network.getNetworkId())) {
+                if (SchedulerManager.getInstance().isScheduledAnalysisJob(network.getNetworkId())) {
                     SchedulerManager.getInstance().cancelAnalysisJob(network.getNetworkId());
                 }
             }

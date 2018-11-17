@@ -5,14 +5,13 @@ import at.ac.tuwien.inso.indoor.sensorserver.util.ServerUtil;
 /**
  * Based on the ITUIndoorModel this is a configurable version of that model.
  * The following parameter can be set:
- *  - bound
- *  - fac
- *  - offset
- *
- *  Together bound and fac create kind of a axis in the function, so that every
- *  output with a path loss higher than bound will be multiplied by fac. Offset
- *  is just a simple addition after the function.
- *
+ * - bound
+ * - fac
+ * - offset
+ * <p>
+ * Together bound and fac create kind of a axis in the function, so that every
+ * output with a path loss higher than bound will be multiplied by fac. Offset
+ * is just a simple addition after the function.
  */
 public class ITUIndoorModelDegradingDist extends ITUIndoorAttenuationModel {
     private double bound;
@@ -20,10 +19,10 @@ public class ITUIndoorModelDegradingDist extends ITUIndoorAttenuationModel {
     private double offsetM;
 
     public ITUIndoorModelDegradingDist(EEnvironmentModel environmentModel, ITUDegradingDistConfig config) {
-        this(environmentModel, config.getBound(),config.getFac(),config.getOffsetM());
+        this(environmentModel, config.getBound(), config.getFac(), config.getOffsetM());
     }
 
-    public ITUIndoorModelDegradingDist(EEnvironmentModel environmentModel, double bound, double fac,double offsetM) {
+    public ITUIndoorModelDegradingDist(EEnvironmentModel environmentModel, double bound, double fac, double offsetM) {
         super(environmentModel);
         this.bound = bound;
         this.fac = fac;
@@ -31,34 +30,34 @@ public class ITUIndoorModelDegradingDist extends ITUIndoorAttenuationModel {
     }
 
     @Override
-    public double getPathLossDb(double distanceMeter, double frequencyHz,int roomsBetween) {
-        return enhancePathLoss(super.getPathLossDb(distanceMeter-offsetM, frequencyHz, roomsBetween));
+    public double getPathLossDb(double distanceMeter, double frequencyHz, int roomsBetween) {
+        return enhancePathLoss(super.getPathLossDb(distanceMeter - offsetM, frequencyHz, roomsBetween));
     }
 
     @Override
-    public double getDistanceInMeter(double pathLossDb, double frequencyHz,int roomsBetween) {
-        return super.getDistanceInMeter(degradePathLoss(pathLossDb),frequencyHz,roomsBetween) + offsetM;
+    public double getDistanceInMeter(double pathLossDb, double frequencyHz, int roomsBetween) {
+        return super.getDistanceInMeter(degradePathLoss(pathLossDb), frequencyHz, roomsBetween) + offsetM;
     }
 
     private double degradePathLoss(double pathLoss) {
-        if(pathLoss > bound) {
-            return bound + ((pathLoss-bound)*fac);
+        if (pathLoss > bound) {
+            return bound + ((pathLoss - bound) * fac);
         }
         return pathLoss;
     }
 
     private double enhancePathLoss(double pathLoss) {
-        if(pathLoss > bound) {
-            return bound + ((pathLoss-bound)/fac);
+        if (pathLoss > bound) {
+            return bound + ((pathLoss - bound) / fac);
         }
         return pathLoss;
     }
 
-	public void setConfig(ITUDegradingDistConfig config) {
-		this.bound = config.getBound();
-		this.fac = config.getFac();
-		this.offsetM = config.getOffsetM();
-	}
+    public void setConfig(ITUDegradingDistConfig config) {
+        this.bound = config.getBound();
+        this.fac = config.getFac();
+        this.offsetM = config.getOffsetM();
+    }
 
     @Override
     public String toString() {
@@ -77,16 +76,16 @@ public class ITUIndoorModelDegradingDist extends ITUIndoorAttenuationModel {
         private double fac = 0.2;
         private double offsetM = 0;
 
-	    public ITUDegradingDistConfig() {
-	    }
+        public ITUDegradingDistConfig() {
+        }
 
-	    public ITUDegradingDistConfig(double bound, double fac, double offsetM) {
-		    this.bound = bound;
-		    this.fac = fac;
-		    this.offsetM = offsetM;
-	    }
+        public ITUDegradingDistConfig(double bound, double fac, double offsetM) {
+            this.bound = bound;
+            this.fac = fac;
+            this.offsetM = offsetM;
+        }
 
-	    public double getBound() {
+        public double getBound() {
             return bound;
         }
 
@@ -110,19 +109,19 @@ public class ITUIndoorModelDegradingDist extends ITUIndoorAttenuationModel {
             this.offsetM = offsetM;
         }
 
-	    public void roundNumbers(int scale) {
-		    bound = ServerUtil.round(bound,scale);
-		    fac = ServerUtil.round(fac,scale);
-		    offsetM = ServerUtil.round(offsetM,scale);
-	    }
+        public void roundNumbers(int scale) {
+            bound = ServerUtil.round(bound, scale);
+            fac = ServerUtil.round(fac, scale);
+            offsetM = ServerUtil.round(offsetM, scale);
+        }
 
-	    @Override
-	    public String toString() {
-		    return "ITUDegradingDistConfig{" +
-				    "bound=" + bound +
-				    ", fac=" + fac +
-				    ", offsetM=" + offsetM +
-				    '}';
-	    }
+        @Override
+        public String toString() {
+            return "ITUDegradingDistConfig{" +
+                    "bound=" + bound +
+                    ", fac=" + fac +
+                    ", offsetM=" + offsetM +
+                    '}';
+        }
     }
 }

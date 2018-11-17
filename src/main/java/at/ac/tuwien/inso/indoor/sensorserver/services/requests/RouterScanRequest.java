@@ -33,24 +33,24 @@ public class RouterScanRequest extends ARequest<List<WlanScanNode>> {
     @Override
     public List<WlanScanNode> startRequest() throws SensorRequestException {
         try {
-            Map<String,String> queryMap= new HashMap<String, String>();
-            queryMap.put(ApiConst.ROUTER_ADAPTER_QUERY_PARAM,adapterName);
-            queryMap.put(ApiConst.ROUTER_SCAN_BOOL_QUERY_PARAM,"true");
+            Map<String, String> queryMap = new HashMap<String, String>();
+            queryMap.put(ApiConst.ROUTER_ADAPTER_QUERY_PARAM, adapterName);
+            queryMap.put(ApiConst.ROUTER_SCAN_BOOL_QUERY_PARAM, "true");
 
 
-            ResponseWrapper responseWrapper = runRequest("GET",getUrl()+ ApiConst.ROUTER_SERVICE_IWINFO+ ServerUtil.createQueryString(queryMap),"",true);
+            ResponseWrapper responseWrapper = runRequest("GET", getUrl() + ApiConst.ROUTER_SERVICE_IWINFO + ServerUtil.createQueryString(queryMap), "", true);
             IwinfoXmlReader.IwinfoAdapter iwinfoAdapter = IwinfoXmlReader.parseSpecificIwinfoAdapter(responseWrapper.getBody());
-            List<WlanScanNode> list =  IwinfoScanParser.parse(iwinfoAdapter.getScan(), false);
+            List<WlanScanNode> list = IwinfoScanParser.parse(iwinfoAdapter.getScan(), false);
             Collections.sort(list);
-            log.debug("Found in scan: "+ServerUtil.foldTooLongString(list.toString(),2000));
+            log.debug("Found in scan: " + ServerUtil.foldTooLongString(list.toString(), 2000));
             return list;
         } catch (Exception e) {
-            throw new SensorRequestException("Could not complete "+getClass().getSimpleName(),e);
+            throw new SensorRequestException("Could not complete " + getClass().getSimpleName(), e);
         }
     }
 
     private String getUrl() {
-        if(url == null) {
+        if (url == null) {
             return getNode().getFullUrl();
         } else {
             return url;

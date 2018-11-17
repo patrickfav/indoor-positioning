@@ -25,16 +25,16 @@ public class SensorNode extends TypeAbleCouchDBDocument {
     private double signalStrengthMultiplicator;
     private boolean enabled;
     private MachineInfo machineInfo;
-    private Integer antennaDBi=2;
+    private Integer antennaDBi = 2;
     private String roomId;
-    private Map<EFrequencyRange,Double> multiplierMap = new HashMap<EFrequencyRange, Double>();
+    private Map<EFrequencyRange, Double> multiplierMap = new HashMap<EFrequencyRange, Double>();
 
     public SensorNode() {
         nodeId = UUID.randomUUID().toString();
         createDate = new Date();
-        enabled=true;
+        enabled = true;
         for (EFrequencyRange eFrequencyRange : EFrequencyRange.values()) {
-            multiplierMap.put(eFrequencyRange,1d);
+            multiplierMap.put(eFrequencyRange, 1d);
         }
     }
 
@@ -169,12 +169,12 @@ public class SensorNode extends TypeAbleCouchDBDocument {
     @JsonIgnore
     public String getFullUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append(isHttpsEnabled() ? "https://":"http://");
+        sb.append(isHttpsEnabled() ? "https://" : "http://");
         sb.append(getIp());
-        if(port != 0) {
+        if (port != 0) {
             sb.append(":").append(port);
         }
-        if(customResourcePath != null && !customResourcePath.isEmpty() && customResourcePath.contains("/")) {
+        if (customResourcePath != null && !customResourcePath.isEmpty() && customResourcePath.contains("/")) {
             sb.append(customResourcePath);
         } else {
             sb.append(ApiConst.DEFAULT_ROUTER_SERVICES_RES);

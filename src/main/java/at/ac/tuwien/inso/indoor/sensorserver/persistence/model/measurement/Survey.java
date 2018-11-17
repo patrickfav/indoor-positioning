@@ -21,8 +21,8 @@ public class Survey extends TypeAbleCouchDBDocument implements Comparable<Survey
     private List<AverageWlanScanMeasurement> averageScanNodes;
 
     public Survey() {
-        surveyId= UUID.randomUUID().toString();
-        created =new Date();
+        surveyId = UUID.randomUUID().toString();
+        created = new Date();
     }
 
     public String getNetworkId() {

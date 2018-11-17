@@ -22,7 +22,7 @@ public class TrilateralMatrixTester {
         Analysis analysis = MiscManager.getInstance().getByAnalysisId(metaDatas.get(0).getAnalysisId());
 
         //ManagedNodesPositioner matrix = new ManagedNodesPositioner(analysis, EFrequencyRange.WLAN_2_4Ghz,new SignalMapConfig());
-        RSSMatrixCreator creator = new RSSMatrixCreator(analysis.getSignalMap().get(EFrequencyRange.WLAN_2_4Ghz), ServerConfig.getInstance().getSignalMapConfig(),network,EFrequencyRange.WLAN_2_4Ghz,true);
+        RSSMatrixCreator creator = new RSSMatrixCreator(analysis.getSignalMap().get(EFrequencyRange.WLAN_2_4Ghz), ServerConfig.getInstance().getSignalMapConfig(), network, EFrequencyRange.WLAN_2_4Ghz, true);
         System.out.println("Test Done");
     }
 }

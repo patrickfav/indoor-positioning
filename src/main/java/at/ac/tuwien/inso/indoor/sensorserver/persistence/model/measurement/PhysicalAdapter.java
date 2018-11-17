@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
-* Created by PatrickF on 03.11.2014.
-*/
-public class PhysicalAdapter implements Comparable<PhysicalAdapter>{
+ * Created by PatrickF on 03.11.2014.
+ */
+public class PhysicalAdapter implements Comparable<PhysicalAdapter> {
     private String macAddress;
     private String nodeId;
     private String nodeName;
@@ -110,6 +110,6 @@ public class PhysicalAdapter implements Comparable<PhysicalAdapter>{
 
     @Override
     public int compareTo(PhysicalAdapter o) {
-        return ServerUtil.implode("", new ArrayList<String>(ssidSet)).compareTo(ServerUtil.implode("",new ArrayList<String>(o.getSsidSet())));
+        return ServerUtil.implode("", new ArrayList<String>(ssidSet)).compareTo(ServerUtil.implode("", new ArrayList<String>(o.getSsidSet())));
     }
 }

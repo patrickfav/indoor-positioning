@@ -28,24 +28,24 @@ import java.util.Map;
 @Path("/util")
 @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 public class PathLossUtilityService {
-	private static Logger log = Logger.getLogger(PathLossUtilityService.class);
+    private static Logger log = Logger.getLogger(PathLossUtilityService.class);
 
-	@POST
+    @POST
     @Path("/itu-degr-dist-values")
     @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getITUDegrDistGraphValues(ITUIndoorModelDegradingDist.ITUDegradingDistConfig config,@Context Request request) {
+    public Response getITUDegrDistGraphValues(ITUIndoorModelDegradingDist.ITUDegradingDistConfig config, @Context Request request) {
         Response.ResponseBuilder builder = null;
         try {
             builder = request.evaluatePreconditions(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class)));
             CacheControl cc = CacheUtil.getCacheControl(ApiConst.CacheControl.SENSOR_NETWORK);
             if (builder == null) {
-                Map<EEnvironmentModel,List<List<Double>>> map = new HashMap<EEnvironmentModel, List<List<Double>>>();
+                Map<EEnvironmentModel, List<List<Double>>> map = new HashMap<EEnvironmentModel, List<List<Double>>>();
 
-                map.put(EEnvironmentModel.INDOOR_OBSTRUCTED_OFFICE,calculateModelValues(EEnvironmentModel.INDOOR_OBSTRUCTED_OFFICE,config));
-                map.put(EEnvironmentModel.INDOOR_OBSTRUCTED_COMMERCIAL,calculateModelValues(EEnvironmentModel.INDOOR_OBSTRUCTED_COMMERCIAL,config));
-                map.put(EEnvironmentModel.INDOOR_OBSTRUCTED_RESIDENTIAL,calculateModelValues(EEnvironmentModel.INDOOR_OBSTRUCTED_RESIDENTIAL,config));
-	            map.put(EEnvironmentModel.INDOOR_LINE_OF_SIGHT,calculateModelValues(EEnvironmentModel.INDOOR_LINE_OF_SIGHT,config));
-	            map.put(EEnvironmentModel.FREE_SPACE,calculateModelValues(EEnvironmentModel.FREE_SPACE,config));
+                map.put(EEnvironmentModel.INDOOR_OBSTRUCTED_OFFICE, calculateModelValues(EEnvironmentModel.INDOOR_OBSTRUCTED_OFFICE, config));
+                map.put(EEnvironmentModel.INDOOR_OBSTRUCTED_COMMERCIAL, calculateModelValues(EEnvironmentModel.INDOOR_OBSTRUCTED_COMMERCIAL, config));
+                map.put(EEnvironmentModel.INDOOR_OBSTRUCTED_RESIDENTIAL, calculateModelValues(EEnvironmentModel.INDOOR_OBSTRUCTED_RESIDENTIAL, config));
+                map.put(EEnvironmentModel.INDOOR_LINE_OF_SIGHT, calculateModelValues(EEnvironmentModel.INDOOR_LINE_OF_SIGHT, config));
+                map.put(EEnvironmentModel.FREE_SPACE, calculateModelValues(EEnvironmentModel.FREE_SPACE, config));
 
                 builder = Response.ok(map).cacheControl(cc).tag(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class)));
             }
@@ -58,64 +58,64 @@ public class PathLossUtilityService {
 
     private List<List<Double>> calculateModelValues(EEnvironmentModel envModel, ITUIndoorModelDegradingDist.ITUDegradingDistConfig config) {
         List<List<Double>> values = new ArrayList<List<Double>>();
-        ITUIndoorModelDegradingDist model = new ITUIndoorModelDegradingDist(envModel,config);
+        ITUIndoorModelDegradingDist model = new ITUIndoorModelDegradingDist(envModel, config);
         for (int i = 30; i < 100; i++) {
             List<Double> xy = new ArrayList<Double>();
             xy.add((double) i); //db x-value
-            xy.add(model.getDistanceInMeter(i, EFrequencyRange.frequencyHz(EFrequencyRange.WLAN_2_4Ghz,1),0)); //m y-value
+            xy.add(model.getDistanceInMeter(i, EFrequencyRange.frequencyHz(EFrequencyRange.WLAN_2_4Ghz, 1), 0)); //m y-value
             values.add(xy);
         }
         return values;
     }
 
-	@POST
-	@Path("/itu-degr-dist-values-for-input")
-	@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Map<Double,Double> getITUDegrDistValuesForInput(@QueryParam("envModel")EEnvironmentModel envModel,@QueryParam("freq")EFrequencyRange range,DistanceValueInput input) {
-		try {
-			ServerUtil.checkParameter(new ServerUtil.RestParam("envModel", envModel),new ServerUtil.RestParam("freq", range));
+    @POST
+    @Path("/itu-degr-dist-values-for-input")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Map<Double, Double> getITUDegrDistValuesForInput(@QueryParam("envModel") EEnvironmentModel envModel, @QueryParam("freq") EFrequencyRange range, DistanceValueInput input) {
+        try {
+            ServerUtil.checkParameter(new ServerUtil.RestParam("envModel", envModel), new ServerUtil.RestParam("freq", range));
 
-			Map<Double,Double> map = new HashMap<Double, Double>();
-			ITUIndoorModelDegradingDist model = new ITUIndoorModelDegradingDist(envModel,input.getConfig());
+            Map<Double, Double> map = new HashMap<Double, Double>();
+            ITUIndoorModelDegradingDist model = new ITUIndoorModelDegradingDist(envModel, input.getConfig());
 
-			for (Double value : input.getValues()) {
-				map.put(value, model.getDistanceInMeter(value, EFrequencyRange.frequencyHz(range, 1), 0));
-			}
+            for (Double value : input.getValues()) {
+                map.put(value, model.getDistanceInMeter(value, EFrequencyRange.frequencyHz(range, 1), 0));
+            }
 
-			return map;
-		} catch (Exception e) {
-			ExceptionHandler.handle(new BaseResponse(), e);
-		}
-		return null;
-	}
+            return map;
+        } catch (Exception e) {
+            ExceptionHandler.handle(new BaseResponse(), e);
+        }
+        return null;
+    }
 
-	@POST
-	@Path("/itu-degr-dist-bruteforce-solver")
-	@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public BruteforceDistanceResult getBestConfigByBruteforceSolver(@QueryParam("envModel")EEnvironmentModel envModel,@QueryParam("freq")EFrequencyRange range , List<BruteforceDistanceInfo> list) {
-		try {
-			ServerUtil.checkParameter(new ServerUtil.RestParam("envModel", envModel),new ServerUtil.RestParam("freq", range),new ServerUtil.RestParam("List<BruteforceDistanceInfo>", list),
-					new ServerUtil.RestParam("elments in list", list.get(0)));
-			PathLossBruteforceSolver solver = new PathLossBruteforceSolver(list,range,envModel);
-			return solver.calculate();
-		} catch (Exception e) {
-			ExceptionHandler.handle(new BaseResponse(), e);
-		}
-		return null;
-	}
+    @POST
+    @Path("/itu-degr-dist-bruteforce-solver")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public BruteforceDistanceResult getBestConfigByBruteforceSolver(@QueryParam("envModel") EEnvironmentModel envModel, @QueryParam("freq") EFrequencyRange range, List<BruteforceDistanceInfo> list) {
+        try {
+            ServerUtil.checkParameter(new ServerUtil.RestParam("envModel", envModel), new ServerUtil.RestParam("freq", range), new ServerUtil.RestParam("List<BruteforceDistanceInfo>", list),
+                    new ServerUtil.RestParam("elments in list", list.get(0)));
+            PathLossBruteforceSolver solver = new PathLossBruteforceSolver(list, range, envModel);
+            return solver.calculate();
+        } catch (Exception e) {
+            ExceptionHandler.handle(new BaseResponse(), e);
+        }
+        return null;
+    }
 
-	@POST
-	@Path("/itu-degr-dist-bruteforce-calibrate-mult")
-	@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public BruteforceMultResult getBestNodeMultiByBruteforceSolver(List<BruteforceMultInfo> list) {
-		try {
-			ServerUtil.checkParameter(new ServerUtil.RestParam("List<BruteforceMultInfo>", list));
+    @POST
+    @Path("/itu-degr-dist-bruteforce-calibrate-mult")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public BruteforceMultResult getBestNodeMultiByBruteforceSolver(List<BruteforceMultInfo> list) {
+        try {
+            ServerUtil.checkParameter(new ServerUtil.RestParam("List<BruteforceMultInfo>", list));
 
-			NodeMultiNormalizer normalizer = new NodeMultiNormalizer(list);
-			return normalizer.calculate();
-		} catch (Exception e) {
-			ExceptionHandler.handle(new BaseResponse(), e);
-		}
-		return null;
-	}
+            NodeMultiNormalizer normalizer = new NodeMultiNormalizer(list);
+            return normalizer.calculate();
+        } catch (Exception e) {
+            ExceptionHandler.handle(new BaseResponse(), e);
+        }
+        return null;
+    }
 }

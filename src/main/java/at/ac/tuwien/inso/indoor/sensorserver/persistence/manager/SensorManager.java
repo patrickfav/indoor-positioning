@@ -44,22 +44,22 @@ public class SensorManager extends AManager {
         sensorDoa = new SensorDao();
     }
 
-     /* **********************************************************************************************  NETWORK */
-     public void addSensorNetwork(SensorNetwork network) {
-         sensorDoa.getSensorNetworkDao().add(network);
-         try {
-             SchedulerManager.getInstance().addSurveyJob(network);
-             SchedulerManager.getInstance().addPingLogJob(network);
-             SchedulerManager.getInstance().addAnalysisLogJob(network);
-         } catch (SchedulerException e) {
-             throw new GenericServerException("Could not add jobs to scheduler for network "+network,e);
-         }
-         EtagManager.getInstance().regenerateETag(SensorNetwork.class);
-     }
+    /* **********************************************************************************************  NETWORK */
+    public void addSensorNetwork(SensorNetwork network) {
+        sensorDoa.getSensorNetworkDao().add(network);
+        try {
+            SchedulerManager.getInstance().addSurveyJob(network);
+            SchedulerManager.getInstance().addPingLogJob(network);
+            SchedulerManager.getInstance().addAnalysisLogJob(network);
+        } catch (SchedulerException e) {
+            throw new GenericServerException("Could not add jobs to scheduler for network " + network, e);
+        }
+        EtagManager.getInstance().regenerateETag(SensorNetwork.class);
+    }
 
-    public void updateSensorNetwork(SensorNetwork network,boolean updateSchedule) {
+    public void updateSensorNetwork(SensorNetwork network, boolean updateSchedule) {
         sensorDoa.getSensorNetworkDao().update(network);
-        if(updateSchedule) {
+        if (updateSchedule) {
             try {
                 SchedulerManager.getInstance().cancelSurveyJob(network.getNetworkId());
                 SchedulerManager.getInstance().cancelPingJob(network.getNetworkId());
@@ -80,7 +80,7 @@ public class SensorManager extends AManager {
         List<SensorNetwork> nonDeleted = new ArrayList<SensorNetwork>();
 
         for (SensorNetwork network : networks) {
-            if(!network.isDeleted()) {
+            if (!network.isDeleted()) {
                 nonDeleted.add(network);
             }
         }
@@ -90,16 +90,16 @@ public class SensorManager extends AManager {
 
     public SensorNetwork getSensorNetworkById(String networkId) {
         SensorNetwork network = sensorDoa.getSensorNetworkDao().getByNetworkId(networkId);
-        if(network == null) {
-            throw new ResourceNotFoundException("Could not find SensorNetwork with id "+networkId);
+        if (network == null) {
+            throw new ResourceNotFoundException("Could not find SensorNetwork with id " + networkId);
         }
         return network;
     }
 
     public void checkIfNetworkExists(String networkId) {
         SensorNetwork network = sensorDoa.getSensorNetworkDao().getByNetworkId(networkId);
-        if(network == null) {
-            throw new ResourceNotFoundException("Could not find SensorNetwork with id "+networkId);
+        if (network == null) {
+            throw new ResourceNotFoundException("Could not find SensorNetwork with id " + networkId);
         }
     }
 
@@ -107,7 +107,7 @@ public class SensorManager extends AManager {
         SensorNetwork network = getSensorNetworkById(networkId);
         network.setDeleted(true);
         network.setCronEnabled(false);
-        updateSensorNetwork(network,false);
+        updateSensorNetwork(network, false);
 
         SchedulerManager.getInstance().cancelSurveyJob(network.getNetworkId());
         SchedulerManager.getInstance().cancelPingJob(network.getNetworkId());
@@ -115,24 +115,20 @@ public class SensorManager extends AManager {
 
     }
 
-    public SensorNetwork saveBlueprintImage(String networkId,InputStream inputStream, String contentType) {
-        return sensorDoa.getSensorNetworkDao().addAttachment(networkId,"blueprint_"+networkId,inputStream,contentType,true);
+    public SensorNetwork saveBlueprintImage(String networkId, InputStream inputStream, String contentType) {
+        return sensorDoa.getSensorNetworkDao().addAttachment(networkId, "blueprint_" + networkId, inputStream, contentType, true);
     }
 
     /* **********************************************************************************************  NODE */
-
-
 
     public void updateSensorNode(SensorNode node) {
         sensorDoa.getSensorNodeDao().update(node);
         EtagManager.getInstance().regenerateETag(SensorNode.class);
     }
 
-
-
     public List<SensorNode> getAllNodesFromNetwork(String networkId) {
-        if(null == sensorDoa.getSensorNetworkDao().getByNetworkId(networkId)) {
-            throw new ResourceNotFoundException("Could not find SensorNetwork with id "+networkId);
+        if (null == sensorDoa.getSensorNetworkDao().getByNetworkId(networkId)) {
+            throw new ResourceNotFoundException("Could not find SensorNetwork with id " + networkId);
         }
 
         return sensorDoa.getSensorNodeDao().findByNetworkId(networkId);
@@ -147,13 +143,13 @@ public class SensorManager extends AManager {
             }
         }
 
-        SchedulerManager.getInstance().schedulePingJob(getSensorNetworkById(node.getNetworkId()),true);
+        SchedulerManager.getInstance().schedulePingJob(getSensorNetworkById(node.getNetworkId()), true);
 
         for (Adapter adapter : node.getAdapters()) {
             try {
                 adapter.setOuiMacInfo(new OUILookupRequest(adapter.getMacAddress()).startRequest());
             } catch (SensorRequestException e) {
-                log.warn("Could not get OUI Info for node "+node+" and adapter "+adapter,e);
+                log.warn("Could not get OUI Info for node " + node + " and adapter " + adapter, e);
             }
         }
 
@@ -163,8 +159,8 @@ public class SensorManager extends AManager {
 
     public SensorNode getSensorNodeById(String nodeId) {
         SensorNode node = sensorDoa.getSensorNodeDao().findByNodeId(nodeId);
-        if(node == null) {
-            throw new ResourceNotFoundException("Could not find SensorNode with id "+nodeId);
+        if (node == null) {
+            throw new ResourceNotFoundException("Could not find SensorNode with id " + nodeId);
         }
 
         return node;

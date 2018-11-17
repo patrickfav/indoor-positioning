@@ -52,7 +52,7 @@ public class IwinfoXmlReader {
 
             return iwinfoAdapter;
         } catch (Exception e) {
-            throw new Exception("Error while parsing adapter xml",e);
+            throw new Exception("Error while parsing adapter xml", e);
         }
     }
 
@@ -94,17 +94,16 @@ public class IwinfoXmlReader {
 
             return iwinfoAdapter;
         } catch (Exception e) {
-            throw new Exception("Error while parsing adapter xml",e);
+            throw new Exception("Error while parsing adapter xml", e);
         }
     }
 
-
     public static class IwinfoAdapter {
-        public String name;
-        public String info;
-        public String scan;
-        public String txpowerlist;
-        public String assoclist;
+        private String name;
+        private String info;
+        private String scan;
+        private String txpowerlist;
+        private String assoclist;
 
         public String getName() {
             return name;
@@ -146,7 +145,6 @@ public class IwinfoXmlReader {
             this.assoclist = assoclist;
         }
 
-
         @Override
         public String toString() {
             return "IwinfoAdapter{" +
@@ -160,13 +158,13 @@ public class IwinfoXmlReader {
     }
 
     public static class IwinfoList {
-        public String adapterList;
-        public String date;
-        public String uptime;
-        public String ifconfig;
-        public String cpuInfo;
-        public String memInfo;
-        public String version;
+        private String adapterList;
+        private String date;
+        private String uptime;
+        private String ifconfig;
+        private String cpuInfo;
+        private String memInfo;
+        private String version;
 
         public String getAdapterList() {
             return adapterList;

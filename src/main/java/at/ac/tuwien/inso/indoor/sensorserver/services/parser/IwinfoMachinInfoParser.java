@@ -21,7 +21,7 @@ public class IwinfoMachinInfoParser {
         MachineInfo machineInfo = new MachineInfo();
         machineInfo.setVersion(info.getVersion());
         machineInfo = parseCpuInfo(info.getCpuInfo(), machineInfo, shouldLog);
-        machineInfo = parseMemInfo(info.getMemInfo(),machineInfo,shouldLog);
+        machineInfo = parseMemInfo(info.getMemInfo(), machineInfo, shouldLog);
 
         if (shouldLog) log.debug("parsed info: " + machineInfo);
         return machineInfo;

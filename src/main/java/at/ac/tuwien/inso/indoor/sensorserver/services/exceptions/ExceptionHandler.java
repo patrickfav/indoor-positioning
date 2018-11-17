@@ -22,7 +22,7 @@ public class ExceptionHandler {
         } else if (e instanceof ResourceNotFoundException) {
             notFound(b, e);
         } else if (e instanceof SensorRequestException) {
-            serviceUnavailable(b,e);
+            serviceUnavailable(b, e);
         } else {
             serverError(b, e);
         }
@@ -34,6 +34,7 @@ public class ExceptionHandler {
         log.error("server-error", e);
         throw new WebApplicationException(Response.status(500).entity(b).build());
     }
+
     private static void serviceUnavailable(BaseResponse b, Exception e) {
         b.setStatusDescription(e.toString());
         b.setExceptionList(getExceptionList(e));
@@ -56,12 +57,12 @@ public class ExceptionHandler {
         b.setStatusDescription(getExceptionsDescription(e));
         throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity(b).build());
     }
-    
+
     private static List<String> getExceptionList(Exception e) {
         Throwable t = e;
         List<String> exceptionList = new ArrayList<String>();
         exceptionList.add(getExceptionsDescription(e));
-        while((t = t.getCause()) != null) {
+        while ((t = t.getCause()) != null) {
             exceptionList.add(getExceptionsDescription(t));
         }
         return exceptionList;
@@ -70,11 +71,11 @@ public class ExceptionHandler {
     private static String getExceptionsDescription(Throwable t) {
         String description = t.getMessage();
         try {
-            if(t.getStackTrace().length > 0) {
-                description+=" (@"+t.getStackTrace()[0].getClassName()+" in "+t.getStackTrace()[0].getMethodName()+":"+t.getStackTrace()[0].getLineNumber()+")";
+            if (t.getStackTrace().length > 0) {
+                description += " (@" + t.getStackTrace()[0].getClassName() + " in " + t.getStackTrace()[0].getMethodName() + ":" + t.getStackTrace()[0].getLineNumber() + ")";
             }
         } catch (Exception e) {
-            log.error("Could not get Stacktrace",e);
+            log.error("Could not get Stacktrace", e);
         }
         return description;
     }

@@ -31,19 +31,19 @@ public class MiscDao {
         }
 
         public List<Survey> findByNodeAndAdapterLimit(String nodeId, String adapter, int limit) {
-            ComplexKey startKey = ComplexKey.of(nodeId,adapter);
-            ComplexKey endKey = ComplexKey.of(nodeId,adapter, ComplexKey.emptyObject());
+            ComplexKey startKey = ComplexKey.of(nodeId, adapter);
+            ComplexKey endKey = ComplexKey.of(nodeId, adapter, ComplexKey.emptyObject());
 
-            ViewQuery query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX+Survey.class.getSimpleName())
+            ViewQuery query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX + Survey.class.getSimpleName())
                     .limit(limit).startKey(endKey).endKey(startKey).descending(true).includeDocs(true).viewName("by_nodeIdAndAdapterSortByDate");
             return db.queryView(query, Survey.class);
         }
 
-        public List<Survey> findByNodeLimit(String nodeId,int limit) {
+        public List<Survey> findByNodeLimit(String nodeId, int limit) {
             ComplexKey startKey = ComplexKey.of(nodeId);
             ComplexKey endKey = ComplexKey.of(nodeId, ComplexKey.emptyObject());
 
-            ViewQuery query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX+Survey.class.getSimpleName())
+            ViewQuery query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX + Survey.class.getSimpleName())
                     .limit(limit).startKey(endKey).endKey(startKey).descending(true).includeDocs(true).viewName("by_nodeIdSortByDate");
             return db.queryView(query, Survey.class);
         }
@@ -52,12 +52,11 @@ public class MiscDao {
             ComplexKey startKey = ComplexKey.of(networkId);
             ComplexKey endKey = ComplexKey.of(networkId, ComplexKey.emptyObject());
 
-            ViewQuery query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX+Survey.class.getSimpleName())
+            ViewQuery query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX + Survey.class.getSimpleName())
                     .limit(limit).startKey(endKey).endKey(startKey).descending(true).includeDocs(true).viewName("by_networkIdSortByDate");
             return db.queryView(query, Survey.class);
         }
     }
-
 
     public static class JobDao extends CouchDbRepositorySupport<JobLog> {
         public JobDao() {
@@ -67,24 +66,24 @@ public class MiscDao {
         public List<JobLog> findByJobId(String nodeId) {
             return queryView("by_jobId", String.valueOf(nodeId));
         }
+
         public List<JobLog> findByNodeId(String nodeId) {
             return queryView("by_nodeId", String.valueOf(nodeId));
         }
+
         public List<JobLog> findByNetworkId(String networkId) {
             return queryView("by_networkId", String.valueOf(networkId));
         }
 
-
-        public List<JobLog> findByNetworkIdLimit(String networkId,int limit) {
+        public List<JobLog> findByNetworkIdLimit(String networkId, int limit) {
             ComplexKey startKey = ComplexKey.of(networkId);
             ComplexKey endKey = ComplexKey.of(networkId, ComplexKey.emptyObject());
 
-            ViewQuery query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX+JobLog.class.getSimpleName())
+            ViewQuery query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX + JobLog.class.getSimpleName())
                     .limit(limit).startKey(endKey).endKey(startKey).descending(true).includeDocs(true).viewName("by_networkIdSortByDate");
             return db.queryView(query, JobLog.class);
         }
     }
-
 
     public static class PingDao extends CouchDbRepositorySupport<PingLog> {
         public PingDao() {
@@ -99,12 +98,11 @@ public class MiscDao {
             ComplexKey startKey = ComplexKey.of(nodeId);
             ComplexKey endKey = ComplexKey.of(nodeId, ComplexKey.emptyObject());
 
-            ViewQuery query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX+PingLog.class.getSimpleName())
+            ViewQuery query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX + PingLog.class.getSimpleName())
                     .limit(limit).startKey(endKey).endKey(startKey).descending(true).includeDocs(true).viewName("by_nodeIdSortByDate");
             return db.queryView(query, PingLog.class);
         }
     }
-
 
     public static class AnalysisDao extends CouchDbRepositorySupport<Analysis> {
         public AnalysisDao() {
@@ -114,7 +112,7 @@ public class MiscDao {
         public Analysis findByAnalysisId(String analysisId) {
             List<Analysis> analysisList = queryView("by_analysisId", String.valueOf(analysisId));
 
-            if(analysisList.isEmpty()) {
+            if (analysisList.isEmpty()) {
                 return null;
             } else {
                 return analysisList.get(0);
@@ -135,24 +133,24 @@ public class MiscDao {
             ComplexKey startKey = ComplexKey.of(networkId);
             ComplexKey endKey = ComplexKey.of(networkId, ComplexKey.emptyObject());
 
-            ViewQuery query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX+Analysis.class.getSimpleName())
+            ViewQuery query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX + Analysis.class.getSimpleName())
                     .limit(limit).startKey(endKey).endKey(startKey).descending(true).includeDocs(true).viewName("by_networkId");
             return db.queryView(query, Analysis.class);
         }
 
-        public List<Analysis> findByNetworkIdAndStartKeyLimit(String networkId, String startKeyDate, String startDocId,int limit) {
+        public List<Analysis> findByNetworkIdAndStartKeyLimit(String networkId, String startKeyDate, String startDocId, int limit) {
             ComplexKey startKey;
             ComplexKey endKey;
             ViewQuery query;
-            if(startKeyDate == null || startKeyDate.isEmpty()) {
+            if (startKeyDate == null || startKeyDate.isEmpty()) {
                 startKey = ComplexKey.of(networkId, ComplexKey.emptyObject());
                 endKey = ComplexKey.of(networkId);
-                query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX+Analysis.class.getSimpleName())
-                        .limit(limit+1).startKey(startKey).endKey(endKey).descending(true).includeDocs(true).viewName("by_networkId");
+                query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX + Analysis.class.getSimpleName())
+                        .limit(limit + 1).startKey(startKey).endKey(endKey).descending(true).includeDocs(true).viewName("by_networkId");
             } else {
                 startKey = ComplexKey.of(networkId, ServerUtil.createISO8601UTCDate(new Date(Long.valueOf(startKeyDate))));
-                query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX+Analysis.class.getSimpleName())
-                        .limit(limit+1).startKey(startKey).startDocId(startDocId).descending(true).includeDocs(true).viewName("by_networkId");
+                query = new ViewQuery().designDocId(DesignDocument.ID_PREFIX + Analysis.class.getSimpleName())
+                        .limit(limit + 1).startKey(startKey).startDocId(startDocId).descending(true).includeDocs(true).viewName("by_networkId");
             }
             return db.queryView(query, Analysis.class);
         }
@@ -166,7 +164,7 @@ public class MiscDao {
         public Blacklist findByNetworkId(String networkId) {
             List<Blacklist> list = queryView("by_networkId", String.valueOf(networkId));
 
-            if(list.isEmpty()) {
+            if (list.isEmpty()) {
                 return null;
             } else {
                 return list.get(0);
@@ -182,7 +180,7 @@ public class MiscDao {
         public RoomList findByNetworkId(String networkId) {
             List<RoomList> roomLists = queryView("by_networkId", String.valueOf(networkId));
 
-            if(roomLists.isEmpty()) {
+            if (roomLists.isEmpty()) {
                 return null;
             } else {
                 return roomLists.get(0);

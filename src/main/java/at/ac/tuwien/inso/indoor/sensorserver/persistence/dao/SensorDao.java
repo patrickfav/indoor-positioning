@@ -13,8 +13,8 @@ import java.util.List;
  * Created by PatrickF on 08.09.2014.
  */
 public class SensorDao {
-    public SensorNetworkDao sensorNetworkDao;
-    public SensorNodeDao sensorNodeDao;
+    private SensorNetworkDao sensorNetworkDao;
+    private SensorNodeDao sensorNodeDao;
 
     public SensorDao() {
         sensorNetworkDao = new SensorNetworkDao();
@@ -37,17 +37,17 @@ public class SensorDao {
         public SensorNetwork getByNetworkId(String networkId) {
             List<SensorNetwork> networks = queryView("by_networkId", String.valueOf(networkId));
 
-            if(networks.isEmpty()) {
+            if (networks.isEmpty()) {
                 return null;
             } else {
                 return networks.get(0);
             }
         }
 
-        public SensorNetwork addAttachment(String networkId, String attachmentId, InputStream inputStream, String contentType,boolean deleteIfAlreadyExistsBeforeAdding) {
+        public SensorNetwork addAttachment(String networkId, String attachmentId, InputStream inputStream, String contentType, boolean deleteIfAlreadyExistsBeforeAdding) {
             SensorNetwork network = getByNetworkId(networkId);
             String rev = network.getRevision();
-            if(deleteIfAlreadyExistsBeforeAdding) {
+            if (deleteIfAlreadyExistsBeforeAdding) {
                 try {
                     AttachmentInputStream attachmentInputStream = db.getAttachment(network.getId(), attachmentId);
                     attachmentInputStream.close();
@@ -55,8 +55,8 @@ public class SensorDao {
                 } catch (Exception e) {/*do nothing; not found and thats ok*/}
             }
 
-            AttachmentInputStream attachment = new AttachmentInputStream(attachmentId,inputStream,contentType);
-            rev = db.createAttachment(network.getId(),rev, attachment);
+            AttachmentInputStream attachment = new AttachmentInputStream(attachmentId, inputStream, contentType);
+            rev = db.createAttachment(network.getId(), rev, attachment);
             return getByNetworkId(networkId);
         }
     }
@@ -73,7 +73,7 @@ public class SensorDao {
         public SensorNode findByNodeId(String nodeId) {
             List<SensorNode> nodes = queryView("by_nodeId", String.valueOf(nodeId));
 
-            if(nodes.isEmpty()) {
+            if (nodes.isEmpty()) {
                 return null;
             } else {
                 return nodes.get(0);

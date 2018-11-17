@@ -35,12 +35,12 @@ public class OUILookupRequest extends ARequest<OUIMacInfo> {
             }
             return null;
         } catch (Exception e) {
-            log.error("error while OUI lookup",e);
+            log.error("error while OUI lookup", e);
             return null;
         }
     }
 
     private String convertMacToSearchableString(String macAddress) {
-        return macAddress.replace(":","-").substring(0,8);
+        return macAddress.replace(":", "-").substring(0, 8);
     }
 }

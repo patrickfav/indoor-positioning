@@ -15,25 +15,24 @@ public class CacheUtil {
 
     private static MessageDigest messageDigest;
 
-
     public static EntityTag getEtag(Object obj) {
-        if(obj instanceof Iterable) {
+        if (obj instanceof Iterable) {
             StringBuilder s = new StringBuilder();
             for (Object o : (Iterable) obj) {
                 s.append(obj.hashCode());
             }
-            return new EntityTag(getEtag(md5Hex(s.toString()),false));
+            return new EntityTag(getEtag(md5Hex(s.toString()), false));
         }
 
-        return new EntityTag(getEtag(obj,false));
+        return new EntityTag(getEtag(obj, false));
     }
 
     public static EntityTag getEtag(String etag) {
-        return new EntityTag(md5Hex(etag+ ServerConfig.getInstance().getEtagSalt()));
+        return new EntityTag(md5Hex(etag + ServerConfig.getInstance().getEtagSalt()));
     }
 
-    public static String getEtag(Object obj,boolean quote) {
-        return quoteIfNeeded(md5Hex(String.valueOf(obj.hashCode())+ ServerConfig.getInstance().getEtagSalt()),quote);
+    public static String getEtag(Object obj, boolean quote) {
+        return quoteIfNeeded(md5Hex(String.valueOf(obj.hashCode()) + ServerConfig.getInstance().getEtagSalt()), quote);
     }
 
     public static Date getModifiedSince(Object obj) {
@@ -44,7 +43,7 @@ public class CacheUtil {
         CacheControl cc = new CacheControl();
         int configMaxAge = ServerConfig.getInstance().getMaxAgeCacheControl();
 
-        if(configMaxAge < 0) {
+        if (configMaxAge < 0) {
             cc.setMaxAge(defaultMaxAge);
         } else {
             cc.setMaxAge(configMaxAge);
@@ -52,10 +51,9 @@ public class CacheUtil {
         return cc;
     }
 
-
-    private static String quoteIfNeeded(String unqoted,boolean quote) {
-        if(quote) {
-            unqoted = "\""+unqoted+"\"";
+    private static String quoteIfNeeded(String unqoted, boolean quote) {
+        if (quote) {
+            unqoted = "\"" + unqoted + "\"";
         }
         return unqoted;
     }
@@ -76,7 +74,7 @@ public class CacheUtil {
             try {
                 messageDigest = MessageDigest.getInstance("MD5");
             } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException("Error getting message digest md5",e);
+                throw new RuntimeException("Error getting message digest md5", e);
             }
         }
         return messageDigest;

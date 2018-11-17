@@ -21,52 +21,52 @@ public class AnalysisBuilder {
     public Analysis createAndPresistAnalysis(String networkId) {
         Analysis analysis = createAnalysis(networkId);
 
-        if(SHOULD_CHECK_IF_SAME_AS_PREVIOUS && AnalysisHelper.isSameAnalysisAsPrevious(analysis, networkId)) {
+        if (SHOULD_CHECK_IF_SAME_AS_PREVIOUS && AnalysisHelper.isSameAnalysisAsPrevious(analysis, networkId)) {
             log.info("There is no new information compared to previous analysis. Skip saving.");
         } else {
             MiscManager.getInstance().addAnaylsis(analysis);
-            log.info("Analysis "+analysis+" saved.");
+            log.info("Analysis " + analysis + " saved.");
         }
         return analysis;
     }
 
     public Analysis createAnalysis(String networkId) {
         SensorNetwork network = SensorManager.getInstance().getSensorNetworkById(networkId);
-        log.info("Start create analysis with "+network.getSurveysPerNodeForAnalysis()+" surveys per node.");
+        log.info("Start create analysis with " + network.getSurveysPerNodeForAnalysis() + " surveys per node.");
         List<SensorNode> nodes = SensorManager.getInstance().getAllNodesFromNetwork(networkId);
         List<Survey> surveyList = new ArrayList<Survey>();
         for (SensorNode node : nodes) {
-            if(node.isEnabled()) {
-                List<Survey> surveys = MiscManager.getInstance().getAllSurveysFromNodeSorted(node.getNodeId(),network.getSurveysPerNodeForAnalysis());
-                log.info("Add surveys from "+node.getNodeName()+" - "+surveys.size()+" surveys found.");
+            if (node.isEnabled()) {
+                List<Survey> surveys = MiscManager.getInstance().getAllSurveysFromNodeSorted(node.getNodeId(), network.getSurveysPerNodeForAnalysis());
+                log.info("Add surveys from " + node.getNodeName() + " - " + surveys.size() + " surveys found.");
                 surveyList.addAll(surveys);
             } else {
-                log.info("SensorNode "+node.getNodeName()+" is disabled, ignore surveys for analysis.");
+                log.info("SensorNode " + node.getNodeName() + " is disabled, ignore surveys for analysis.");
             }
         }
 
-        Analysis analysis = new Analysis(surveyList,networkId);
+        Analysis analysis = new Analysis(surveyList, networkId);
 
         log.debug("create extendednodemap");
-        Map<EFrequencyRange,List<ExtendedNodeInfo>> extendedNodeMap = new ExtendedNodeMapCreator().create(surveyList, networkId);
+        Map<EFrequencyRange, List<ExtendedNodeInfo>> extendedNodeMap = new ExtendedNodeMapCreator().create(surveyList, networkId);
         log.debug("create PhysicalAdapter");
-        Map<EFrequencyRange,List<PhysicalAdapter>> physicalAdaptersMap = AnalysisHelper.createPhysicalAdapterMap(extendedNodeMap);
+        Map<EFrequencyRange, List<PhysicalAdapter>> physicalAdaptersMap = AnalysisHelper.createPhysicalAdapterMap(extendedNodeMap);
         log.debug("create distMultiMap");
-        Map<EFrequencyRange,Double> distMultiMap = AnalysisHelper.getPrevAnalysisMultiplier(networkId);
-	    log.debug("create nodeMultiMap");
-	    Map<EFrequencyRange,Map<String,Double>> nodeMultiMap = AnalysisHelper.getNodeMultiMap(networkId);
+        Map<EFrequencyRange, Double> distMultiMap = AnalysisHelper.getPrevAnalysisMultiplier(networkId);
+        log.debug("create nodeMultiMap");
+        Map<EFrequencyRange, Map<String, Double>> nodeMultiMap = AnalysisHelper.getNodeMultiMap(networkId);
 
 
         analysis.setExtendedNodeMap(extendedNodeMap);
         analysis.setPhysicalAdaptersMap(physicalAdaptersMap);
         analysis.setDistMultiMap(distMultiMap);
-	    analysis.setNodeMultiMap(nodeMultiMap);
+        analysis.setNodeMultiMap(nodeMultiMap);
 
         log.debug("create signalmap");
         analysis.setSignalMap(AnalysisHelper.createBasicSignalMap(analysis));
 
 
-        log.info("Analysis created: "+analysis);
+        log.info("Analysis created: " + analysis);
         return analysis;
     }
 }

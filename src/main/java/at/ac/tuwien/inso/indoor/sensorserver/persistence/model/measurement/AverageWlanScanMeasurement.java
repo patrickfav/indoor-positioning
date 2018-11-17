@@ -53,10 +53,14 @@ public class AverageWlanScanMeasurement extends WlanScanNode {
         this.statistics = statistics;
     }
 
-
     public abstract static class AverageWlanScanMeasurementDBMixin {
-        @JsonIgnore SimpleStatistics statistics;
-        @JsonIgnore public abstract SimpleStatistics getStatistics();
-        @JsonIgnore public abstract void setStatistics(SimpleStatistics statistics);
+        @JsonIgnore
+        SimpleStatistics statistics;
+
+        @JsonIgnore
+        public abstract SimpleStatistics getStatistics();
+
+        @JsonIgnore
+        public abstract void setStatistics(SimpleStatistics statistics);
     }
 }

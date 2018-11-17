@@ -9,7 +9,13 @@ import java.util.UUID;
  * Created by PatrickF on 16.09.2014.
  */
 public class JobLog extends TypeAbleCouchDBDocument {
-    public enum Status {CREATED,RUNNING,ERROR,SUCCESS,CANCEL}
+    public enum Status {
+        CREATED,
+        RUNNING,
+        ERROR,
+        SUCCESS,
+        CANCEL
+    }
 
     private String jobId;
     private String networkId;
@@ -28,13 +34,13 @@ public class JobLog extends TypeAbleCouchDBDocument {
     public JobLog() {
         jobId = UUID.randomUUID().toString();
         status = Status.CREATED;
-        created=new Date();
-        progress=0d;
+        created = new Date();
+        progress = 0d;
     }
 
     public JobLog(String jobId, String networkId, String nodeId) {
         this();
-        this.jobId =jobId;
+        this.jobId = jobId;
         this.networkId = networkId;
         this.nodeId = nodeId;
     }

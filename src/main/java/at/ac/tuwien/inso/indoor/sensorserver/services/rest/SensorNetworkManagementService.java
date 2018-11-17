@@ -54,7 +54,7 @@ public class SensorNetworkManagementService {
     public BaseResponse updateSensorNetwork(SensorNetwork network) {
         BaseResponse b = new BaseResponse();
         try {
-            SensorManager.getInstance().updateSensorNetwork(network,true);
+            SensorManager.getInstance().updateSensorNetwork(network, true);
             validateCronSchedules(network);
         } catch (Exception e) {
             ExceptionHandler.handle(b, e);
@@ -63,14 +63,14 @@ public class SensorNetworkManagementService {
     }
 
     private void validateCronSchedules(SensorNetwork network) {
-        if(!CronExpression.isValidExpression(network.getCronSchedulePing())) {
-            throw new InvalidAPICallException("Ping Schedule Cron Schedule "+network.getCronSchedulePing()+" is invalid. Check the Quartz Syntax.");
+        if (!CronExpression.isValidExpression(network.getCronSchedulePing())) {
+            throw new InvalidAPICallException("Ping Schedule Cron Schedule " + network.getCronSchedulePing() + " is invalid. Check the Quartz Syntax.");
         }
-        if(!CronExpression.isValidExpression(network.getCronScheduleSurvey())) {
-            throw new InvalidAPICallException("Survey Schedule Cron Schedule "+network.getCronScheduleSurvey()+" is invalid. Check the Quartz Syntax.");
+        if (!CronExpression.isValidExpression(network.getCronScheduleSurvey())) {
+            throw new InvalidAPICallException("Survey Schedule Cron Schedule " + network.getCronScheduleSurvey() + " is invalid. Check the Quartz Syntax.");
         }
-        if(!CronExpression.isValidExpression(network.getCronScheduleAnalysis())) {
-            throw new InvalidAPICallException("Survey Schedule Cron Schedule "+network.getCronScheduleAnalysis()+" is invalid. Check the Quartz Syntax.");
+        if (!CronExpression.isValidExpression(network.getCronScheduleAnalysis())) {
+            throw new InvalidAPICallException("Survey Schedule Cron Schedule " + network.getCronScheduleAnalysis() + " is invalid. Check the Quartz Syntax.");
         }
     }
 
@@ -79,7 +79,7 @@ public class SensorNetworkManagementService {
         Response.ResponseBuilder builder = null;
         try {
 
-            builder = request.evaluatePreconditions(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class,PingLog.class)));
+            builder = request.evaluatePreconditions(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class, PingLog.class)));
             CacheControl cc = CacheUtil.getCacheControl(ApiConst.CacheControl.SENSOR_NETWORK);
             if (builder == null) {
 
@@ -87,14 +87,14 @@ public class SensorNetworkManagementService {
                 wrapper.setNetworks(SensorManager.getInstance().getAllSensorNetworksNonDeleted());
                 for (SensorNetwork network : wrapper.getNetworks()) {
                     for (SensorNode sensorNode : SensorManager.getInstance().getAllNodesFromNetwork(network.getNetworkId())) {
-                        if(!wrapper.getPingMap().containsKey(network.getNetworkId())) {
+                        if (!wrapper.getPingMap().containsKey(network.getNetworkId())) {
                             wrapper.getPingMap().put(network.getNetworkId(), new ArrayList<PingLog>());
                         }
                         wrapper.getPingMap().get(network.getNetworkId()).addAll(MiscManager.getInstance().getAllPingLogsFromNodeSorted(sensorNode.getNodeId(), 1));
                     }
                 }
 
-                builder = Response.ok(wrapper).cacheControl(cc).tag(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class,PingLog.class)));
+                builder = Response.ok(wrapper).cacheControl(cc).tag(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class, PingLog.class)));
             }
             return builder.cacheControl(cc).build();
         } catch (Exception e) {
@@ -108,9 +108,9 @@ public class SensorNetworkManagementService {
     public Response getSensorNetworkDetails(@PathParam("networkId") String networkId, @Context Request request) {
         Response.ResponseBuilder builder = null;
         try {
-            ServerUtil.checkParameter(new ServerUtil.RestParam("networkId",networkId));
+            ServerUtil.checkParameter(new ServerUtil.RestParam("networkId", networkId));
 
-            builder = request.evaluatePreconditions(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class,SensorNode.class,RoomList.class,PingLog.class)));
+            builder = request.evaluatePreconditions(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class, SensorNode.class, RoomList.class, PingLog.class)));
             CacheControl cc = CacheUtil.getCacheControl(ApiConst.CacheControl.SENSOR_NETWORK);
             if (builder == null) {
                 SensorNodeListWrapper wrapper = new SensorNodeListWrapper();
@@ -122,12 +122,12 @@ public class SensorNetworkManagementService {
                     List<PingLog> pingLogs = MiscManager.getInstance().getAllPingLogsFromNode(sensorNode.getNodeId());
                     Collections.sort(pingLogs);
 
-                    if(!pingLogs.isEmpty()) {
+                    if (!pingLogs.isEmpty()) {
                         wrapper.getPingLogList().add(pingLogs.get(0));
                     }
                 }
 
-                builder = Response.ok(wrapper).cacheControl(cc).tag(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class,SensorNode.class,RoomList.class,PingLog.class)));
+                builder = Response.ok(wrapper).cacheControl(cc).tag(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class, SensorNode.class, RoomList.class, PingLog.class)));
             }
             return builder.cacheControl(cc).build();
         } catch (Exception e) {
@@ -149,7 +149,6 @@ public class SensorNetworkManagementService {
         }
         return null;
     }
-
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -180,11 +179,11 @@ public class SensorNetworkManagementService {
 
     @GET
     @Path("/{networkId}/node/{nodeId}")
-    public Response getNodeDetails(@PathParam("networkId") String networkId,@PathParam("nodeId") String nodeId, @Context Request request) {
+    public Response getNodeDetails(@PathParam("networkId") String networkId, @PathParam("nodeId") String nodeId, @Context Request request) {
         Response.ResponseBuilder builder = null;
         try {
-            ServerUtil.checkParameter(new ServerUtil.RestParam("networkId",networkId),new ServerUtil.RestParam("nodeId",nodeId));
-            builder = request.evaluatePreconditions(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class,SensorNode.class,RoomList.class,PingLog.class)));
+            ServerUtil.checkParameter(new ServerUtil.RestParam("networkId", networkId), new ServerUtil.RestParam("nodeId", nodeId));
+            builder = request.evaluatePreconditions(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class, SensorNode.class, RoomList.class, PingLog.class)));
             CacheControl cc = CacheUtil.getCacheControl(ApiConst.CacheControl.SENSOR_NETWORK);
             if (builder == null) {
                 SensorNodeDetailsWrapper wrapper = new SensorNodeDetailsWrapper();
@@ -193,7 +192,7 @@ public class SensorNetworkManagementService {
                 wrapper.setPingList(MiscManager.getInstance().getAllPingLogsFromNodeSorted(nodeId, 1));
                 wrapper.setRoomList(MiscManager.getInstance().getRoomlistByNetworkId(networkId));
 
-                builder = Response.ok(wrapper).cacheControl(cc).tag(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class,SensorNode.class,RoomList.class,PingLog.class)));
+                builder = Response.ok(wrapper).cacheControl(cc).tag(CacheUtil.getEtag(EtagManager.getInstance().getETag(SensorNetwork.class, SensorNode.class, RoomList.class, PingLog.class)));
             }
             return builder.cacheControl(cc).build();
         } catch (Exception e) {
@@ -211,40 +210,40 @@ public class SensorNetworkManagementService {
             @FormDataParam("file") InputStream file,
             @FormDataParam("file") FormDataContentDisposition fileDisposition) {
         try {
-            ServerUtil.checkParameter(new ServerUtil.RestParam("networkId",networkId));
-            return SensorManager.getInstance().saveBlueprintImage(networkId,file,contentType);
+            ServerUtil.checkParameter(new ServerUtil.RestParam("networkId", networkId));
+            return SensorManager.getInstance().saveBlueprintImage(networkId, file, contentType);
         } catch (Exception e) {
             ExceptionHandler.handle(new BaseResponse(), e);
         }
         return null;
     }
 
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	@Path("/{networkId}/node/multiplier")
-	public BaseResponse  setMultiplierForNodes(@PathParam("networkId") String networkId, Map<EFrequencyRange,BruteforceMultResult> multiplier) {
-		BaseResponse b = new BaseResponse();
-		try {
-			List<SensorNode> allNodes = SensorManager.getInstance().getAllNodesFromNetwork(networkId);
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Path("/{networkId}/node/multiplier")
+    public BaseResponse setMultiplierForNodes(@PathParam("networkId") String networkId, Map<EFrequencyRange, BruteforceMultResult> multiplier) {
+        BaseResponse b = new BaseResponse();
+        try {
+            List<SensorNode> allNodes = SensorManager.getInstance().getAllNodesFromNetwork(networkId);
 
-			for (SensorNode node : allNodes) {
-				boolean anythingChanged = false;
-				for (Adapter adapter : node.getAdapters()) {
-					if(multiplier.containsKey(adapter.getFrequencyRange()) && multiplier.get(adapter.getFrequencyRange()).getMacMultMap().containsKey(adapter.getMacAddress())) {
-						anythingChanged = true;
-						node.getMultiplierMap().put(adapter.getFrequencyRange(),multiplier.get(adapter.getFrequencyRange()).getMacMultMap().get(adapter.getMacAddress()));
-					}
-				}
+            for (SensorNode node : allNodes) {
+                boolean anythingChanged = false;
+                for (Adapter adapter : node.getAdapters()) {
+                    if (multiplier.containsKey(adapter.getFrequencyRange()) && multiplier.get(adapter.getFrequencyRange()).getMacMultMap().containsKey(adapter.getMacAddress())) {
+                        anythingChanged = true;
+                        node.getMultiplierMap().put(adapter.getFrequencyRange(), multiplier.get(adapter.getFrequencyRange()).getMacMultMap().get(adapter.getMacAddress()));
+                    }
+                }
 
-				if(anythingChanged) {
-					SensorManager.getInstance().updateSensorNode(node);
-				}
-			}
+                if (anythingChanged) {
+                    SensorManager.getInstance().updateSensorNode(node);
+                }
+            }
 
-		} catch (Exception e) {
-			ExceptionHandler.handle(b, e);
-		}
-		return b;
-	}
+        } catch (Exception e) {
+            ExceptionHandler.handle(b, e);
+        }
+        return b;
+    }
 
 }

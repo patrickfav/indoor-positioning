@@ -15,13 +15,13 @@ import java.util.Map;
  * Created by PatrickF on 30.09.2014.
  */
 public class RadioModelData {
-    private Map<String,DistanceData> distanceMap = new HashMap<String, DistanceData>();
+    private Map<String, DistanceData> distanceMap = new HashMap<String, DistanceData>();
 
-    public RadioModelData(SimpleStatistics statistics,EFrequencyRange frequencyRange,int channel,EEnvironmentModel environmentModel,String receiverRoomId, String apRoomId, double multi, ITUIndoorModelDegradingDist.ITUDegradingDistConfig config) {
+    public RadioModelData(SimpleStatistics statistics, EFrequencyRange frequencyRange, int channel, EEnvironmentModel environmentModel, String receiverRoomId, String apRoomId, double multi, ITUIndoorModelDegradingDist.ITUDegradingDistConfig config) {
         IRadioPropagationModel ituDegradingModel = new ITUIndoorModelDegradingDist(environmentModel, config);
         IRadioPropagationModel friis = new FreeSpacePathLoss();
 
-        double hz = EFrequencyRange.frequencyHz(frequencyRange,channel);
+        double hz = EFrequencyRange.frequencyHz(frequencyRange, channel);
 //        int roomsBetween = calculateRoomsInBetween(receiverRoomId, apRoomId, statistics.getMean());
         int roomsBetween = 0;
         List<IRadioPropagationModel> modelList = new ArrayList<IRadioPropagationModel>();
@@ -32,15 +32,15 @@ public class RadioModelData {
             DistanceData data = new DistanceData();
             data.setRoomsBetween(roomsBetween);
 
-            data.setMeanDistance(iRadioPropagationModel.getDistanceInMeter(Math.abs(statistics.getMean()),hz,roomsBetween));
-            data.setMedianDistance(iRadioPropagationModel.getDistanceInMeter(Math.abs(statistics.getMedian()), hz,roomsBetween));
-            data.setModeDistance(iRadioPropagationModel.getDistanceInMeter(Math.abs(statistics.getMode()),hz,roomsBetween));
+            data.setMeanDistance(iRadioPropagationModel.getDistanceInMeter(Math.abs(statistics.getMean()), hz, roomsBetween));
+            data.setMedianDistance(iRadioPropagationModel.getDistanceInMeter(Math.abs(statistics.getMedian()), hz, roomsBetween));
+            data.setModeDistance(iRadioPropagationModel.getDistanceInMeter(Math.abs(statistics.getMode()), hz, roomsBetween));
 
-            data.setMultMeanDistance(iRadioPropagationModel.getDistanceInMeter(Math.abs(statistics.getMean())*multi,hz,roomsBetween));
-            data.setMultMedianDistance(iRadioPropagationModel.getDistanceInMeter(Math.abs(statistics.getMedian())*multi, hz,roomsBetween));
-            data.setMultModeDistance(iRadioPropagationModel.getDistanceInMeter(Math.abs(statistics.getMode())*multi,hz,roomsBetween));
+            data.setMultMeanDistance(iRadioPropagationModel.getDistanceInMeter(Math.abs(statistics.getMean()) * multi, hz, roomsBetween));
+            data.setMultMedianDistance(iRadioPropagationModel.getDistanceInMeter(Math.abs(statistics.getMedian()) * multi, hz, roomsBetween));
+            data.setMultModeDistance(iRadioPropagationModel.getDistanceInMeter(Math.abs(statistics.getMode()) * multi, hz, roomsBetween));
 
-            distanceMap.put(iRadioPropagationModel.getClass().getSimpleName(),data);
+            distanceMap.put(iRadioPropagationModel.getClass().getSimpleName(), data);
         }
     }
 
@@ -123,13 +123,14 @@ public class RadioModelData {
     }
 
     public static int calculateRoomsInBetween(String rId1, String rId2, double signalStrength) {
-        if(rId1 != null && rId2 != null && !rId1.isEmpty() && !rId2.isEmpty() && rId1.equals(rId2)) {
+        if (rId1 != null && rId2 != null && !rId1.isEmpty() && !rId2.isEmpty() && rId1.equals(rId2)) {
             return 0;
         }
 
         if (signalStrength > -60) {
             return 0;
-        } if(signalStrength > -85) {
+        }
+        if (signalStrength > -85) {
             return 1;
         } else {
             return 2;

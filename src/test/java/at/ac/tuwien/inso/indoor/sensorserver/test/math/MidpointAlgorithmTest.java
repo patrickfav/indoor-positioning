@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * Created by PatrickF on 10.10.2014.
  */
-public class MidpointAlgorithmTest{
+public class MidpointAlgorithmTest {
     private char[][] image1;
 
     @Before

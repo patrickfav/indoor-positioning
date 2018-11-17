@@ -22,15 +22,15 @@ public class SensorNetwork extends TypeAbleCouchDBDocument implements Comparable
     private String cronScheduleSurvey;
     private String cronScheduleAnalysis;
     private boolean cronEnabled;
-    private int surveysPerNodeForAnalysis =150;
+    private int surveysPerNodeForAnalysis = 150;
 
     private boolean deleted;
 
     public SensorNetwork() {
         networkId = UUID.randomUUID().toString();
         createDate = new Date();
-        cronEnabled=true;
-        deleted=false;
+        cronEnabled = true;
+        deleted = false;
     }
 
     public EEnvironmentModel getEnvironmentModel() {

@@ -11,11 +11,11 @@ public class SensorPosition {
     private String macAddress;
     private NodeProbabilityDetails nodeProbabilityDetails;
 
-    public SensorPosition(int xCm, int yCm, String macAddress,int tileLength) {
+    public SensorPosition(int xCm, int yCm, String macAddress, int tileLength) {
         this.xCm = xCm;
         this.yCm = yCm;
-        this.xTiles = PosHelper.toTiles(xCm,tileLength);
-        this.yTiles = PosHelper.toTiles(yCm,tileLength);
+        this.xTiles = PosHelper.toTiles(xCm, tileLength);
+        this.yTiles = PosHelper.toTiles(yCm, tileLength);
         this.macAddress = macAddress;
     }
 

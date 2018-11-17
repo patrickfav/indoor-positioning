@@ -9,8 +9,9 @@ import org.ektorp.support.TypeDiscriminator;
  * @since 10.12.13
  * Time: 17:17
  */
-public class TypeAbleCouchDBDocument  extends CouchDbDocument{
-    @JsonProperty("dbType") @TypeDiscriminator
+public class TypeAbleCouchDBDocument extends CouchDbDocument {
+    @JsonProperty("dbType")
+    @TypeDiscriminator
     private String dbType = "undefined";
 
     public TypeAbleCouchDBDocument() {
@@ -22,6 +23,7 @@ public class TypeAbleCouchDBDocument  extends CouchDbDocument{
     public String getDbType() {
         return dbType;
     }
+
     @JsonProperty("dbType")
     public void setDbType(String dbType) {
         this.dbType = dbType;

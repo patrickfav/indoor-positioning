@@ -11,12 +11,12 @@ import java.util.*;
  * Created by PatrickF on 05.10.2014.
  */
 public class PingLogHistory {
-    Map<Date,Double> onlineMap = new TreeMap<Date, Double>();
+    Map<Date, Double> onlineMap = new TreeMap<Date, Double>();
 
-    private Map<Date,Double> createOnlineMap(String networkId) {
+    private Map<Date, Double> createOnlineMap(String networkId) {
         Date startDate = new Date(new Date().getTime() - 1000 * 60 * 60 * 12);
         List<SensorNode> nodes = SensorManager.getInstance().getAllNodesFromNetwork(networkId);
-        Map<SensorNode,List<PingLog>> sensorMap = new HashMap<SensorNode, List<PingLog>>();
+        Map<SensorNode, List<PingLog>> sensorMap = new HashMap<SensorNode, List<PingLog>>();
         for (SensorNode node : nodes) {
             sensorMap.put(node, MiscManager.getInstance().getAllPingLogsFromNodeSorted(node.getNodeId(), 80));
         }

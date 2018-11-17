@@ -15,7 +15,6 @@ public final class ApiConst {
     public static final String ROUTER_ADAPTER_QUERY_PARAM = "adapter";
     public static final String ROUTER_SCAN_BOOL_QUERY_PARAM = "scan";
 
-
     public final class CacheControl {
         public static final int SENSOR_NETWORK = 10 * 1;
         public static final int PING = 10 * 1;
@@ -25,9 +24,15 @@ public final class ApiConst {
         public static final int BLACKLIST = 10 * 1;
         public static final int ROOMLIST = 10 * 1;
         public static final int SERVER_CONFIG = 10 * 1;
+
+        private CacheControl() {
+        }
     }
 
     public final class OpenWrtConst {
         public static final String MODE_MASTER = "master";
+    }
+
+    private ApiConst() {
     }
 }

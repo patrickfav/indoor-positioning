@@ -9,8 +9,7 @@ import javax.ws.rs.core.Response;
 /**
  * Created by PatrickF on 12.09.2014.
  */
-public class RouterScriptPingRequest extends ARequest<Boolean> implements IPingRequest{
-
+public class RouterScriptPingRequest extends ARequest<Boolean> implements IPingRequest {
 
     public RouterScriptPingRequest(SensorNode node) {
         super(node);
@@ -19,10 +18,10 @@ public class RouterScriptPingRequest extends ARequest<Boolean> implements IPingR
     @Override
     public Boolean startRequest() throws SensorRequestException {
         try {
-            ResponseWrapper responseWrapper = runRequest("GET",getNode().getFullUrl()+ ApiConst.ROUTER_SERVICE_SCRIPT_PING,"",false);
+            ResponseWrapper responseWrapper = runRequest("GET", getNode().getFullUrl() + ApiConst.ROUTER_SERVICE_SCRIPT_PING, "", false);
             return responseWrapper.getResponse().getStatus() == Response.Status.OK.getStatusCode();
         } catch (Exception e) {
-            throw new SensorRequestException("Could not complete "+getClass().getSimpleName(),e);
+            throw new SensorRequestException("Could not complete " + getClass().getSimpleName(), e);
         }
     }
 }

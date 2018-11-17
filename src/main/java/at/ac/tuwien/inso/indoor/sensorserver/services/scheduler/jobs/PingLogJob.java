@@ -65,7 +65,7 @@ public class PingLogJob extends ISensorJob {
                     PingLogJob.log.debug("add pinglog " + log);
                     MiscManager.getInstance().addPing(log);
 
-                    jobExecutionContext.setResult(Math.min(0.99d,((Double) jobExecutionContext.getResult()) + (1.0 / nodes.size())));
+                    jobExecutionContext.setResult(Math.min(0.99d, ((Double) jobExecutionContext.getResult()) + (1.0 / nodes.size())));
                 }
             });
         }
@@ -83,7 +83,6 @@ public class PingLogJob extends ISensorJob {
 
         log.info("full ping job ended");
     }
-
 
     @Override
     public long getEstimatedFullRuntime() {

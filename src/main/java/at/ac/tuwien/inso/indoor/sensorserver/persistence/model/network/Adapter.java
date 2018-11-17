@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by PatrickF on 12.09.2014.
  */
-public class Adapter implements Comparable<Adapter>{
+public class Adapter implements Comparable<Adapter> {
     private String name;
     private String ssid;
     private Integer channel;

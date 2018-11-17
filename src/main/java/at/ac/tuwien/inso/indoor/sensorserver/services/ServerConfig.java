@@ -1,6 +1,5 @@
 package at.ac.tuwien.inso.indoor.sensorserver.services;
 
-
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.couchdb.TypeAbleCouchDBDocument;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.dao.ServerConfigDao;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.EtagManager;
@@ -14,9 +13,9 @@ import java.util.UUID;
 /**
  * @author PatrickF
  * @since 15.11.13
- *        Time: 19:38
+ * Time: 19:38
  */
-public class ServerConfig extends TypeAbleCouchDBDocument {
+public final class ServerConfig extends TypeAbleCouchDBDocument {
     @JsonIgnore
     private static Logger log = Logger.getLogger(ServerConfig.class);
 
@@ -48,7 +47,7 @@ public class ServerConfig extends TypeAbleCouchDBDocument {
     private long ifModifiedSinceDate = new Date().getTime();
     private int maxAgeCacheControl = -1;
     private boolean autoReloadJobs = true;
-    private String couchDBUrl ="";
+    private String couchDBUrl = "";
     private SignalMapConfig signalMapConfig = new SignalMapConfig();
 
     public String getRootPath() {

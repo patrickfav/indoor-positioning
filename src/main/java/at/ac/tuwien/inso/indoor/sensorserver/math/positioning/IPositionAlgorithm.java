@@ -12,14 +12,13 @@ import java.util.Map;
  */
 public interface IPositionAlgorithm {
 
+    PositionData getMostLikelyPositions(Map<String, SimpleMeasurement> measurements, List<RSSMatrixCreator.RSSPoint> referencePoints, double multiplicator);
 
-    public PositionData getMostLikelyPositions(Map<String, SimpleMeasurement> measurements, List<RSSMatrixCreator.RSSPoint> referencePoints, double multiplicator);
-
-    public static enum Type {
+    enum Type {
 
     }
 
-    public static class ProbablePosition {
+    class ProbablePosition {
         private int x;
         private int y;
         private int tileLengthCm;
@@ -65,37 +64,37 @@ public interface IPositionAlgorithm {
         }
     }
 
-	public static class PositionData {
-		private List<ProbablePosition> bestPositions;
-		private List<ProbablePosition> goodPositions;
-		private Date positionTime;
+    class PositionData {
+        private List<ProbablePosition> bestPositions;
+        private List<ProbablePosition> goodPositions;
+        private Date positionTime;
 
-		public PositionData() {
-			positionTime = new Date();
-		}
+        public PositionData() {
+            positionTime = new Date();
+        }
 
-		public List<ProbablePosition> getBestPositions() {
-			return bestPositions;
-		}
+        public List<ProbablePosition> getBestPositions() {
+            return bestPositions;
+        }
 
-		public void setBestPositions(List<ProbablePosition> bestPositions) {
-			this.bestPositions = bestPositions;
-		}
+        public void setBestPositions(List<ProbablePosition> bestPositions) {
+            this.bestPositions = bestPositions;
+        }
 
-		public List<ProbablePosition> getGoodPositions() {
-			return goodPositions;
-		}
+        public List<ProbablePosition> getGoodPositions() {
+            return goodPositions;
+        }
 
-		public void setGoodPositions(List<ProbablePosition> goodPositions) {
-			this.goodPositions = goodPositions;
-		}
+        public void setGoodPositions(List<ProbablePosition> goodPositions) {
+            this.goodPositions = goodPositions;
+        }
 
-		public Date getPositionTime() {
-			return positionTime;
-		}
+        public Date getPositionTime() {
+            return positionTime;
+        }
 
-		public void setPositionTime(Date positionTime) {
-			this.positionTime = positionTime;
-		}
-	}
+        public void setPositionTime(Date positionTime) {
+            this.positionTime = positionTime;
+        }
+    }
 }

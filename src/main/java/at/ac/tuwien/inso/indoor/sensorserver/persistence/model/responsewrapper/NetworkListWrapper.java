@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class NetworkListWrapper {
     private List<SensorNetwork> networks = new ArrayList<SensorNetwork>();
-    private Map<String,List<PingLog>> pingMap = new HashMap<String, List<PingLog>>();
+    private Map<String, List<PingLog>> pingMap = new HashMap<String, List<PingLog>>();
 
     public List<SensorNetwork> getNetworks() {
         return networks;

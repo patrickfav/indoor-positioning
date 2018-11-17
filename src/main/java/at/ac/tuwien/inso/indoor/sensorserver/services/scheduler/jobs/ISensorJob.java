@@ -15,5 +15,6 @@ public abstract class ISensorJob implements InterruptableJob {
     public ThreadPoolExecutor createThreadPool() {
         return new ThreadPoolExecutor(8, MAX_CONCURRENT_THREADS, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1024));
     }
+
     public abstract long getEstimatedFullRuntime();
 }

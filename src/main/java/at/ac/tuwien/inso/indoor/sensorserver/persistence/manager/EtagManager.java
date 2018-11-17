@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.indoor.sensorserver.persistence.manager;
 
-import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.*;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.JobLog;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.PingLog;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.Analysis;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.Survey;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.Blacklist;
@@ -21,8 +22,8 @@ public class EtagManager {
 
     public static EtagManager getInstance() {
         if (instance == null) {
-            instance = new EtagManager(Survey.class, PingLog.class, JobLog.class,Analysis.class,
-                    Blacklist.class,RoomList.class,SensorNetwork.class,SensorNode.class, ServerConfig.class);
+            instance = new EtagManager(Survey.class, PingLog.class, JobLog.class, Analysis.class,
+                    Blacklist.class, RoomList.class, SensorNetwork.class, SensorNode.class, ServerConfig.class);
         }
         return instance;
     }
@@ -31,14 +32,14 @@ public class EtagManager {
         instance = null;
     }
 
-    private Map<String,String> eTagMap = new HashMap<String, String>();
+    private Map<String, String> eTagMap = new HashMap<String, String>();
 
     public EtagManager(Class<?>... models) {
         regenerateETag(models);
     }
 
     public void regenerateETag(Class<?>... classes) {
-        if(classes.length == 0) {
+        if (classes.length == 0) {
             throw new IllegalArgumentException("Must at least pass 1 class");
         }
 
@@ -48,11 +49,11 @@ public class EtagManager {
     }
 
     public String getQuotedETag(Class<?>... classes) {
-        return "\""+getETag(classes)+"\"";
+        return "\"" + getETag(classes) + "\"";
     }
 
     public String getETag(Class<?>... classes) {
-        if(classes.length == 0) {
+        if (classes.length == 0) {
             throw new IllegalArgumentException("Must at least pass 1 class");
         }
 
@@ -60,7 +61,7 @@ public class EtagManager {
 
         StringBuilder sb = new StringBuilder();
         for (Class<?> clazz : classes) {
-            if(!eTagMap.containsKey(clazz.getName())) {
+            if (!eTagMap.containsKey(clazz.getName())) {
                 regenerateETag(clazz);
             }
             sb.append(eTagMap.get(clazz.getName()));

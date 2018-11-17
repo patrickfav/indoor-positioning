@@ -20,7 +20,7 @@ public class ResponseWrapper {
 
     public String getBody() {
         if (body == null) {
-            body = ServerUtil.getStringFromInputStream((InputStream) response.getEntity(),true);
+            body = ServerUtil.getStringFromInputStream((InputStream) response.getEntity(), true);
         }
         return body;
     }
@@ -28,10 +28,12 @@ public class ResponseWrapper {
     public Response getResponse() {
         return response;
     }
+
     public void setBody(String body) {
         this.body = body;
     }
-    public Map<String,NewCookie> getCookie() {
+
+    public Map<String, NewCookie> getCookie() {
         return response.getCookies();
     }
 }

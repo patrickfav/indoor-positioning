@@ -18,7 +18,6 @@ import java.util.List;
  */
 public class RouterAdapterInfoRequest extends ARequest<AdapterInfoWrapper> {
 
-
     public RouterAdapterInfoRequest(SensorNode node) {
         super(node);
     }
@@ -26,22 +25,22 @@ public class RouterAdapterInfoRequest extends ARequest<AdapterInfoWrapper> {
     @Override
     public AdapterInfoWrapper startRequest() throws SensorRequestException {
         try {
-            ResponseWrapper responseWrapper = runRequest("GET",getNode().getFullUrl()+ ApiConst.ROUTER_SERVICE_IWINFO,"",false);
+            ResponseWrapper responseWrapper = runRequest("GET", getNode().getFullUrl() + ApiConst.ROUTER_SERVICE_IWINFO, "", false);
             IwinfoXmlReader.IwinfoList iwinfoList = IwinfoXmlReader.parseIwinfoAdapterList(responseWrapper.getBody());
 
             List<Adapter> adapters = new ArrayList<Adapter>();
             for (String adapterName : IwinfoIfConfigAdapterListParser.parse(iwinfoList.getIfconfig(), true)) {
-                adapters.addAll(new RouterSingleAdapterInfoRequest(getNode(),adapterName).startRequest());
+                adapters.addAll(new RouterSingleAdapterInfoRequest(getNode(), adapterName).startRequest());
             }
             Collections.sort(adapters);
 
             AdapterInfoWrapper adapterInfoWrapper = new AdapterInfoWrapper();
-            adapterInfoWrapper.setMachineInfo(IwinfoMachinInfoParser.parse(iwinfoList,true));
+            adapterInfoWrapper.setMachineInfo(IwinfoMachinInfoParser.parse(iwinfoList, true));
             adapterInfoWrapper.setAdapterList(adapters);
 
             return adapterInfoWrapper;
         } catch (Exception e) {
-            throw new SensorRequestException("Could not complete "+getClass().getSimpleName(),e);
+            throw new SensorRequestException("Could not complete " + getClass().getSimpleName(), e);
         }
     }
 }

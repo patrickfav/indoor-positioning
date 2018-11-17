@@ -13,17 +13,17 @@ import java.util.*;
  */
 public class NodeDistanceMatrix {
 
-    private Map<MacCombKey,DataEntry> lookupMap;
-    private Map<MacCombKey,Double> normalizedDistanceMap;
-    private Map<String,ManagedNodeEntry> managedNodesMacMap;
-    private Map<String,ExtendedNodeInfo> extendedNodesMacList;
+    private Map<MacCombKey, DataEntry> lookupMap;
+    private Map<MacCombKey, Double> normalizedDistanceMap;
+    private Map<String, ManagedNodeEntry> managedNodesMacMap;
+    private Map<String, ExtendedNodeInfo> extendedNodesMacList;
 
     private EFrequencyRange freq;
     private Analysis analysis;
 
     private List<SensorPosition> managedNodesFixedPosition;
 
-    public NodeDistanceMatrix(Analysis analysis,EFrequencyRange freq) {
+    public NodeDistanceMatrix(Analysis analysis, EFrequencyRange freq) {
         this.freq = freq;
         this.analysis = analysis;
         this.lookupMap = new HashMap<MacCombKey, DataEntry>();
@@ -34,14 +34,14 @@ public class NodeDistanceMatrix {
 
         for (ExtendedNodeInfo e : analysis.getExtendedNodeMap().get(freq)) {
             for (ExtendedNodeInfo.ManagedNode managedNode : e.getManagedNodes()) {
-                lookupMap.put(new MacCombKey(managedNode.getPhysicalAdapter().getMacAddress(),e.getMacAddress()),new DataEntry(managedNode,e));
+                lookupMap.put(new MacCombKey(managedNode.getPhysicalAdapter().getMacAddress(), e.getMacAddress()), new DataEntry(managedNode, e));
 
-                if(!managedNodesMacMap.containsKey(managedNode.getPhysicalAdapter().getMacAddress())) {
+                if (!managedNodesMacMap.containsKey(managedNode.getPhysicalAdapter().getMacAddress())) {
                     managedNodesMacMap.put(managedNode.getPhysicalAdapter().getMacAddress(), new ManagedNodeEntry(managedNode.getPhysicalAdapter()));
                 }
 
-                if(!e.isIgnored()) {
-                    if(e.isManagedNode()) {
+                if (!e.isIgnored()) {
+                    if (e.isManagedNode()) {
                         managedNodesMacMap.get(managedNode.getPhysicalAdapter().getMacAddress()).getScannedMacsManaged().add(e.getMacAddress());
                     } else {
                         managedNodesMacMap.get(managedNode.getPhysicalAdapter().getMacAddress()).getScannedMacsExtended().add(e.getMacAddress());
@@ -49,7 +49,7 @@ public class NodeDistanceMatrix {
                 }
             }
 
-            if(!e.isManagedNode() && !e.isIgnored()) {
+            if (!e.isManagedNode() && !e.isIgnored()) {
                 extendedNodesMacList.put(e.getMacAddress(), e);
             }
         }
@@ -57,7 +57,7 @@ public class NodeDistanceMatrix {
         for (String srcMac : managedNodesMacMap.keySet()) {
             for (String targetMac : managedNodesMacMap.get(srcMac).getScannedMacsManaged()) {
                 double distToTarget = getDistance(getData(srcMac, targetMac).getManagedNode());
-                double distToSrc = getDistance(getData(targetMac,srcMac).getManagedNode());
+                double distToSrc = getDistance(getData(targetMac, srcMac).getManagedNode());
                 normalizedDistanceMap.put(new MacCombKey(srcMac, targetMac), normalizeDistance(distToTarget, distToSrc));
             }
             for (String targetMac : managedNodesMacMap.get(srcMac).getScannedMacsExtended()) {
@@ -67,8 +67,8 @@ public class NodeDistanceMatrix {
         }
     }
 
-    private double normalizeDistance(double dist1,double dist2) {
-        return (dist1 +dist2) /2;
+    private double normalizeDistance(double dist1, double dist2) {
+        return (dist1 + dist2) / 2;
     }
 
     private double getDistance(ExtendedNodeInfo.ManagedNode managedNode) {
@@ -79,7 +79,7 @@ public class NodeDistanceMatrix {
         return managedNodesMacMap.containsKey(mac);
     }
 
-    public DataEntry getData(String macSrc,String macTarget) {
+    public DataEntry getData(String macSrc, String macTarget) {
         return lookupMap.get(new MacCombKey(macSrc, macTarget));
     }
 
@@ -92,7 +92,7 @@ public class NodeDistanceMatrix {
     public Set<String> getAllManagedNodeMacsWhichSeeGivenExtendedNode(String macExtendedNode) {
         Set<String> macList = new HashSet<String>();
         for (NodeDistanceMatrix.MacCombKey macCombKey : getLookupMap().keySet()) {
-            if(macCombKey.getTarget().equalsIgnoreCase(macExtendedNode)) {
+            if (macCombKey.getTarget().equalsIgnoreCase(macExtendedNode)) {
                 macList.add(macCombKey.getSrc());
             }
         }
@@ -136,7 +136,7 @@ public class NodeDistanceMatrix {
         public MacCombKey(String src, String target) {
             this.src = src;
             this.target = target;
-            this.comb = src+"_"+target;
+            this.comb = src + "_" + target;
         }
 
         public String getSrc() {
@@ -148,7 +148,7 @@ public class NodeDistanceMatrix {
         }
 
         public MacCombKey createOppositeMacCombKey() {
-            return new MacCombKey(target,src);
+            return new MacCombKey(target, src);
         }
 
         @Override
@@ -178,7 +178,6 @@ public class NodeDistanceMatrix {
         private final PhysicalAdapter physicalAdapter;
         private final Set<String> scannedMacsExtended;
         private final Set<String> scannedMacsManaged;
-
 
         public ManagedNodeEntry(PhysicalAdapter physicalAdapter) {
             this.physicalAdapter = physicalAdapter;

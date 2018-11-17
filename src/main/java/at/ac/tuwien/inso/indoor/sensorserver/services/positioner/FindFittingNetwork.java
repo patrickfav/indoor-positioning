@@ -27,36 +27,36 @@ public class FindFittingNetwork {
 
     public List<SensorNetwork> findNetwork(Map<String, SimpleMeasurement> measurements) {
 
-        Map<SensorNetwork,Integer> probabilityMap = new HashMap<SensorNetwork, Integer>();
+        Map<SensorNetwork, Integer> probabilityMap = new HashMap<SensorNetwork, Integer>();
 
         for (SensorNetwork network : SensorManager.getInstance().getAllSensorNetworksNonDeleted()) {
-            int foundNodes=0;
+            int foundNodes = 0;
             Analysis analysis = MiscManager.getInstance().getLatestAnalysis(network.getNetworkId());
 
-            if(analysis != null) {
+            if (analysis != null) {
                 for (ExtendedNodeInfo node : analysis.getExtendedNodeMap().get(frequencyRange)) {
-                    if(measurements.containsKey(node.getMacAddress())) {
+                    if (measurements.containsKey(node.getMacAddress())) {
                         foundNodes++;
                     }
                 }
 
-                probabilityMap.put(network,foundNodes);
-                log.debug(network.getNetworkName()+" contains "+foundNodes+" of "+measurements.values().size()+" BSSI");
+                probabilityMap.put(network, foundNodes);
+                log.debug(network.getNetworkName() + " contains " + foundNodes + " of " + measurements.values().size() + " BSSI");
             } else {
-                log.warn(network.getNetworkName()+ " does not seem to have a single analysis");
+                log.warn(network.getNetworkName() + " does not seem to have a single analysis");
             }
         }
 
         int bestFound = Integer.MIN_VALUE;
         for (Integer found : probabilityMap.values()) {
-            if(found > bestFound) {
+            if (found > bestFound) {
                 bestFound = found;
             }
         }
 
         List<SensorNetwork> bestFittingNetworks = new ArrayList<SensorNetwork>();
         for (Map.Entry<SensorNetwork, Integer> entry : probabilityMap.entrySet()) {
-            if(entry.getValue() <= bestFound) {
+            if (entry.getValue() <= bestFound) {
                 bestFittingNetworks.add(entry.getKey());
             }
         }
