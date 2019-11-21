@@ -8,7 +8,7 @@ jdk:
   - openjdk8
 
 script:
-- ./mvnw clean package -X -Djarsigner.skip=false checkstyle:check
+  - ./mvnw clean package -Djarsigner.skip=false checkstyle:check
 
 after_success:
 - ./mvnw test jacoco:report coveralls:report
