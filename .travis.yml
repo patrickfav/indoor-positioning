@@ -1,14 +1,12 @@
 # To let the CI execute the maven wrapper, use this command and push the change:
 #    git update-index --chmod=+x mvnw
 
-sudo: false # route your build to the container-based infrastructure for a faster build
 language: java
-install: true
 jdk:
   - openjdk8
 
 script:
-  - ./mvnw clean package -Djarsigner.skip=false checkstyle:check
+  - ./mvnw clean package -Djarsigner.skip=false
 
 after_success:
 - ./mvnw test jacoco:report coveralls:report

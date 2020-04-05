@@ -186,7 +186,6 @@ public class MiscManager extends AManager {
         return pingDao.findByNodeSortByDate(nodeId, limit);
     }
 
-
     /* ************************************************************ ANALYSIS */
 
     public synchronized void addAnaylsis(Analysis analysis) {
