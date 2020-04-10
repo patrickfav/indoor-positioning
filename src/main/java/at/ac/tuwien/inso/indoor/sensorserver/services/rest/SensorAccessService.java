@@ -8,9 +8,15 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.responsewrapper.B
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.responsewrapper.SuccessResponse;
 import at.ac.tuwien.inso.indoor.sensorserver.services.exceptions.ExceptionHandler;
 import at.ac.tuwien.inso.indoor.sensorserver.services.exceptions.SensorRequestException;
-import at.ac.tuwien.inso.indoor.sensorserver.services.requests.*;
+import at.ac.tuwien.inso.indoor.sensorserver.services.requests.IPingRequest;
+import at.ac.tuwien.inso.indoor.sensorserver.services.requests.RouterAdapterInfoRequest;
+import at.ac.tuwien.inso.indoor.sensorserver.services.requests.RouterRebootRequest;
+import at.ac.tuwien.inso.indoor.sensorserver.services.requests.RouterScanRequest;
+import at.ac.tuwien.inso.indoor.sensorserver.services.requests.RouterScriptPingRequest;
+import at.ac.tuwien.inso.indoor.sensorserver.services.requests.RouterWebserverPingRequest;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.SurveyCallable;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -26,7 +32,7 @@ import java.util.List;
 @Path("/sensor")
 @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 public class SensorAccessService {
-    protected static Logger log = Logger.getLogger(SensorAccessService.class);
+    protected static Logger log = LogManager.getLogger(SensorAccessService.class);
 
     @POST
     @Path("/info")

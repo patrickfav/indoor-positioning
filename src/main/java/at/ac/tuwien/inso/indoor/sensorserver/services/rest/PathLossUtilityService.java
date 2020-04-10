@@ -7,16 +7,29 @@ import at.ac.tuwien.inso.indoor.sensorserver.math.solver.PathLossBruteforceSolve
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.EtagManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.EFrequencyRange;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNetwork;
-import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.pathloss.*;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.pathloss.BruteforceDistanceInfo;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.pathloss.BruteforceDistanceResult;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.pathloss.BruteforceMultInfo;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.pathloss.BruteforceMultResult;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.pathloss.DistanceValueInput;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.responsewrapper.BaseResponse;
 import at.ac.tuwien.inso.indoor.sensorserver.services.ApiConst;
 import at.ac.tuwien.inso.indoor.sensorserver.services.exceptions.ExceptionHandler;
 import at.ac.tuwien.inso.indoor.sensorserver.util.CacheUtil;
 import at.ac.tuwien.inso.indoor.sensorserver.util.ServerUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +41,7 @@ import java.util.Map;
 @Path("/util")
 @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 public class PathLossUtilityService {
-    private static Logger log = Logger.getLogger(PathLossUtilityService.class);
+    private static Logger log = LogManager.getLogger(PathLossUtilityService.class);
 
     @POST
     @Path("/itu-degr-dist-values")

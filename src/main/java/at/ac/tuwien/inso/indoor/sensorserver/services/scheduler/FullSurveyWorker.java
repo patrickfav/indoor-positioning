@@ -4,18 +4,23 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.Surve
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.Adapter;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNode;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.jobs.ISensorJob;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by PatrickF on 15.09.2014.
  */
 public class FullSurveyWorker implements Callback<Survey> {
-    protected static Logger log = Logger.getLogger(FullSurveyWorker.class);
+    protected static Logger log = LogManager.getLogger(FullSurveyWorker.class);
 
     private List<SensorNode> nodes;
     private long delay;

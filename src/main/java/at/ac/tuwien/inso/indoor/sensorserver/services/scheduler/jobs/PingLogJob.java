@@ -8,7 +8,8 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNod
 import at.ac.tuwien.inso.indoor.sensorserver.services.exceptions.SensorRequestException;
 import at.ac.tuwien.inso.indoor.sensorserver.services.requests.RouterScriptPingRequest;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.SchedulerManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.UnableToInterruptJobException;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * Created by PatrickF on 15.09.2014.
  */
 public class PingLogJob extends ISensorJob {
-    protected static Logger log = Logger.getLogger(PingLogJob.class);
+    protected static Logger log = LogManager.getLogger(PingLogJob.class);
 
     private JobLog job;
     private ExecutorService threadPool;

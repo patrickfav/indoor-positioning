@@ -1,7 +1,8 @@
 package at.ac.tuwien.inso.indoor.sensorserver.services.parser;
 
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.MachineInfo;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,7 +11,7 @@ import java.util.regex.Pattern;
  * Created by PatrickF on 12.09.2014.
  */
 public final class IwinfoMachinInfoParser {
-    private static Logger log = Logger.getLogger(IwinfoMachinInfoParser.class);
+    private static Logger log = LogManager.getLogger(IwinfoMachinInfoParser.class);
 
     private IwinfoMachinInfoParser() {
     }

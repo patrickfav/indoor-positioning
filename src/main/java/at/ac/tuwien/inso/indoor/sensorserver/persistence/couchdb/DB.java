@@ -10,7 +10,8 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.RoomList;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNetwork;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNode;
 import at.ac.tuwien.inso.indoor.sensorserver.services.ServerConfig;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.UpdateConflictException;
@@ -27,7 +28,7 @@ import org.ektorp.support.DesignDocument;
  */
 public final class DB {
     public static final String DB_URL = "http://localhost:5984";
-    private static Logger log = Logger.getLogger(DB.class);
+    private static Logger log = LogManager.getLogger(DB.class);
     private static DB ourInstance = new DB();
     private static final String DB_MAIN = "sensordb";
 

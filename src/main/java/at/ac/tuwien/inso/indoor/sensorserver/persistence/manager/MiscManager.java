@@ -11,7 +11,8 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.Blacklist
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.RoomList;
 import at.ac.tuwien.inso.indoor.sensorserver.services.exceptions.ResourceNotFoundException;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.SchedulerManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public class MiscManager extends AManager {
 
-    private static Logger log = Logger.getLogger(MiscManager.class);
+    private static Logger log = LogManager.getLogger(MiscManager.class);
     private static MiscManager instance;
 
     public static MiscManager getInstance() {

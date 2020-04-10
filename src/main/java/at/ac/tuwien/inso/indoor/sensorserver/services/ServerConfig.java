@@ -5,7 +5,8 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.dao.ServerConfigDao;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.EtagManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.SignalMapConfig;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.UUID;
@@ -17,7 +18,7 @@ import java.util.UUID;
  */
 public final class ServerConfig extends TypeAbleCouchDBDocument {
     @JsonIgnore
-    private static Logger log = Logger.getLogger(ServerConfig.class);
+    private static Logger log = LogManager.getLogger(ServerConfig.class);
 
     @JsonIgnore
     private static ServerConfig instance;

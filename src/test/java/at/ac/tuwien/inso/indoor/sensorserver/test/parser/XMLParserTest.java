@@ -2,7 +2,8 @@ package at.ac.tuwien.inso.indoor.sensorserver.test.parser;
 
 import at.ac.tuwien.inso.indoor.sensorserver.services.parser.IwinfoXmlReader;
 import at.ac.tuwien.inso.indoor.sensorserver.test.parser.examples.XMLExamples;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by PatrickF on 13.09.2014.
  */
 public class XMLParserTest {
-    private static Logger log = Logger.getLogger(XMLParserTest.class);
+    private static Logger log = LogManager.getLogger(XMLParserTest.class);
 
     @Test
     public void testIwinfoWlan0AdapterParseShouldOk() throws Exception {

@@ -10,7 +10,8 @@ import at.ac.tuwien.inso.indoor.sensorserver.services.exceptions.ResourceNotFoun
 import at.ac.tuwien.inso.indoor.sensorserver.services.exceptions.SensorRequestException;
 import at.ac.tuwien.inso.indoor.sensorserver.services.requests.OUILookupRequest;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.SchedulerManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.SchedulerException;
 
 import java.io.InputStream;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class SensorManager extends AManager {
 
-    private static Logger log = Logger.getLogger(SensorManager.class);
+    private static Logger log = LogManager.getLogger(SensorManager.class);
     private static SensorManager instance;
 
     public static SensorManager getInstance() {

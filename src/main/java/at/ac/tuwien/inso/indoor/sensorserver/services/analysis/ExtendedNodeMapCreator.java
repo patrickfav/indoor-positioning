@@ -3,18 +3,33 @@ package at.ac.tuwien.inso.indoor.sensorserver.services.analysis;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.MiscManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.SensorManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.Statistics;
-import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.*;
-import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.*;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.Analysis;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.AverageWlanScanMeasurement;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.EFrequencyRange;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.ExtendedNodeInfo;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.PhysicalAdapter;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.RadioModelData;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.Survey;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.Adapter;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.Blacklist;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.RoomList;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNetwork;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNode;
 import at.ac.tuwien.inso.indoor.sensorserver.util.RadioUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by PatrickF on 03.10.2014.
  */
 public class ExtendedNodeMapCreator {
-    private static Logger log = Logger.getLogger(ExtendedNodeMapCreator.class);
+    private static Logger log = LogManager.getLogger(ExtendedNodeMapCreator.class);
 
     private List<Analysis> prevAnalysis;
 

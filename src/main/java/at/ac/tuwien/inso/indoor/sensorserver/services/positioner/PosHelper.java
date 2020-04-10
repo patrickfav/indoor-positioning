@@ -5,7 +5,8 @@ import at.ac.tuwien.inso.indoor.sensorserver.math.radiomodels.ITUIndoorModelDegr
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.EFrequencyRange;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.SignalMapConfig;
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,7 +20,7 @@ import java.util.Map;
  */
 public final class PosHelper {
     public static final String EMPTY_STRING_REPRESENTATION = " ";
-    private static Logger log = Logger.getLogger(PosHelper.class);
+    private static Logger log = LogManager.getLogger(PosHelper.class);
 
     private PosHelper() {
     }

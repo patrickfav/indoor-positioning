@@ -3,10 +3,15 @@ package at.ac.tuwien.inso.indoor.sensorserver.services.requests;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNode;
 import at.ac.tuwien.inso.indoor.sensorserver.services.exceptions.SensorRequestException;
 import at.ac.tuwien.inso.indoor.sensorserver.util.ServerUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.client.ClientProperties;
 
-import javax.ws.rs.client.*;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,7 +21,7 @@ import java.util.Map;
  * Created by PatrickF on 13.09.2014.
  */
 public abstract class ARequest<T> {
-    protected static Logger log = Logger.getLogger(ARequest.class);
+    protected static Logger log = LogManager.getLogger(ARequest.class);
 
     private Client client;
     private SensorNode node;

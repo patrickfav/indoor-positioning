@@ -4,7 +4,8 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.EFreq
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.WlanScanNode;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNode;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.SurveyCallable;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ import java.util.Random;
  * Created by PatrickF on 14.09.2014.
  */
 public class SurveyWorkerTest {
-    private static Logger log = Logger.getLogger(SurveyWorkerTest.class);
+    private static Logger log = LogManager.getLogger(SurveyWorkerTest.class);
 
     private List<WlanScanNode> wlanScanNodes;
     private Random rnd = new Random(322768354L);

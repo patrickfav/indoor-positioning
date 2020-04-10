@@ -9,15 +9,20 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.RoomList;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNetwork;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNode;
 import at.ac.tuwien.inso.indoor.sensorserver.services.ServerConfig;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by PatrickF on 03.10.2014.
  */
 public class EtagManager {
-    private static Logger log = Logger.getLogger(EtagManager.class);
+    private static Logger log = LogManager.getLogger(EtagManager.class);
     private static EtagManager instance;
 
     public static EtagManager getInstance() {

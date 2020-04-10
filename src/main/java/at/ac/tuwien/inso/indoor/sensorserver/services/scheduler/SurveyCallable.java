@@ -7,16 +7,22 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.Surve
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.WlanScanNode;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNode;
 import at.ac.tuwien.inso.indoor.sensorserver.services.requests.RouterScanRequest;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.Callable;
 
 /**
  * Created by PatrickF on 14.09.2014.
  */
 public class SurveyCallable implements Callable<Survey> {
-    protected static Logger log = Logger.getLogger(SurveyCallable.class);
+    protected static Logger log = LogManager.getLogger(SurveyCallable.class);
 
     private static final int MAX_REPEAT_COUNT = 100;
     private static final int MIN_DELAY = 100;

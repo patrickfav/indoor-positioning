@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.indoor.sensorserver.persistence.manager;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author PatrickF
@@ -8,7 +9,7 @@ import org.apache.log4j.Logger;
  * Time: 11:59
  */
 public class AManager {
-    protected static Logger log = Logger.getLogger(AManager.class);
+    protected static Logger log = LogManager.getLogger(AManager.class);
 
     protected AManager() {
 

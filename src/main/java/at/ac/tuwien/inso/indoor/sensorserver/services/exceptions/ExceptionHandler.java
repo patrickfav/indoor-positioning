@@ -1,7 +1,8 @@
 package at.ac.tuwien.inso.indoor.sensorserver.services.exceptions;
 
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.responsewrapper.BaseResponse;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -14,7 +15,7 @@ import java.util.List;
  * Time: 11:56
  */
 public final class ExceptionHandler {
-    private static Logger log = Logger.getLogger(ExceptionHandler.class);
+    private static Logger log = LogManager.getLogger(ExceptionHandler.class);
 
     private ExceptionHandler() {
     }

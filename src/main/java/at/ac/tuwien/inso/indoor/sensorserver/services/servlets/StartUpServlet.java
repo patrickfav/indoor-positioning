@@ -6,7 +6,8 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNet
 import at.ac.tuwien.inso.indoor.sensorserver.services.ServerConfig;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.SchedulerManager;
 import at.ac.tuwien.inso.indoor.sensorserver.util.ServerUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.SchedulerException;
 
 import javax.servlet.http.HttpServlet;
@@ -20,7 +21,7 @@ import java.io.IOException;
  * @since 08.09.2014
  */
 public class StartUpServlet extends HttpServlet {
-    private static Logger log = Logger.getLogger(StartUpServlet.class);
+    private static Logger log = LogManager.getLogger(StartUpServlet.class);
 
     @Override
     public void init() {

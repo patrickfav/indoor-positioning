@@ -5,18 +5,23 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.EFreq
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.SignalMap;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.SignalMapConfig;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.Callback;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by PatrickF on 26.10.2014.
  */
 public class ExtendedNodePositionManager {
-    private static Logger log = Logger.getLogger(ExtendedNodePositionManager.class);
+    private static Logger log = LogManager.getLogger(ExtendedNodePositionManager.class);
     private int calculationMatrixLengthCm;
 
     private int tileLengthCm;

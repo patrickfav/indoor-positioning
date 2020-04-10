@@ -4,7 +4,8 @@ import at.ac.tuwien.inso.indoor.sensorserver.math.radiomodels.EEnvironmentModel;
 import at.ac.tuwien.inso.indoor.sensorserver.math.radiomodels.ITUIndoorAttenuationModel;
 import at.ac.tuwien.inso.indoor.sensorserver.math.radiomodels.ITUIndoorModelDegradingDist;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.EFrequencyRange;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,7 +16,7 @@ import java.util.Map;
  * Created by PatrickF on 10.11.2014.
  */
 public class ITUIndoorModelTest {
-    private static Logger log = Logger.getLogger(ITUIndoorModelTest.class);
+    private static Logger log = LogManager.getLogger(ITUIndoorModelTest.class);
     private static final double delta = 1e-10;
     private static final double freq_24ghz = EFrequencyRange.frequencyHz(EFrequencyRange.WLAN_2_4Ghz, 1);
 

@@ -6,7 +6,8 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.JobLog;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNode;
 import at.ac.tuwien.inso.indoor.sensorserver.services.analysis.AnalysisBuilder;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.SchedulerManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.UnableToInterruptJobException;
@@ -17,7 +18,7 @@ import java.util.List;
  * Created by PatrickF on 25.09.2014.
  */
 public class AnalysisJob extends ISensorJob {
-    protected static Logger log = Logger.getLogger(AnalysisJob.class);
+    protected static Logger log = LogManager.getLogger(AnalysisJob.class);
 
     private JobLog job;
     private long estimatedRuntimeMs = 8000;

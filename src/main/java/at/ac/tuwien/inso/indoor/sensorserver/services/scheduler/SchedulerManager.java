@@ -4,8 +4,18 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNet
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.jobs.AnalysisJob;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.jobs.FullSurveyJob;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.jobs.PingLogJob;
-import org.apache.log4j.Logger;
-import org.quartz.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.Job;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
+import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
 
@@ -18,7 +28,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
  * Created by PatrickF on 15.09.2014.
  */
 public final class SchedulerManager {
-    protected static Logger log = Logger.getLogger(SchedulerManager.class);
+    protected static Logger log = LogManager.getLogger(SchedulerManager.class);
 
     public static final String NETWORK_ID_KEY = "progress-id";
     public static final String JOB_ID_KEY = "job-id";

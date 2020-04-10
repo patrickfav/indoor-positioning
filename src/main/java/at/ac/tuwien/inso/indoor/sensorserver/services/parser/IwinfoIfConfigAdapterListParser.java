@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.indoor.sensorserver.services.parser;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.regex.Pattern;
  * Created by PatrickF on 12.09.2014.
  */
 public final class IwinfoIfConfigAdapterListParser {
-    private static Logger log = Logger.getLogger(IwinfoIfConfigAdapterListParser.class);
+    private static Logger log = LogManager.getLogger(IwinfoIfConfigAdapterListParser.class);
 
     private IwinfoIfConfigAdapterListParser() {
     }

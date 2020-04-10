@@ -4,7 +4,8 @@ import at.ac.tuwien.inso.indoor.sensorserver.services.exceptions.InvalidAPICallE
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import java.io.BufferedReader;
@@ -39,7 +40,7 @@ import java.util.zip.GZIPOutputStream;
  * Time: 16:02
  */
 public final class ServerUtil {
-    private static Logger log = Logger.getLogger(ServerUtil.class);
+    private static Logger log = LogManager.getLogger(ServerUtil.class);
 
     private ServerUtil() {
     }

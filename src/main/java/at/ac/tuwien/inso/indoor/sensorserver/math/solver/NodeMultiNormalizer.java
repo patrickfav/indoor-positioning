@@ -4,17 +4,27 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.pathloss.Brutefor
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.pathloss.BruteforceMultResult;
 import at.ac.tuwien.inso.indoor.sensorserver.services.scheduler.Callback;
 import at.ac.tuwien.inso.indoor.sensorserver.util.ServerUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Finds the best multipliers so that in a distance matrix
  * the distance a->b ~ b->a
  */
 public class NodeMultiNormalizer {
-    private static Logger log = Logger.getLogger(NodeMultiNormalizer.class);
+    private static Logger log = LogManager.getLogger(NodeMultiNormalizer.class);
     private static final int MAX_ITERATIONS = 10000000;
     private static final int MAX_THREAD = 8;
     private static final double UPPER_BOUND = 1.1;
