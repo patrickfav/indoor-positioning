@@ -12,8 +12,11 @@ import java.util.regex.Pattern;
 /**
  * Created by PatrickF on 12.09.2014.
  */
-public class IwinfoScanParser {
+public final class IwinfoScanParser {
     private static Logger log = Logger.getLogger(IwinfoScanParser.class);
+
+    private IwinfoScanParser() {
+    }
 
     public static List<WlanScanNode> parse(String iwinfoScanString) {
         return parse(iwinfoScanString, false);

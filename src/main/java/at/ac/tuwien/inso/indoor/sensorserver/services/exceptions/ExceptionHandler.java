@@ -13,8 +13,11 @@ import java.util.List;
  * @since 14.01.14
  * Time: 11:56
  */
-public class ExceptionHandler {
+public final class ExceptionHandler {
     private static Logger log = Logger.getLogger(ExceptionHandler.class);
+
+    private ExceptionHandler() {
+    }
 
     public static void handle(BaseResponse b, Exception e) {
         if (e instanceof InvalidAPICallException) {

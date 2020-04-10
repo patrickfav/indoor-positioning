@@ -7,15 +7,22 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.Signa
 import cern.colt.matrix.impl.SparseObjectMatrix2D;
 import org.apache.log4j.Logger;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.util.Map;
 
 /**
  * Created by PatrickF on 10.10.2014.
  */
-public class PosHelper {
+public final class PosHelper {
     public static final String EMPTY_STRING_REPRESENTATION = " ";
     private static Logger log = Logger.getLogger(PosHelper.class);
+
+    private PosHelper() {
+    }
 
     public static int convertMToCm(double meter) {
         return (int) Math.round(meter * 100.0);

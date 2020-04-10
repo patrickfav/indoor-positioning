@@ -7,14 +7,29 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContext;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.TimeZone;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -23,8 +38,11 @@ import java.util.zip.GZIPOutputStream;
  * @since 18.11.13
  * Time: 16:02
  */
-public class ServerUtil {
+public final class ServerUtil {
     private static Logger log = Logger.getLogger(ServerUtil.class);
+
+    private ServerUtil() {
+    }
 
     public static String prettyPrint(String uglyJson) {
         try {

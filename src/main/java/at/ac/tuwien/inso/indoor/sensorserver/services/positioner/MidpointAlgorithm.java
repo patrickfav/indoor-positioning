@@ -8,7 +8,11 @@ import java.util.List;
 /**
  * Created by PatrickF on 10.10.2014.
  */
-public class MidpointAlgorithm {
+public final class MidpointAlgorithm {
+
+    private MidpointAlgorithm() {
+    }
+
     public static void simpleCharArrayDrawCircle(final int centerX, final int centerY, final int radius, char[][] image, char paint) {
         int d = (5 - radius * 4) / 4;
         int x = 0;

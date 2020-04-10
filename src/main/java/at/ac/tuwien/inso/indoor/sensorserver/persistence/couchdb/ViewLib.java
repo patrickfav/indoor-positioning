@@ -5,7 +5,11 @@ import org.ektorp.support.DesignDocument;
 /**
  * Created by PatrickF on 30.01.14.
  */
-public class ViewLib {
+public final class ViewLib {
+
+    private ViewLib() {
+    }
+
     public static ViewWrapper getByNetworkId(String name, Class clazz) {
         return new ViewWrapper(name, new DesignDocument.View("function(doc) { if (doc.dbType == '" + clazz.getSimpleName() + "' ) emit( doc.networkId, doc._id )}"));
     }

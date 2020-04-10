@@ -3,16 +3,27 @@ package at.ac.tuwien.inso.indoor.sensorserver.util;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.MiscManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.manager.SensorManager;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.Statistics;
-import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.*;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.AverageWlanScanMeasurement;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.EFrequencyRange;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.RadioModelData;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.Survey;
+import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.SurveyStatistics;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.Blacklist;
 import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.network.SensorNetwork;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by PatrickF on 18.09.2014.
  */
-public class SurveyUtil {
+public final class SurveyUtil {
+
+    private SurveyUtil() {
+    }
 
     public static List<SurveyStatistics> createAverageFromSurveys(List<Survey> surveys, String networkId) {
         Map<String, SurveyStatistics> map = new HashMap<String, SurveyStatistics>();

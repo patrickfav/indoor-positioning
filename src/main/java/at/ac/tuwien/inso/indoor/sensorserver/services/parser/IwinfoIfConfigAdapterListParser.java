@@ -10,8 +10,11 @@ import java.util.regex.Pattern;
 /**
  * Created by PatrickF on 12.09.2014.
  */
-public class IwinfoIfConfigAdapterListParser {
+public final class IwinfoIfConfigAdapterListParser {
     private static Logger log = Logger.getLogger(IwinfoIfConfigAdapterListParser.class);
+
+    private IwinfoIfConfigAdapterListParser() {
+    }
 
     public static List<String> parse(String ifConfig) {
         return parse(ifConfig, false);

@@ -3,10 +3,10 @@
 
 language: java
 jdk:
-  - openjdk8
+  - openjdk11
 
 script:
-  - ./mvnw clean package -Djarsigner.skip=false
+  - ./mvnw clean package
 
 after_success:
 - ./mvnw test jacoco:report coveralls:report

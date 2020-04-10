@@ -5,8 +5,11 @@ import at.ac.tuwien.inso.indoor.sensorserver.persistence.model.measurement.EFreq
 /**
  * Created by PatrickF on 30.09.2014.
  */
-public class RadioUtil {
+public final class RadioUtil {
     public static final double LIGHT_SPEED_M_S = 299792458;
+
+    private RadioUtil() {
+    }
 
     public static int convertToMhz(double frequencyHz) {
         return (int) frequencyHz / 1000 / 1000;

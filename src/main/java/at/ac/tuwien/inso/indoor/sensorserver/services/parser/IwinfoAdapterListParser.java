@@ -12,8 +12,11 @@ import java.util.regex.Pattern;
 /**
  * Created by PatrickF on 12.09.2014.
  */
-public class IwinfoAdapterListParser {
+public final class IwinfoAdapterListParser {
     private static Logger log = Logger.getLogger(IwinfoAdapterListParser.class);
+
+    private IwinfoAdapterListParser() {
+    }
 
     public static List<Adapter> parse(String iwinfoAdapterList) {
         return parse(iwinfoAdapterList, false);

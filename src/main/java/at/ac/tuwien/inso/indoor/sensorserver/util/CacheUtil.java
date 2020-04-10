@@ -11,9 +11,12 @@ import java.util.Date;
 /**
  * Created by PatrickF on 11.03.14.
  */
-public class CacheUtil {
+public final class CacheUtil {
 
     private static MessageDigest messageDigest;
+
+    private CacheUtil() {
+    }
 
     public static EntityTag getEtag(Object obj) {
         if (obj instanceof Iterable) {

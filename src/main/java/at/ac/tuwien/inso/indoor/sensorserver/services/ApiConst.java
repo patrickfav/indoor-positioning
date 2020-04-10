@@ -31,6 +31,10 @@ public final class ApiConst {
 
     public final class OpenWrtConst {
         public static final String MODE_MASTER = "master";
+
+        private OpenWrtConst() {
+
+        }
     }
 
     private ApiConst() {

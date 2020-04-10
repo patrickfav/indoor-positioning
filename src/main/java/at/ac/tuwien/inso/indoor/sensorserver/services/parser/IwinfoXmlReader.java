@@ -13,7 +13,10 @@ import java.io.StringReader;
 /**
  * Created by PatrickF on 12.09.2014.
  */
-public class IwinfoXmlReader {
+public final class IwinfoXmlReader {
+
+    private IwinfoXmlReader() {
+    }
 
     public static IwinfoList parseIwinfoAdapterList(String xml) throws Exception {
         try {

@@ -9,8 +9,11 @@ import java.util.regex.Pattern;
 /**
  * Created by PatrickF on 12.09.2014.
  */
-public class IwinfoMachinInfoParser {
+public final class IwinfoMachinInfoParser {
     private static Logger log = Logger.getLogger(IwinfoMachinInfoParser.class);
+
+    private IwinfoMachinInfoParser() {
+    }
 
     public static MachineInfo parse(IwinfoXmlReader.IwinfoList info) {
         return parse(info, false);

@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 public class AManager {
     protected static Logger log = Logger.getLogger(AManager.class);
 
-    AManager() {
+    protected AManager() {
+
     }
 }
