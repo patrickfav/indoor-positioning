@@ -31,3 +31,4 @@ proguard
 # Eclipse project files
 .classpath
 .project
+pom.xml.versionsBackup
