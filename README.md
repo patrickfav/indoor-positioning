@@ -2,18 +2,18 @@
 This is a full-featured indoor positioning system that was developed during my master thesis.
 Its server component uses servlets and an Angular JS front end, whereas the Router/AP service is written in Lua.
 
-[![Build Status](https://travis-ci.org/patrickfav/indoor-positioning.svg?branch=master)](https://travis-ci.org/patrickfav/indoor-positioning)
-[![Coverage Status](https://coveralls.io/repos/github/patrickfav/indoor-positioning/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/indoor-positioning?branch=master) 
-[![Maintainability](https://api.codeclimate.com/v1/badges/43b7770f0ee00b85f92a/maintainability)](https://codeclimate.com/github/patrickfav/indoor-positioning/maintainability)
+[![GitHub release](https://img.shields.io/github/release/patrickfav/indoor-positioning.svg)](https://github.com/patrickfav/indoor-positioning/releases/latest)
+[![Github Actions](https://github.com/patrickfav/indoor-positioning/actions/workflows/build.yml/badge.svg)](https://github.com/patrickfav/indoor-positioning/actions)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=patrickfav_indoor-positioning&metric=coverage)](https://sonarcloud.io/summary/new_code?id=patrickfav_indoor-positioning)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=patrickfav_indoor-positioning&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=patrickfav_indoor-positioning)
 
-![UI Overview](https://github.com/patrickfav/indoor-positioning/blob/master/misc/ui-overview.png?raw=true)
-
+![UI Overview](https://github.com/patrickfav/indoor-positioning/blob/main/misc/ui-overview.png?raw=true)
 
 # Requirements
 
 ## Software
 
-* Java 1.7
+* Java 11
 * Tomcat 7
 * CouchDB 1.5
 * Maven 3
@@ -27,7 +27,7 @@ Its server component uses servlets and an Angular JS front end, whereas the Rout
 
 The underlying architecture can be observed in the diagram below.
 
-![Map Generation Procedure Diagram](https://github.com/patrickfav/indoor-positioning/blob/master/misc/map_generation_procedure_lowsat.jpg?raw=true)
+![Map Generation Procedure Diagram](https://github.com/patrickfav/indoor-positioning/blob/main/misc/map_generation_procedure_lowsat.jpg?raw=true)
 
 Overall procedure to map the target area:
 
@@ -45,7 +45,7 @@ With the adapted model, radio wave propagation can be simulated over
 a representation of the target area. Positioning works similar to the
 scene analysis approach using a modified nearest neighbor algorithm.
 
-![Phases Diagram](https://github.com/patrickfav/indoor-positioning/blob/master/misc/simple_phases_lowsat.jpg?raw=true)
+![Phases Diagram](https://github.com/patrickfav/indoor-positioning/blob/main/misc/simple_phases_lowsat.jpg?raw=true)
 
 # Setup
 
@@ -84,13 +84,13 @@ positions of the Active Nodes again). Then press "Calculate" next to the "Extend
 of all APs/Routers in the vicinity. You may want to correct the positions you know of. Press "save". You now are ready
 to position.
 
-![Node Editor](https://github.com/patrickfav/indoor-positioning/blob/master/misc/ui-node-editor.jpg?raw=true)
+![Node Editor](https://github.com/patrickfav/indoor-positioning/blob/main/misc/ui-node-editor.jpg?raw=true)
 
 # Positioning
 
 You need a AP with the custom webservices installed, same as Active Nodes. This AP must be in your network.
 
-![Positioning](https://github.com/patrickfav/indoor-positioning/blob/master/misc/ui-positioning.png?raw=true)
+![Positioning](https://github.com/patrickfav/indoor-positioning/blob/main/misc/ui-positioning.png?raw=true)
 
 Go to "Positioning". Input the IP of the client (AP) and press "Find". If multiple networks match for this position
 you have to select one, otherwise you will be shown a UI with the estimated position. You may press on a square in the grid
@@ -112,7 +112,7 @@ The results indicate that the position accuracy offers a performance comparable 
 a state-of-the-art solution. The following diagram shows the accumulated offsets
 in all test locations.
 
-![Accuracy Diagram](https://github.com/patrickfav/indoor-positioning/blob/master/misc/ac_diagram.png?raw=true)
+![Accuracy Diagram](https://github.com/patrickfav/indoor-positioning/blob/main/misc/ac_diagram.png?raw=true)
 
 ## Scalability
 
@@ -120,7 +120,7 @@ Based on extrapolated data, the proposed system delivers superior performance in
 terms of maintainability and scalability. In the diagram below the required effort
 for various target areas is depicted.
 
-![Scalability Diagram](https://github.com/patrickfav/indoor-positioning/blob/master/misc/maintain_diagram.png?raw=true)
+![Scalability Diagram](https://github.com/patrickfav/indoor-positioning/blob/main/misc/maintain_diagram.png?raw=true)
 
 # License
 
