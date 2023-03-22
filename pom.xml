@@ -35,7 +35,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
+                <version>3.0.0</version>
             </plugin>
             <!-- needed because of http://stackoverflow.com/questions/7539970/cannot-construct-org-apache-maven-plugin-war-util-webappstructure-as-it-does-not -->
             <plugin>
