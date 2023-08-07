@@ -15,7 +15,10 @@
     <version>1.2</version>
     <packaging>war</packaging>
     <name>Indoor Sensor Management</name>
-
+    <description>This is a full-featured indoor positioning system that was developed during my master thesis. Its server component uses servlets and an Angular JS front end, whereas the Router/AP service is written in Lua.</description>
+    <url>https://repositum.tuwien.at/handle/20.500.12708/2080</url>
+    <inceptionYear>2015</inceptionYear>
+         
     <properties>
         <!-- SonarQube Config -->
         <sonar.organization>patrickfav</sonar.organization>
